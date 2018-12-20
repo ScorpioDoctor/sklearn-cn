@@ -4,17 +4,16 @@
 模型持久化(Model persistence)
 =================
 
-After training a scikit-learn model, it is desirable to have a way to persist
-the model for future use without having to retrain. The following section gives
-you an example of how to persist a model with pickle. We'll also review a few
-security and maintainability issues when working with pickle serialization.
+在训练完 scikit-learn 模型之后，最好有一种方法来将模型持久化以备将来使用，而无需重新训练。 
+以下部分为您提供了有关如何使用 pickle 来持久化模型的示例。 
+在使用 pickle 序列化时，我们还将回顾一些安全性和可维护性方面的问题。
 
 
 模型持久化案例
 -------------------
 
-It is possible to save a model in scikit-learn by using Python's built-in
-persistence model, namely `pickle <https://docs.python.org/2/library/pickle.html>`_::
+可以通过使用 Python 的内置持久化模型将训练好的模型保存在 scikit-learn 中，它名为 
+`pickle <https://docs.python.org/2/library/pickle.html>`_::
 
   >>> from sklearn import svm
   >>> from sklearn import datasets
@@ -35,56 +34,44 @@ persistence model, namely `pickle <https://docs.python.org/2/library/pickle.html
   >>> y[0]
   0
 
-In the specific case of scikit-learn, it may be better to use joblib's
-replacement of pickle (``dump`` & ``load``), which is more efficient on
-objects that carry large numpy arrays internally as is often the case for
-fitted scikit-learn estimators, but can only pickle to the disk and not to a
-string::
+在这个 scikit-learn 的特殊示例中，使用 joblib 来替换 pickle（joblib.dump & joblib.load）可能会更有意思，
+这对于内部带有 numpy 数组的对象来说更为高效， 通常情况下适合 scikit-learn estimators，
+但是也只能是 pickle 到硬盘而不是字符串::
 
   >>> from joblib import dump, load
   >>> dump(clf, 'filename.joblib') # doctest: +SKIP
 
-Later you can load back the pickled model (possibly in another Python process)
-with::
+之后你可以使用以下方式回调 pickled model （可能在另一个 Python 进程中）::
 
   >>> clf = load('filename.joblib') # doctest:+SKIP
 
 .. note::
 
-   ``dump`` and ``load`` functions also accept file-like object
-   instead of filenames. More information on data persistence with Joblib is
-   available `here <https://joblib.readthedocs.io/en/latest/persistence.html>`_.
+   ``dump`` 和 ``load`` 函数也接收类似 file-like 的对象而不是文件名。 
+   更多有关使用 Joblib 来持久化数据的信息可以参阅 
+   `这里 <https://joblib.readthedocs.io/en/latest/persistence.html>`_。
 
 .. _persistence_limitations:
 
 安全性 & 可维护性限制
 --------------------------------------
 
-pickle (and joblib by extension), has some issues regarding maintainability
-and security. Because of this,
+pickle（和通过扩展的 joblib），在安全性和可维护性方面存在一些问题。 有以下原因,
 
-* Never unpickle untrusted data as it could lead to malicious code being 
-  executed upon loading.
-* While models saved using one version of scikit-learn might load in 
-  other versions, this is entirely unsupported and inadvisable. It should 
-  also be kept in mind that operations performed on such data could give
-  different and unexpected results.
+* 绝对不要使用未经 pickle 的不受信任的数据，因为它可能会在加载时执行恶意代码。
+* 虽然一个版本的 scikit-learn 模型可以在其他版本中加载，但这完全不建议并且也是不可取的。 
+  还应该了解到，对于这些数据执行的操作可能会产生不同及意想不到的结果。
 
-In order to rebuild a similar model with future versions of scikit-learn,
-additional metadata should be saved along the pickled model:
+为了用以后版本的 scikit-learn 来重构类似的模型, 额外的元数据应该随着 pickled model 一起被保存：
 
-* The training data, e.g. a reference to an immutable snapshot
-* The python source code used to generate the model
-* The versions of scikit-learn and its dependencies
-* The cross validation score obtained on the training data
+* 训练数据，例如：引用不可变的快照
+* 用于生成模型的 python 源代码
+* scikit-learn 的各版本以及各版本对应的依赖包
+* 在训练数据的基础上获得的交叉验证得分
 
-This should make it possible to check that the cross-validation score is in the
-same range as before.
+这样可以检查交叉验证得分是否与以前相同。
 
-Since a model internal representation may be different on two different
-architectures, dumping a model on one architecture and loading it on
-another architecture is not supported.
+由于模型内部表示可能在两种不同架构上不一样，因此不支持在一个架构上转储模型并将其加载到另一个体系架构上。
 
-If you want to know more about these issues and explore other possible
-serialization methods, please refer to this
+如果您想要了解更多关于这些问题以及其它可能的序列化方法，请参阅这个 Alex Gaynor 的演讲 
 `talk by Alex Gaynor <http://pyvideo.org/video/2566/pickles-are-for-delis-not-software>`_.
