@@ -290,7 +290,7 @@ Support Vector Regression有三种不同的实现: :class:`SVR`, :class:`NuSVR` 
 :math:`O(n_{features} \times n_{samples}^3)` 之间变动，这依赖于在实际计算中如何高效利用 `libsvm`_ 缓存(这是与数据集无关的)。
 如果数据非常稀疏， :math:`n_{features}` 应该用样本向量中非零特征的平均数量替换。
 
-值得注意的是，在线性情况下，:class:`LinearSVC` 使用的算法是由 `liblinear`_ 实现的，它比基于`libsvm`_实现的对应的线性 :class:`SVC` 效率更高，而且
+值得注意的是，在线性情况下，:class:`LinearSVC` 使用的算法是由 `liblinear`_ 实现的，它比基于 `libsvm`_ 实现的对应的线性 :class:`SVC` 效率更高，而且
 其伸缩性在百万级样本和特征下几乎是线性的。
 
 
@@ -298,80 +298,54 @@ Support Vector Regression有三种不同的实现: :class:`SVR`, :class:`NuSVR` 
 =====================
 
 
-  * **Avoiding data copy**: For :class:`SVC`, :class:`SVR`, :class:`NuSVC` and
-    :class:`NuSVR`, if the data passed to certain methods is not C-ordered
-    contiguous, and double precision, it will be copied before calling the
-    underlying C implementation. You can check whether a given numpy array is
-    C-contiguous by inspecting its ``flags`` attribute.
-
-    For :class:`LinearSVC` (and :class:`LogisticRegression
-    <sklearn.linear_model.LogisticRegression>`) any input passed as a numpy
-    array will be copied and converted to the liblinear internal sparse data
-    representation (double precision floats and int32 indices of non-zero
-    components). If you want to fit a large-scale linear classifier without
-    copying a dense numpy C-contiguous double precision array as input we
-    suggest to use the :class:`SGDClassifier
-    <sklearn.linear_model.SGDClassifier>` class instead.  The objective
-    function can be configured to be almost the same as the :class:`LinearSVC`
-    model.
-
-  * **Kernel cache size**: For :class:`SVC`, :class:`SVR`, :class:`NuSVC` and
-    :class:`NuSVR`, the size of the kernel cache has a strong impact on run
-    times for larger problems.  If you have enough RAM available, it is
-    recommended to set ``cache_size`` to a higher value than the default of
-    200(MB), such as 500(MB) or 1000(MB).
-
-  * **Setting C**: ``C`` is ``1`` by default and it's a reasonable default
-    choice.  If you have a lot of noisy observations you should decrease it.
-    It corresponds to regularize more the estimation.
+  * **避免数据拷贝**: 对 :class:`SVC`, :class:`SVR`, :class:`NuSVC` 和
+    :class:`NuSVR`, 如果传递到这些类中的数据不是 C-ordered contiguous 的, 并且是双精度的, 
+    这些数据将会在调用SVM的C语言实现之前被复制。你可以通过检查它的 ``flags`` 属性判断一个给定的numpy数组是否是 C-contiguous的。
     
-    :class:`LinearSVC` and :class`LinearSVR` are less sensitive to ``C`` when
-    it becomes large, and prediction results stop improving after a certain 
-    threshold. Meanwhile, larger ``C`` values will take more time to train, 
-    sometimes up to 10 times longer, as shown by Fan et al. (2008)
+    对于 :class:`LinearSVC` (还有 :class:`LogisticRegression <sklearn.linear_model.LogisticRegression>`)，
+    任何以numpy array形式传入的数据都会被拷贝并且转换成 `liblinear`_ 内部的稀疏数据表达形式(double precision floats and int32 indices of non-zero
+    components)。 如果你想训练一个大规模线性分类器而不愿意拷贝稠密的numpy C-contiguous 类型的双精度数组，我们建议使用 
+    :class:`SGDClassifier <sklearn.linear_model.SGDClassifier>` 类作为替代方案， 并且SGD分类器中使用的目标函数可以配置的和 :class:`LinearSVC` 
+    模型几乎一样。 
 
-  * Support Vector Machine algorithms are not scale invariant, so **it
-    is highly recommended to scale your data**. For example, scale each
-    attribute on the input vector X to [0,1] or [-1,+1], or standardize it
-    to have mean 0 and variance 1. Note that the *same* scaling must be
-    applied to the test vector to obtain meaningful results. See section
-    :ref:`preprocessing` for more details on scaling and normalization.
+  * **核缓存大小(Kernel cache size)**: 对于 :class:`SVC`, :class:`SVR`, :class:`NuSVC` 和 :class:`NuSVR` 类来说, 
+    核缓存的大小对规模比较大的问题的运行时间有很大的影响。  如果你有足够的RAM可用，建议将 ``cache_size`` 
+    设定为一个比默认值(200MB)较高的值,比如500MB或1000MB。
 
-  * Parameter ``nu`` in :class:`NuSVC`/:class:`OneClassSVM`/:class:`NuSVR`
-    approximates the fraction of training errors and support vectors.
+  * **Setting C**: 默认情况下 ``C`` 等于 ``1`` 而且这是一个合理的默认值。如果你的观测数据带有很大噪声，应该减小 ``C`` 的值，这对应于正则化比估计值更大(
+    译者注：数据噪声比较大时，源于数据的模型估计就不那么令人信服了，所以对模型的正则化程度就更强一点以避免模型的拟合被有问题的数据带偏)。
+    
+    当 ``C`` 的值变大以后, :class:`LinearSVC` 和 :class:`LinearSVR` 对其取值就不敏感了。
+    并且超过某个阈值以后，预测结果就不会再有改进了。 同时，越大的 ``C`` 值需要的训练时间会越多, 
+    有些时候甚至会多出10倍, 就像 Fan et al. (2008) 所展示的那样。
 
-  * In :class:`SVC`, if data for classification are unbalanced (e.g. many
-    positive and few negative), set ``class_weight='balanced'`` and/or try
-    different penalty parameters ``C``.
+  * SVM 算法都不具备 尺度不变性(scale invariant), 所以 **强烈建议缩放数据**。
+    比如，把输入向量 X 中每个特征分量的值缩放到[0,1] or [-1,+1], 或者将其标准化(standardize)成具有零均值单位方差的数据。
+    请注意对测试数据也要使用**相同的缩放操作**进行变换以获得有意义的结果。关于数据缩放和归一化请查看 :ref:`preprocessing` 。
 
-  * **Randomness of the underlying implementations**: The underlying 
-    implementations of :class:`SVC` and :class:`NuSVC` use a random number
-    generator only to shuffle the data for probability estimation (when
-    ``probability`` is set to ``True``). This randomness can be controlled
-    with the ``random_state`` parameter. If ``probability`` is set to ``False``
-    these estimators are not random and ``random_state`` has no effect on the
-    results. The underlying :class:`OneClassSVM` implementation is similar to
-    the ones of :class:`SVC` and :class:`NuSVC`. As no probability estimation
-    is provided for :class:`OneClassSVM`, it is not random.
+  * :class:`NuSVC`/:class:`OneClassSVM`/:class:`NuSVR` 类中的参数 ``nu`` 近似了训练误差和支持向量的比值
+    (approximates the fraction of training errors and support vectors)。 
 
-    The underlying :class:`LinearSVC` implementation uses a random number
-    generator to select features when fitting the model with a dual coordinate
-    descent (i.e when ``dual`` is set to ``True``). It is thus not uncommon,
-    to have slightly different results for the same input data. If that
-    happens, try with a smaller tol parameter. This randomness can also be
-    controlled with the ``random_state`` parameter. When ``dual`` is
-    set to ``False`` the underlying implementation of :class:`LinearSVC` is
-    not random and ``random_state`` has no effect on the results.
+  * 在 :class:`SVC` 类中, 如果用于分类的数据是不均衡的(unbalanced) (比如 很多的正样本但是负样本很少), 请设置 ``class_weight='balanced'`` 
+    and/or 尝试不同的惩罚参数(正则化) ``C`` 。
 
-  * Using L1 penalization as provided by ``LinearSVC(loss='l2', penalty='l1',
-    dual=False)`` yields a sparse solution, i.e. only a subset of feature
-    weights is different from zero and contribute to the decision function.
-    Increasing ``C`` yields a more complex model (more feature are selected).
-    The ``C`` value that yields a "null" model (all weights equal to zero) can
-    be calculated using :func:`l1_min_c`.
+  * **底层实现的随机性**:  :class:`SVC` 和 :class:`NuSVC` 类的底层实现仅仅在随机打乱数据和概率估计(``probability`` 被设置为 ``True``)
+    的时候用到了随机数发生器。这种随机性可以由参数 ``random_state`` 进行控制。如果 ``probability`` 被设置为 ``False``，那么这两个estimators
+    就不是随机的，参数 ``random_state`` 对结果没有影响。 :class:`OneClassSVM` 类的底层实现与 :class:`SVC` 和 :class:`NuSVC` 是类似的。
+    由于 :class:`OneClassSVM` 类压根儿没提供概率估计, 所以它不是随机的。
+
+    :class:`LinearSVC` 的底层实现： 当使用对偶坐标下降法(dual coordinate descent)拟合模型的时候(``dual`` 被设置为 ``True``)，
+    该类的底层实现使用了一个随机数发生器进行特征选择。这时候对相同的输入数据可能会产生稍微不同的结果。如果这种情况确实发生了，请使用一个较小的
+    tol 参数。 此处的随机性也可以用参数 ``random_state`` 进行控制。当参数 ``dual`` 被设置为 ``False`` 的时候， :class:`LinearSVC` 类的底层实现不是随机的
+    因此参数 ``random_state`` 对最终的结果也就没啥影响啦。
+
+  * 使用由 ``LinearSVC(loss='l2', penalty='l1', dual=False)`` 提供的L1惩罚项会产生稀疏解， 
+    也就是说 全部特征的只有一个特征子集的权重不等于0并对决策函数有贡献(only a subset of feature weights is different from zero 
+    and contribute to the decision function)。增加 ``C`` 的值会产生一个更加复杂的模型 (有更多的特征被用于决策函数)。
+    用于产生空模型 ("null" model: 所有权重等于0) 的``C`` 的值 可以使用 :func:`l1_min_c` 计算得到。
 
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * Fan, Rong-En, et al.,
    `"LIBLINEAR: A library for large linear classification."
@@ -383,20 +357,20 @@ Support Vector Regression有三种不同的实现: :class:`SVR`, :class:`NuSVR` 
 核函数
 ================
 
-The *kernel function* can be any of the following:
+SVMs中可用的核函数(*kernel function*)如下所示：
 
-  * linear: :math:`\langle x, x'\rangle`.
+  * 线性核(linear): :math:`\langle x, x'\rangle`.
 
-  * polynomial: :math:`(\gamma \langle x, x'\rangle + r)^d`.
+  * 多项式核(polynomial): :math:`(\gamma \langle x, x'\rangle + r)^d`.
     :math:`d` is specified by keyword ``degree``, :math:`r` by ``coef0``.
 
-  * rbf: :math:`\exp(-\gamma \|x-x'\|^2)`. :math:`\gamma` is
+  * 径向基核(rbf): :math:`\exp(-\gamma \|x-x'\|^2)`. :math:`\gamma` is
     specified by keyword ``gamma``, must be greater than 0.
 
   * sigmoid (:math:`\tanh(\gamma \langle x,x'\rangle + r)`),
     where :math:`r` is specified by ``coef0``.
 
-Different kernels are specified by keyword kernel at initialization::
+在估计器被初始化的时候，可以通过关键字参数 ``kernel`` 指定你想使用的核函数  ::
 
     >>> linear_svc = svm.SVC(kernel='linear')
     >>> linear_svc.kernel
@@ -409,32 +383,25 @@ Different kernels are specified by keyword kernel at initialization::
 自定义核函数
 --------------
 
-You can define your own kernels by either giving the kernel as a
-python function or by precomputing the Gram matrix.
+你可以用两种方式定义自己的核函数：一是以某个Python函数作为核函数，二是预先计算出 Gram 矩阵。
 
-Classifiers with custom kernels behave the same way as any other
-classifiers, except that:
+带有自定义核函数的SVM分类器与其他分类器的行为是一样的，除了以下几点：
 
-    * Field ``support_vectors_`` is now empty, only indices of support
-      vectors are stored in ``support_``
+    * 属性域 ``support_vectors_`` 现在是空的, 只有 support vectors 的索引被存储在 ``support_`` 中。
 
-    * A reference (and not a copy) of the first argument in the ``fit()``
-      method is stored for future reference. If that array changes between the
-      use of ``fit()`` and ``predict()`` you will have unexpected results.
+    * ``fit()`` 方法的第一个参数的引用(not a copy)将会被保存下来方便后续使用。如果那个数组在使用 ``fit()`` 和 ``predict()`` 
+      之间被修改了，那么你会得到无法预料的结果。
 
 
 使用Python函数作为核
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also use your own defined kernels by passing a function to the
-keyword ``kernel`` in the constructor.
+你可以在构造器中传入一个python函数给关键字参数 ``kernel`` 来使用自己的核函数。
 
-Your kernel must take as arguments two matrices of shape
-``(n_samples_1, n_features)``, ``(n_samples_2, n_features)``
-and return a kernel matrix of shape ``(n_samples_1, n_samples_2)``.
+你的核函数必须接受两个shape为 ``(n_samples_1, n_features)`` 和 ``(n_samples_2, n_features)`` 的矩阵作为参数，
+然后返回一个shape为 ``(n_samples_1, n_samples_2)`` 的核矩阵。
 
-The following code defines a linear kernel and creates a classifier
-instance that will use that kernel::
+下面的代码定义了一个线性核函数，然后创建了一个分类器实例并使用了自定义的线性核函数::
 
     >>> import numpy as np
     >>> from sklearn import svm
@@ -443,16 +410,14 @@ instance that will use that kernel::
     ...
     >>> clf = svm.SVC(kernel=my_kernel)
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_svm_plot_custom_kernel.py`.
 
 使用 Gram matrix
 ~~~~~~~~~~~~~~~~~~~~~
 
-Set ``kernel='precomputed'`` and pass the Gram matrix instead of X in the fit
-method. At the moment, the kernel values between *all* training vectors and the
-test vectors must be provided.
+设置 ``kernel='precomputed'`` 并且把 Gram 矩阵而不是 X 传递到 fit 方法中。目前，在所有训练向量和测试向量之间的核函数取值都必须提供。
 
     >>> import numpy as np
     >>> from sklearn import svm
@@ -473,34 +438,25 @@ test vectors must be provided.
 RBF核函数的参数
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When training an SVM with the *Radial Basis Function* (RBF) kernel, two
-parameters must be considered: ``C`` and ``gamma``.  The parameter ``C``,
-common to all SVM kernels, trades off misclassification of training examples
-against simplicity of the decision surface. A low ``C`` makes the decision
-surface smooth, while a high ``C`` aims at classifying all training examples
-correctly.  ``gamma`` defines how much influence a single training example has.
-The larger ``gamma`` is, the closer other examples must be to be affected.
+当使用径向基核函数(*Radial Basis Function* (RBF))训练SVM的时候，有两个参数必须被考虑： ``C`` 和 ``gamma``。  
+参数 ``C``, 与其他所有SVM核函数一样，都是为了在训练样例的误分类和决策面的简单性之间做折中(trades off)的一个量。
+小的 ``C`` 值能够使决策面(decision surface)变得光滑, 而 大的 ``C`` 值的目标是把所有的训练样例都正确分类。
+``gamma`` 定义了单个训练样本的影响有多大。``gamma`` 的取值越大, the closer other examples must be to be affected.
 
-Proper choice of ``C`` and ``gamma`` is critical to the SVM's performance.  One
-is advised to use :class:`sklearn.model_selection.GridSearchCV` with 
-``C`` and ``gamma`` spaced exponentially far apart to choose good values.
+合理选择 ``C`` 和 ``gamma`` 的值对 SVM 的性能至关重要。建议使用 :class:`sklearn.model_selection.GridSearchCV` 
+对参数 ``C`` 和 ``gamma`` 的指数距离间隔上搜索以选择比较好的值。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_svm_plot_rbf_parameters.py`
 
 .. _svm_mathematical_formulation:
 
-数学表达形式
+数学表达式
 ========================
 
-A support vector machine constructs a hyper-plane or set of hyper-planes
-in a high or infinite dimensional space, which can be used for
-classification, regression or other tasks. Intuitively, a good
-separation is achieved by the hyper-plane that has the largest distance
-to the nearest training data points of any class (so-called functional
-margin), since in general the larger the margin the lower the
-generalization error of the classifier.
+支持向量机在高维或无限维空间中构造超平面或超平面集，然后用它们进行分类，回归，或其他学习任务。
+直观地说，使得超平面与任意一类的最近的训练数据点(所谓的函数边缘)的距离最大就可以得到一个很好的分离，因为一般来说，边缘间隔越大，分类器的泛化误差就越小。
 
 
 .. figure:: ../auto_examples/svm/images/sphx_glr_plot_separating_hyperplane_001.png
@@ -510,8 +466,8 @@ generalization error of the classifier.
 SVC
 ---
 
-Given training vectors :math:`x_i \in \mathbb{R}^p`, i=1,..., n, in two classes, and a
-vector :math:`y \in \{1, -1\}^n`, SVC solves the following primal problem:
+给定两个类的训练向量集 :math:`x_i \in \mathbb{R}^p`, i=1,..., n, 和一个向量 :math:`y \in \{1, -1\}^n`, 
+SVC 要 求解 的是下面这样一个原问题(primal problem)
 
 
 .. math::
@@ -523,7 +479,7 @@ vector :math:`y \in \{1, -1\}^n`, SVC solves the following primal problem:
     \textrm {subject to } & y_i (w^T \phi (x_i) + b) \geq 1 - \zeta_i,\\
     & \zeta_i \geq 0, i=1, ..., n
 
-Its dual is
+它的对偶问题(dual problem)是:
 
 .. math::
 
@@ -533,34 +489,26 @@ Its dual is
    \textrm {subject to } & y^T \alpha = 0\\
    & 0 \leq \alpha_i \leq C, i=1, ..., n
 
-where :math:`e` is the vector of all ones, :math:`C > 0` is the upper bound,
-:math:`Q` is an :math:`n` by :math:`n` positive semidefinite matrix,
-:math:`Q_{ij} \equiv y_i y_j K(x_i, x_j)`, where :math:`K(x_i, x_j) = \phi (x_i)^T \phi (x_j)`
-is the kernel. Here training vectors are implicitly mapped into a higher
-(maybe infinite) dimensional space by the function :math:`\phi`.
+其中 :math:`e` 是全1的向量， :math:`C > 0` 是上界, :math:`Q` 是 :math:`n` by :math:`n` 的半正定矩阵(positive semidefinite matrix),
+:math:`Q_{ij} \equiv y_i y_j K(x_i, x_j)`, 其中 :math:`K(x_i, x_j) = \phi (x_i)^T \phi (x_j)` 是核函数。在这里，训练向量通过函数 :math:`\phi` 
+被隐式映射到一个更高(也许是无限)维空间中。
 
-
-The decision function is:
+决策函数(decision function)是:
 
 .. math:: \operatorname{sgn}(\sum_{i=1}^n y_i \alpha_i K(x_i, x) + \rho)
 
 .. note::
 
-    While SVM models derived from `libsvm`_ and `liblinear`_ use ``C`` as
-    regularization parameter, most other estimators use ``alpha``. The exact
-    equivalence between the amount of regularization of two models depends on
-    the exact objective function optimized by the model. For example, when the
-    estimator used is :class:`sklearn.linear_model.Ridge <ridge>` regression,
-    the relation between them is given as :math:`C = \frac{1}{alpha}`.
+    从 `libsvm`_ 和 `liblinear`_ 导出的SVM模型都采用 ``C`` 作为正则化参数，而其他估计器则大多采用 ``alpha`` 作为正则化参数。
+    两个模型的正则化量之间的精确等价取决于模型所优化的精确目标函数。比如，这个 :class:`sklearn.linear_model.Ridge <ridge>` 估计器被使用的话,
+    那么它的正则化参数 ``alpha`` 与 SVM 的 正则化参数 ``C`` 的关系是这样的：:math:`C = \frac{1}{alpha}`.
 
 .. TODO multiclass case ?/
 
-This parameters can be accessed through the members ``dual_coef_``
-which holds the product :math:`y_i \alpha_i`, ``support_vectors_`` which
-holds the support vectors, and ``intercept_`` which holds the independent
-term :math:`\rho` :
+上面决策函数表达式的计算可以通过获取成员变量的取值得到： ``dual_coef_`` 保存着乘积 :math:`y_i \alpha_i`, 
+``support_vectors_`` 保存着 support vectors, 以及 ``intercept_`` 保存着独立项 :math:`\rho` :
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * `"Automatic Capacity Tuning of Very Large VC-dimension Classifiers"
    <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.17.7215>`_,
@@ -577,20 +525,17 @@ term :math:`\rho` :
 NuSVC
 -----
 
-We introduce a new parameter :math:`\nu` which controls the number of
-support vectors and training errors. The parameter :math:`\nu \in (0,
-1]` is an upper bound on the fraction of training errors and a lower
-bound of the fraction of support vectors.
+我们引入一个新的参数 :math:`\nu` 用来控制支持向量的数量和训练错误。参数 :math:`\nu \in (0, 1]` 
+is an upper bound on the fraction of training errors and a lower bound of the fraction of support vectors.
 
-It can be shown that the :math:`\nu`-SVC formulation is a reparameterization
-of the :math:`C`-SVC and therefore mathematically equivalent.
+It can be shown that the :math:`\nu`-SVC formulation is a reparameterization of the :math:`C`-SVC and therefore mathematically equivalent.
 
 
 SVR
 ---
 
-Given training vectors :math:`x_i \in \mathbb{R}^p`, i=1,..., n, and a
-vector :math:`y \in \mathbb{R}^n` :math:`\varepsilon`-SVR solves the following primal problem:
+给定训练样本向量 :math:`x_i \in \mathbb{R}^p`, i=1,..., n, 和 向量 :math:`y \in \mathbb{R}^n` 
+:math:`\varepsilon`-SVR 求解下面的原问题(primal problem):
 
 
 .. math::
@@ -603,7 +548,7 @@ vector :math:`y \in \mathbb{R}^n` :math:`\varepsilon`-SVR solves the following p
                           & w^T \phi (x_i) + b - y_i \leq \varepsilon + \zeta_i^*,\\
                           & \zeta_i, \zeta_i^* \geq 0, i=1, ..., n
 
-Its dual is
+它的对偶如下：
 
 .. math::
 
@@ -613,22 +558,19 @@ Its dual is
    \textrm {subject to } & e^T (\alpha - \alpha^*) = 0\\
    & 0 \leq \alpha_i, \alpha_i^* \leq C, i=1, ..., n
 
-where :math:`e` is the vector of all ones, :math:`C > 0` is the upper bound,
-:math:`Q` is an :math:`n` by :math:`n` positive semidefinite matrix,
-:math:`Q_{ij} \equiv K(x_i, x_j) = \phi (x_i)^T \phi (x_j)`
-is the kernel. Here training vectors are implicitly mapped into a higher
-(maybe infinite) dimensional space by the function :math:`\phi`.
+其中 :math:`e` 是全1的向量， :math:`C > 0` 是上界, :math:`Q` 是 :math:`n` by :math:`n` 的半正定矩阵(positive semidefinite matrix),
+:math:`Q_{ij} \equiv y_i y_j K(x_i, x_j)`, 其中 :math:`K(x_i, x_j) = \phi (x_i)^T \phi (x_j)` 是核函数。在这里，训练向量通过函数 :math:`\phi` 
+被隐式映射到一个更高(也许是无限)维空间中。
 
-The decision function is:
+决策函数是:
 
 .. math:: \sum_{i=1}^n (\alpha_i - \alpha_i^*) K(x_i, x) + \rho
 
-These parameters can be accessed through the members ``dual_coef_``
-which holds the difference :math:`\alpha_i - \alpha_i^*`, ``support_vectors_`` which
-holds the support vectors, and ``intercept_`` which holds the independent
-term :math:`\rho`
+上面决策函数表达式的计算可以通过获取成员变量的取值得到： ``dual_coef_`` 保存着差值 :math:`\alpha_i - \alpha_i^*`, 
+``support_vectors_`` 保存着 support vectors, 以及 ``intercept_`` 保存着独立项 :math:`\rho` :
 
-.. topic:: References:
+
+.. topic:: 参考文献:
 
  * `"A Tutorial on Support Vector Regression"
    <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.114.4288>`_,
@@ -641,16 +583,14 @@ term :math:`\rho`
 算法实现细节
 ======================
 
-Internally, we use `libsvm`_ and `liblinear`_ to handle all
-computations. These libraries are wrapped using C and Cython.
+在内部, 我们使用 `libsvm`_ 和 `liblinear`_ 来处理所有的计算问题。这些库使用C和Cython封装的。
 
 .. _`libsvm`: https://www.csie.ntu.edu.tw/~cjlin/libsvm/
 .. _`liblinear`: https://www.csie.ntu.edu.tw/~cjlin/liblinear/
 
-.. topic:: References:
+.. topic:: 参考文献:
 
-  For a description of the implementation and details of the algorithms
-  used, please refer to
+  关于SVM算法的实现请参考下面的介绍：
 
     - `LIBSVM: A Library for Support Vector Machines
       <https://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf>`_.
