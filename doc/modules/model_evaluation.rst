@@ -6,27 +6,18 @@
 模型评估:对模型的预测进行量化考核
 ========================================================
 
-There are 3 different APIs for evaluating the quality of a model's
-predictions:
+有 3 种不同的 API 用于评估模型预测的质量:
 
-* **Estimator score method**: Estimators have a ``score`` method providing a
-  default evaluation criterion for the problem they are designed to solve.
-  This is not discussed on this page, but in each estimator's documentation.
+* **Estimator score method**: Estimators（估计器）有一个 ``score`` 方法，为其解决的问题提供了默认的评估准则(evaluation criterion) 。 
+  在本页面上没有相关讨论，但是在每个 estimator 的文档中会有相关的讨论。
 
-* **Scoring parameter**: Model-evaluation tools using
-  :ref:`cross-validation <cross_validation>` (such as
-  :func:`model_selection.cross_val_score` and
-  :class:`model_selection.GridSearchCV`) rely on an internal *scoring* strategy.
-  This is discussed in the section :ref:`scoring_parameter`.
+* **Scoring parameter**: 使用了 :ref:`cross-validation <cross_validation>` (比如 :func:`model_selection.cross_val_score` 和 :class:`model_selection.GridSearchCV`)
+  的模型评估工具依赖于一个内部评分策略。此参数的用法参考 :ref:`scoring_parameter` 。
 
-* **Metric functions**: The :mod:`metrics` module implements functions
-  assessing prediction error for specific purposes. These metrics are detailed
-  in sections on :ref:`classification_metrics`,
-  :ref:`multilabel_ranking_metrics`, :ref:`regression_metrics` and
-  :ref:`clustering_metrics`.
+* **Metric functions**: 模块 :mod:`metrics` 实现了一些函数用于以某种特殊目的评估模型预测误差。这些测度指标(metrics)的详细介绍在 :ref:`classification_metrics` ，
+  :ref:`multilabel_ranking_metrics` , :ref:`regression_metrics` 以及 :ref:`clustering_metrics` 中。
 
-Finally, :ref:`dummy_estimators` are useful to get a baseline
-value of those metrics for random predictions.
+最后, :ref:`dummy_estimators` 可以针对随机预测结果计算那些测度指标的一个基准值。
 
 .. seealso::
 
@@ -35,24 +26,19 @@ value of those metrics for random predictions.
 
 .. _scoring_parameter:
 
-这个 ``scoring`` 参数: 定义模型评估准则
+``scoring`` 参数: 定义模型评估准则
 ==========================================================
 
-Model selection and evaluation using tools, such as
-:class:`model_selection.GridSearchCV` and
-:func:`model_selection.cross_val_score`, take a ``scoring`` parameter that
-controls what metric they apply to the estimators evaluated.
+模型选择与评估使用的工具，例如 :class:`model_selection.GridSearchCV` 和 :func:`model_selection.cross_val_score`, 
+接受一个 ``scoring`` 参数，该参数控制着估计器的评估过程中使用什么样的测度指标(metric)。
 
 一般情况: 使用预定义的值
 -------------------------------
 
-For the most common use cases, you can designate a scorer object with the
-``scoring`` parameter; the table below shows all possible values.
-All scorer objects follow the convention that **higher return values are better
-than lower return values**.  Thus metrics which measure the distance between
-the model and the data, like :func:`metrics.mean_squared_error`, are
-available as neg_mean_squared_error which return the negated value
-of the metric.
+对于最常见的用例, 可以使用 ``scoring`` 参数指定一个评分器对象(scorer object); 下表显示了所有可能的值。 
+所有 scorer objects 遵循惯例:较高的返回值优于较低的返回值(higher return values are better than lower return values) 。
+因此，度量模型和数据之间距离的测度指标(metrics), 如 :func:`metrics.mean_squared_error` 可作为 neg_mean_squared_error, 返回变负的指标值。
+(译者注：也就是说 有些 测度指标比如均方误差本来是越小越好，但是为了遵循越大越好的惯例，我们要把这种原来越小越好的指标取个负号，这样就符合惯例啦 )
 
 ==============================    =============================================     ==================================
 Scoring                           Function                                          Comment
@@ -92,7 +78,7 @@ Scoring                           Function                                      
 ==============================    =============================================     ==================================
 
 
-Usage examples:
+用法案例:
 
     >>> from sklearn import svm, datasets
     >>> from sklearn.model_selection import cross_val_score
@@ -109,43 +95,31 @@ Usage examples:
 
 .. note::
 
-    The values listed by the ValueError exception correspond to the functions measuring
-    prediction accuracy described in the following sections.
-    The scorer objects for those functions are stored in the dictionary
-    ``sklearn.metrics.SCORERS``.
+    通过 *ValueError* 异常列举出来的那些值对应于度量预测精度的函数，它们会在下面的小节中介绍。
+    用于这些函数的评分器对象(scorer objects) 被存放在 ``sklearn.metrics.SCORERS`` 字典中。
 
 .. currentmodule:: sklearn.metrics
 
 .. _scoring:
 
-利用测度函数自定义评分策略
+利用指标函数 metric 自定义评分策略
 -----------------------------------------------------
 
-The module :mod:`sklearn.metrics` also exposes a set of simple functions
-measuring a prediction error given ground truth and prediction:
+模块 :mod:`sklearn.metrics` 也暴露了一组简单的函数：当给定真值和预测值的时候用来度量一个预测错误。
 
-- functions ending with ``_score`` return a value to
-  maximize, the higher the better.
+- 以 ``_score`` 结尾的函数返回一个值进行最大化，值越高代表预测越好
 
-- functions ending with ``_error`` or ``_loss`` return a
-  value to minimize, the lower the better.  When converting
-  into a scorer object using :func:`make_scorer`, set
-  the ``greater_is_better`` parameter to False (True by default; see the
-  parameter description below).
+- 以 ``_error`` 或 ``_loss`` 结尾的函数 返回一个值进行最小化，值越小代表预测越好。当我们使用函数 :func:`make_scorer` 
+  把这种越小越好的metric转换成评分对象(scorer object)的时候,就需要设置参数 ``greater_is_better`` 为 False。 (这个参数默认是True,对这个参数下面还会解释)
 
-Metrics available for various machine learning tasks are detailed in sections
-below.
+可用于各种机器学习任务的 Metrics （指标）在下面详细介绍。
 
-Many metrics are not given names to be used as ``scoring`` values,
-sometimes because they require additional parameters, such as
-:func:`fbeta_score`. In such cases, you need to generate an appropriate
-scoring object.  The simplest way to generate a callable object for scoring
-is by using :func:`make_scorer`. That function converts metrics
-into callables that can be used for model evaluation.
+许多 metrics 没有被命名以使得它们被用作 ``scoring`` 值，有时是因为它们需要额外的参数，例如 :func:`fbeta_score` 。
+在这种情况下，您需要生成一个适当的评分对象(scoring object)。最简单的办法就是利用函数 :func:`make_scorer` 生成一个用于评分的可调用对象
+(callable object)。 函数 :func:`make_scorer` 将 metrics 转换为可用于模型评估的可调用对象。
+(译者注：可调用对象即callable object是Python的一个知识点，如果你知道这个知识点那么这段话不难理解，如果不知道的话，请自行查一下就会明白啦！)
 
-One typical use case is to wrap an existing metric function from the library
-with non-default values for its parameters, such as the ``beta`` parameter for
-the :func:`fbeta_score` function::
+一个典型的用法是从库中封装一个已经存在的具有非默认值参数的 metric 函数，例如 :func:`fbeta_score` 函数的 ``beta`` 参数 ::
 
     >>> from sklearn.metrics import fbeta_score, make_scorer
     >>> ftwo_scorer = make_scorer(fbeta_score, beta=2)
@@ -154,26 +128,19 @@ the :func:`fbeta_score` function::
     >>> grid = GridSearchCV(LinearSVC(), param_grid={'C': [1, 10]},
     ...                     scoring=ftwo_scorer, cv=5)
 
-The second use case is to build a completely custom scorer object
-from a simple python function using :func:`make_scorer`, which can
-take several parameters:
+第二个用法是使用 :func:`make_scorer` 从简单的 python 函数构建一个完全自定义的评分对象(scorer object) ，可以接受几个参数 :
 
-* the python function you want to use (``my_custom_loss_func``
-  in the example below)
+* 你想使用的Python函数 (以 ``my_custom_loss_func`` 为例)
 
-* whether the python function returns a score (``greater_is_better=True``,
-  the default) or a loss (``greater_is_better=False``).  If a loss, the output
-  of the python function is negated by the scorer object, conforming to
-  the cross validation convention that scorers return higher values for better models.
+* 你的python函数返回值是 score (``greater_is_better=True``, the default) 还是 loss (``greater_is_better=False``)。  
+  如果是 loss 的话, python函数的输出就会被 scorer object 取负号，以满足 交叉验证 中关于 评分准则越大越好 的约定惯例。
 
-* for classification metrics only: whether the python function you provided requires continuous decision
-  certainties (``needs_threshold=True``).  The default value is
-  False.
+* 如果你要定义的是一个分类评分指标(classification metrics)，还要确认你的python函数需要连续的 decision certainties (``needs_threshold=True``)，
+  默认值是 False。
 
-* any additional parameters, such as ``beta`` or ``labels`` in :func:`f1_score`.
+* 任意的附加参数, 比如 :func:`f1_score` 函数中的 ``beta`` 或 ``labels`` .
 
-Here is an example of building custom scorers, and of using the
-``greater_is_better`` parameter::
+下面是一个构建自定义评分器(custom scorers)的例子,并且使用了参数 ``greater_is_better`` ::
 
     >>> import numpy as np
     >>> def my_custom_loss_func(y_true, y_pred):
@@ -199,47 +166,37 @@ Here is an example of building custom scorers, and of using the
 
 实现你自己的 scoring object
 ------------------------------------
-You can generate even more flexible model scorers by constructing your own
-scoring object from scratch, without using the :func:`make_scorer` factory.
-For a callable to be a scorer, it needs to meet the protocol specified by
-the following two rules:
+您可以通过从头开始构建自己的 scoring object，而不使用 :func:`make_scorer` 来生成更加灵活的模型评分对象(model scorers)。
+如果一个python 可调用对象 被叫做 scorer ，那么它需要符合以下两个规则所指定的协议:
 
-- It can be called with parameters ``(estimator, X, y)``, where ``estimator``
-  is the model that should be evaluated, ``X`` is validation data, and ``y`` is
-  the ground truth target for ``X`` (in the supervised case) or ``None`` (in the
-  unsupervised case).
+- 可以使用参数 ``(estimator, X, y)`` 来调用它，其中 ``estimator`` 是要被评估的模型，``X`` 是验证数据， ``y`` 是 真实目标变量 (在有监督情况下) 
+  或 None (在无监督情况下)。
 
-- It returns a floating point number that quantifies the
-  ``estimator`` prediction quality on ``X``, with reference to ``y``.
-  Again, by convention higher numbers are better, so if your scorer
-  returns loss, that value should be negated.
+- 它返回一个浮点数，用于对 ``estimator`` 在 ``X`` 上的预测质量以 ``y`` 为真值参考进行量化。 再就是，按照惯例，越高的数字越好，
+  所以如果你的 scorer 返回 loss ，那么这个值应该被取负号 。
 
 .. _multimetric_scoring:
 
-使用多测度评估
+使用多指标评估
 --------------------------------
 
-Scikit-learn also permits evaluation of multiple metrics in ``GridSearchCV``,
-``RandomizedSearchCV`` and ``cross_validate``.
+Scikit-learn 还允许在 ``GridSearchCV``, ``RandomizedSearchCV`` 和 ``cross_validate`` 中进行多指标的评估(evaluation of multiple metrics)。
 
-There are two ways to specify multiple scoring metrics for the ``scoring``
-parameter:
+有两种方法可以为 ``scoring`` 参数指定 多个评分指标:
 
-- As an iterable of string metrics::
+- 把多个metrics的名字以字符串列表的方式传给 ``scoring`` 参数 ::
       >>> scoring = ['accuracy', 'precision']
 
-- As a ``dict`` mapping the scorer name to the scoring function::
+- 以字典的形式把评分器的名称映射到评分函数上，然后把这字典作为参数传给 ``scoring`` 参数 ::
       >>> from sklearn.metrics import accuracy_score
       >>> from sklearn.metrics import make_scorer
       >>> scoring = {'accuracy': make_scorer(accuracy_score),
       ...            'prec': 'precision'}
 
-Note that the dict values can either be scorer functions or one of the
-predefined metric strings.
+要注意的是 字典的值 既可以是 scorer functions 也可以是 sklearn预定义的metric的名字字符串。
 
-Currently only those scorer functions that return a single score can be passed
-inside the dict. Scorer functions that return multiple values are not
-permitted and will require a wrapper to return a single metric::
+目前，只有那些返回单个得分值的 scorer functions 可以被传到 字典中。 那些有多个返回值的 scorer functions 不被允许传入。
+如果非要这么干的话，必须对其进行封装使其只有单个返回值 ::
 
     >>> from sklearn.model_selection import cross_validate
     >>> from sklearn.metrics import confusion_matrix
@@ -263,19 +220,16 @@ permitted and will require a wrapper to return a single metric::
 
 .. _classification_metrics:
 
-分类问题的测度
+分类问题的指标
 =======================
 
 .. currentmodule:: sklearn.metrics
 
-The :mod:`sklearn.metrics` module implements several loss, score, and utility
-functions to measure classification performance.
-Some metrics might require probability estimates of the positive class,
-confidence values, or binary decisions values.
-Most implementations allow each sample to provide a weighted contribution
-to the overall score, through the ``sample_weight`` parameter.
+:mod:`sklearn.metrics` 模块实现了几个 loss, score, 和 utility 函数来度量分类器性能。 
+某些测度指标(metrics)可能需要 positive class，confidence values 或 binary decisions values 的概率估计。 
+大多数的实现允许每个样本通过 ``sample_weight`` 参数为 整体得分(overall score) 提供 加权贡献(weighted contribution)。
 
-Some of these are restricted to the binary classification case:
+这里面的一部分指标仅仅限于在二分类的情况下使用(binary classification case):
 
 .. autosummary::
    :template: function.rst
@@ -285,7 +239,7 @@ Some of these are restricted to the binary classification case:
    balanced_accuracy_score
 
 
-Others also work in the multiclass case:
+下面这些既能在二分类中用也能够用于多分类的情况(multiclass case):
 
 .. autosummary::
    :template: function.rst
@@ -296,7 +250,7 @@ Others also work in the multiclass case:
    matthews_corrcoef
 
 
-Some also work in the multilabel case:
+下面的这些还可以用在多标签分类中(multilabel case):
 
 .. autosummary::
    :template: function.rst
@@ -313,7 +267,7 @@ Some also work in the multilabel case:
    recall_score
    zero_one_loss
 
-And some work with binary and multilabel (but not multiclass) problems:
+下面的这些指标可以用在两类多标签问题(不是multiclass而是binary classes喔):
 
 .. autosummary::
    :template: function.rst
@@ -322,52 +276,38 @@ And some work with binary and multilabel (but not multiclass) problems:
    roc_auc_score
 
 
-In the following sub-sections, we will describe each of those functions,
-preceded by some notes on common API and metric definition.
+在下面的小节中，我们会逐个讲解这些函数, 包括一些常用API的注解和metric的数学定义。
 
 从二分类问题到多类或多标签问题
 ----------------------------------------
 
-Some metrics are essentially defined for binary classification tasks (e.g.
-:func:`f1_score`, :func:`roc_auc_score`). In these cases, by default
-only the positive label is evaluated, assuming by default that the positive
-class is labelled ``1`` (though this may be configurable through the
-``pos_label`` parameter).
+有些 metrics 基本上是为 binary classification tasks 定义的 (例如 :func:`f1_score`, :func:`roc_auc_score`) 。
+在这些情况下，默认情况下仅评估 positive label （正标签），默认情况下我们假定 positive label （正类） 标记为 1 
+(尽管可以通过 ``pos_label`` 参数进行配置)。
 
 .. _average:
 
-In extending a binary metric to multiclass or multilabel problems, the data
-is treated as a collection of binary problems, one for each class.
-There are then a number of ways to average binary metric calculations across
-the set of classes, each of which may be useful in some scenario.
-Where available, you should select among these using the ``average`` parameter.
+将 binary metric （二分指标）扩展为 multiclass （多类）或 multilabel （多标签）问题时，数据将被视为二分问题的集合，每个类都有一个binary metric。
+然后可以使用多种策略在整个类中计算所有二分指标的平均值(average binary metric calculations across the set of classes)，
+这些不同的计算平均值的策略在某些特定场景中可能会用到。 如果可用，您应该使用 ``average`` 参数来选择某个平均策略。
 
-* ``"macro"`` simply calculates the mean of the binary metrics,
-  giving equal weight to each class.  In problems where infrequent classes
-  are nonetheless important, macro-averaging may be a means of highlighting
-  their performance. On the other hand, the assumption that all classes are
-  equally important is often untrue, such that macro-averaging will
-  over-emphasize the typically low performance on an infrequent class.
-* ``"weighted"`` accounts for class imbalance by computing the average of
-  binary metrics in which each class's score is weighted by its presence in the
-  true data sample.
-* ``"micro"`` gives each sample-class pair an equal contribution to the overall
-  metric (except as a result of sample-weight). Rather than summing the
-  metric per class, this sums the dividends and divisors that make up the
-  per-class metrics to calculate an overall quotient.
-  Micro-averaging may be preferred in multilabel settings, including
-  multiclass classification where a majority class is to be ignored.
-* ``"samples"`` applies only to multilabel problems. It does not calculate a
-  per-class measure, instead calculating the metric over the true and predicted
-  classes for each sample in the evaluation data, and returning their
-  (``sample_weight``-weighted) average.
-* Selecting ``average=None`` will return an array with the score for each
-  class.
+* ``"macro"``  简单地计算 binary metrics （二分指标）的平均值，赋予每个类别相同的权重。在不常见的类别重要的问题上，
+  macro-averaging （宏观平均）可能是突出表现的一种手段。另一方面，所有类别同样重要的假设通常是不真实的，
+  因此 macro-averaging （宏观平均）将过度强调不频繁类的典型的低性能。
 
-While multiclass data is provided to the metric, like binary targets, as an
-array of class labels, multilabel data is specified as an indicator matrix,
-in which cell ``[i, j]`` has value 1 if sample ``i`` has label ``j`` and value
-0 otherwise.
+* ``"weighted"`` 通过计算其在真实数据样本中的存在来对每个类的 score 进行加权的 binary metrics （二分指标）的平均值来计算类不平衡。
+
+* ``"micro"`` 给每个 sample-class pair （样本类对）对 overall metric （总体指数）（sample-class 权重的结果除外） 等同的贡献。
+  除了对每个类别的 metric 进行求和之外，这个总和构成每个类别度量的 dividends （除数）和 divisors （除数）计算一个整体商。 
+  在 multilabel settings （多标签设置）中， Micro-averaging 可能是优先选择的，包括要忽略 majority class （多数类）的 multiclass classification （多类分类）。
+
+* ``"samples"`` 仅适用于 multilabel problems （多标签问题）。它 does not calculate a per-class measure （不计算每个类别的 measure），而是计算 evaluation data 
+  （评估数据）中的每个样本的 true and predicted classes （真实和预测类别）的 metric （指标），并返回 (sample_weight-weighted) 加权平均。
+
+* 选择 ``average=None`` 将返回一个 array 与每个类的 score 。
+
+虽然将 multiclass data 作为 array of class labels 提供给 metric ，就像 binary targets （二分类目标）一样，
+multilabel data 被指定为 indicator matrix（标识矩阵），其中如果样本 ``i`` 具有标号 ``j`` ， ``[i, j]`` 具有值 1， 否则为值 0 。
 
 .. _accuracy_score:
 

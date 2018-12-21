@@ -167,20 +167,15 @@ for an example usage.
 并行化
 -----------
 
-:class:`GridSearchCV` and :class:`RandomizedSearchCV` evaluate each parameter
-setting independently.  Computations can be run in parallel if your OS
-supports it, by using the keyword ``n_jobs=-1``. See function signature for
-more details.
+:class:`GridSearchCV`  和 :class:`RandomizedSearchCV`  可以独立地评估每个参数设置。
+如果您的OS支持,通过使用关键字 ``n_jobs=-1`` 可以使计算并行运行。 
+有关详细信息, 请参见函数签名。
 
 对失败保持鲁棒性
 ---------------------
 
-Some parameter settings may result in a failure to ``fit`` one or more folds
-of the data.  By default, this will cause the entire search to fail, even if
-some parameter settings could be fully evaluated. Setting ``error_score=0``
-(or `=np.NaN`) will make the procedure robust to such failure, issuing a
-warning and setting the score for that fold to 0 (or `NaN`), but completing
-the search. 
+某些参数设置可能导致无法 ``fit`` 数据的一个或多个folds。 默认情况下, 这将导致整个搜索失败, 即使某些参数设置可以完全计算。 
+设置 ``error_score=0`` (或 `=np.NaN` ) 将使程序对此类故障具有鲁棒性,发出警告并将该折叠的分数设置为0(或 `NaN` ), 但可以完成搜索。
 
 .. _alternative_cv:
 
@@ -191,16 +186,11 @@ the search.
 -------------------------------
 
 
-Some models can fit data for a range of values of some parameter almost
-as efficiently as fitting the estimator for a single value of the
-parameter. This feature can be leveraged to perform a more efficient
-cross-validation used for model selection of this parameter.
+某些模型可以与参数的单个值的估计值一样有效地适应某一参数范围内的数据。 此功能可用于执行更有效的交叉验证, 用于此参数的模型选择。
 
-The most common parameter amenable to this strategy is the parameter
-encoding the strength of the regularizer. In this case we say that we
-compute the **regularization path** of the estimator.
+该策略最常用的参数是编码正则化因子强度的参数。在这种情况下, 我们称之为, 计算估计器的正则化路径( **regularization path** )。
 
-Here is the list of such models:
+下面是这些特定模型的列表:
 
 .. currentmodule:: sklearn
 
@@ -223,13 +213,12 @@ Here is the list of such models:
 信息准则
 ---------------------
 
+一些模型通过计算单个正则化路径 (代替使用交叉验证得出数个参数), 可以给出正则化参数最优估计的信息理论闭包公式。
 Some models can offer an information-theoretic closed-form formula of the
 optimal estimate of the regularization parameter by computing a single
 regularization path (instead of several when using cross-validation).
 
-Here is the list of models benefiting from the Akaike Information
-Criterion (AIC) or the Bayesian Information Criterion (BIC) for automated
-model selection:
+以下是从 Akaike Information Criterion (AIC) 或 Bayesian Information Criterion(BIC) (可用于自动选择模型) 中受益的模型列表:
 
 .. autosummary::
    :toctree: generated/
@@ -243,17 +232,12 @@ model selection:
 Out of Bag Estimates
 --------------------
 
-When using ensemble methods base upon bagging, i.e. generating new
-training sets using sampling with replacement, part of the training set
-remains unused.  For each classifier in the ensemble, a different part
-of the training set is left out.
+当使用基于装袋(bagging)的集成方法(ensemble methods)时，i.e. 使用替换式采样产生新的训练集，部分训练集保持不用。 
+对于集合中的每个分类器，训练集的不同部分被忽略。
 
-This left out portion can be used to estimate the generalization error
-without having to rely on a separate validation set.  This estimate
-comes "for free" as no additional data is needed and can be used for
-model selection.
+这个被忽略的部分可以用来估计泛化误差，而不必依靠单独的验证集。 此估计是”免费的”，因为不需要额外的数据，可以用于模型选择。
 
-This is currently implemented in the following classes:
+目前已经实现该方法的类有以下几个:
 
 .. autosummary::
    :toctree: generated/
