@@ -8,67 +8,50 @@
 通过网格搜索调节估计器超参数
 ===========================================
 
-Hyper-parameters are parameters that are not directly learnt within estimators.
-In scikit-learn they are passed as arguments to the constructor of the
-estimator classes. Typical examples include ``C``, ``kernel`` and ``gamma``
-for Support Vector Classifier, ``alpha`` for Lasso, etc.
+超参数(Hyper-parameters)，即不直接在估计器内学习的参数。在 scikit-learn 包中，它们作为估计器类中构造函数的参数进行传递。
+典型的例子有：用于支持向量分类器的 ``C``, ``kernel`` 和 ``gamma`` ，用于Lasso的 ``alpha`` 等。 
 
-It is possible and recommended to search the hyper-parameter space for the
-best :ref:`cross validation <cross_validation>` score.
+搜索超参数空间(hyper-parameter space)以便获得最好 :ref:`交叉验证 <cross_validation>` 分数的方法是可能的而且是值得提倡的。
 
-Any parameter provided when constructing an estimator may be optimized in this
-manner. Specifically, to find the names and current values for all parameters
-for a given estimator, use::
+通过这种方式，构造估计器时被提供的任何参数或许都能被优化。具体来说，要获取到给定估计器的所有参数的名称和当前值，使用 ::
 
   estimator.get_params()
 
-A search consists of:
+搜索包括:
 
-- an estimator (regressor or classifier such as ``sklearn.svm.SVC()``);
-- a parameter space;
-- a method for searching or sampling candidates;
-- a cross-validation scheme; and
-- a :ref:`score function <gridsearch_scoring>`.
+- 估计器(回归器或分类器，例如 ``sklearn.svm.SVC()``);
+- 参数空间;
+- 搜寻或对候选集合采样的方法;
+- 交叉验证方案; 和
+- :ref:`评分函数 <gridsearch_scoring>` .
 
-Some models allow for specialized, efficient parameter search strategies,
-:ref:`outlined below <alternative_cv>`.
-Two generic approaches to sampling search candidates are provided in
-scikit-learn: for given values, :class:`GridSearchCV` exhaustively considers
-all parameter combinations, while :class:`RandomizedSearchCV` can sample a
-given number of candidates from a parameter space with a specified
-distribution. After describing these tools we detail
-:ref:`best practice <grid_search_tips>` applicable to both approaches.
+有些模型支持专业化的、高效的参数搜索策略, :ref:`罗列如下 <alternative_cv>` 。在 scikit-learn 包中提供了两种采样搜索候选的通用方法:对于给定的值, 
+:class:`GridSearchCV` 考虑了所有参数组合；而 :class:`RandomizedSearchCV` 可以从具有指定分布的参数空间中抽取给定数量的候选。介绍完这些工具后，
+我们将详细介绍适用于这两种方法的 :ref:`最佳实践 <grid_search_tips>` 。
 
-Note that it is common that a small subset of those parameters can have a large
-impact on the predictive or computation performance of the model while others
-can be left to their default values. It is recommended to read the docstring of
-the estimator class to get a finer understanding of their expected behavior,
-possibly by reading the enclosed reference to the literature.  
+注意，通常这些参数的一小部分会对模型的预测或计算性能有很大的影响，而其他参数可以保留为其默认值。 
+建议阅读估计器类的相关文档，以更好地了解其预期行为，
+可能的话还可以阅读下引用的文献。
 
 穷举方式的网格搜索
 ======================
 
-The grid search provided by :class:`GridSearchCV` exhaustively generates
-candidates from a grid of parameter values specified with the ``param_grid``
-parameter. For instance, the following ``param_grid``::
+:class:`GridSearchCV` 类提供的网格搜索从通过 ``param_grid`` 参数确定的网格参数值中穷举生成候选参数组合。例如，下面的 ``param_grid``  ::
 
   param_grid = [
     {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
     {'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
    ]
 
-specifies that two grids should be explored: one with a linear kernel and
-C values in [1, 10, 100, 1000], and the second one with an RBF kernel,
-and the cross-product of C values ranging in [1, 10, 100, 1000] and gamma
-values in [0.001, 0.0001].
+探索两个参数网格的详细解释： 一个具有线性内核并且C在[1,10,100,1000]中取值； 
+另一个具有RBF内核，C值的交叉乘积范围在[1,10，100,1000]，gamma在[0.001，0.0001]中取值。
 
-The :class:`GridSearchCV` instance implements the usual estimator API: when
-"fitting" it on a dataset all the possible combinations of parameter values are
-evaluated and the best combination is retained.
+:class:`GridSearchCV` 实例实现了常用估计器 API：当在数据集上“拟合”时，所有可能的参数组合都会被评估，
+从而计算出最佳的参数组合。
 
 .. currentmodule:: sklearn.model_selection
 
-.. topic:: Examples:
+.. topic:: 案例:
 
     - See :ref:`sphx_glr_auto_examples_model_selection_plot_grid_search_digits.py` for an example of
       Grid Search computation on the digits dataset.
@@ -92,33 +75,22 @@ evaluated and the best combination is retained.
 
 随机化参数优化
 =================================
-While using a grid of parameter settings is currently the most widely used
-method for parameter optimization, other search methods have more
-favourable properties.
-:class:`RandomizedSearchCV` implements a randomized search over parameters,
-where each setting is sampled from a distribution over possible parameter values.
-This has two main benefits over an exhaustive search:
+尽管使用参数设置的网格法是目前最广泛使用的参数优化方法, 其他搜索方法也具有更有利的性能。 
+:class:`RandomizedSearchCV` 实现了对参数的随机搜索, 其中每个设置都是从可能的参数值的分布中进行取样。 这相对于穷举搜索有两个主要优势:
 
-* A budget can be chosen independent of the number of parameters and possible values.
-* Adding parameters that do not influence the performance does not decrease efficiency.
+* 可以选择独立于参数个数和可能值的预算.
+* 添加不影响性能的参数不会降低效率
 
-Specifying how parameters should be sampled is done using a dictionary, very
-similar to specifying parameters for :class:`GridSearchCV`. Additionally,
-a computation budget, being the number of sampled candidates or sampling
-iterations, is specified using the ``n_iter`` parameter.
-For each parameter, either a distribution over possible values or a list of
-discrete choices (which will be sampled uniformly) can be specified::
+指定参数的抽样方法是使用字典完成的, 非常类似于为 :class:`GridSearchCV` 指定参数。 
+此外, 通过 ``n_iter`` 参数指定计算预算, 即取样候选项数或取样迭代次数。 
+对于每个参数, 可以指定在可能值上的分布或离散选择的列表 (均匀取样)::
 
   {'C': scipy.stats.expon(scale=100), 'gamma': scipy.stats.expon(scale=.1),
     'kernel': ['rbf'], 'class_weight':['balanced', None]}
 
-This example uses the ``scipy.stats`` module, which contains many useful
-distributions for sampling parameters, such as ``expon``, ``gamma``,
-``uniform`` or ``randint``.
-In principle, any function can be passed that provides a ``rvs`` (random
-variate sample) method to sample a value. A call to the ``rvs`` function should
-provide independent random samples from possible parameter values on
-consecutive calls.
+本示例使用 ``scipy.stats`` 模块, 它包含许多用于采样参数的有用分布, 如 ``expon``，``gamma``，``uniform`` 或者 ``randint``。 
+原则上, 任何函数都可以通过提供一个 ``rvs`` (random variate sample: 随机变量样本)方法来采样一个值。 
+对 ``rvs`` 函数的调用应在连续调用中提供来自可能参数值的独立随机样本。
 
     .. warning::
 
@@ -129,16 +101,14 @@ consecutive calls.
         the :mod:`sklearn.model_selection` module sets the random state provided
         by the user if scipy >= 0.16 is also available.
 
-For continuous parameters, such as ``C`` above, it is important to specify
-a continuous distribution to take full advantage of the randomization. This way,
-increasing ``n_iter`` will always lead to a finer search.
+对于连续参数 (如上面提到的 ``C`` )，指定连续分布以充分利用随机化是很重要的。这样，有助于 ``n_iter`` 总是趋向于更精细的搜索。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
     * :ref:`sphx_glr_auto_examples_model_selection_plot_randomized_search.py` compares the usage and efficiency
       of randomized search and grid search.
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     * Bergstra, J. and Bengio, Y.,
       Random search for hyper-parameter optimization,
@@ -154,34 +124,26 @@ increasing ``n_iter`` will always lead to a finer search.
 指定一个目标测度
 ------------------------------
 
-By default, parameter search uses the ``score`` function of the estimator
-to evaluate a parameter setting. These are the
-:func:`sklearn.metrics.accuracy_score` for classification and
-:func:`sklearn.metrics.r2_score` for regression.  For some applications,
-other scoring functions are better suited (for example in unbalanced
-classification, the accuracy score is often uninformative). An alternative
-scoring function can be specified via the ``scoring`` parameter to
-:class:`GridSearchCV`, :class:`RandomizedSearchCV` and many of the
-specialized cross-validation tools described below.
-See :ref:`scoring_parameter` for more details.
+默认情况下, 参数搜索使用估计器的评分函数(``score`` function)来评估（衡量）参数设置。
+比如 :func:`sklearn.metrics.accuracy_score` 用于分类和 :func:`sklearn.metrics.r2_score` 用于回归。 
+对于一些应用, 其他评分函数将会更加适合 (例如在不平衡的分类问题中, 精度评分往往是信息不足的)。
+一个可选的评分函数可以通过评分参数 ``scoring`` 指定给 :class:`GridSearchCV`, :class:`RandomizedSearchCV` 
+和许多下文将要描述的、专业化的交叉验证工具。 
+有关详细信息, 请参阅 :ref:`scoring_parameter` 。
 
 .. _multimetric_grid_search:
 
 指定多个测度用于评估
 ------------------------------------------
 
-``GridSearchCV`` and ``RandomizedSearchCV`` allow specifying multiple metrics
-for the ``scoring`` parameter.
+``GridSearchCV`` 和 ``RandomizedSearchCV`` 允许为评分参数 ``scoring`` 指定多个测度指标(metrics)。
 
-Multimetric scoring can either be specified as a list of strings of predefined
-scores names or a dict mapping the scorer name to the scorer function and/or
-the predefined scorer name(s). See :ref:`multimetric_scoring` for more details.
+多指标评分(Multimetric scoring)可以被指定为一个预先定义的评分器名称(scorer name)的字符串列表或者
+是一个把评分器名称映射到评分函数或预先定义的评分器的字典。
+有关详细信息, 请参阅 :ref:`multimetric_scoring` 。
 
-When specifying multiple metrics, the ``refit`` parameter must be set to the
-metric (string) for which the ``best_params_`` will be found and used to build
-the ``best_estimator_`` on the whole dataset. If the search should not be
-refit, set ``refit=False``. Leaving refit to the default value ``None`` will
-result in an error when using multiple metrics.
+在指定多个指标时,必须将 ``refit`` 参数设置为要在其中找到 ``best_params_``,并用于在整个数据集上构建 ``best_estimator_`` 的度量标准（字符串）。 
+如果搜索不应该refit, 则设置 ``refit=False`` 。在使用多指标评分时,如果将 refit 保留为默认值 ``None``, 会导致结果错误。
 
 See :ref:`sphx_glr_auto_examples_model_selection_plot_multi_metric_evaluation.py`
 for an example usage.
@@ -189,23 +151,18 @@ for an example usage.
 组合不同估计器和参数空间
 -----------------------------------------
 
-:ref:`pipeline` describes building composite estimators whose
-parameter space can be searched with these tools.
+:ref:`pipeline` 小节描述了如何使用这些工具搜索参数空间构建组合式评估器。
 
 模型选择: 开发与评估
 -------------------------------------------
 
-Model selection by evaluating various parameter settings can be seen as a way
-to use the labeled data to "train" the parameters of the grid.
+通过评估各种参数设置，可以将模型选择视为使用标记数据 "训练" 网格参数的一种方法。 
 
-When evaluating the resulting model it is important to do it on
-held-out samples that were not seen during the grid search process:
-it is recommended to split the data into a **development set** (to
-be fed to the ``GridSearchCV`` instance) and an **evaluation set**
-to compute performance metrics.
+在评估得到的模型时, 重要的是在网格搜索过程中未看到的留出的(held-out)样本数据上执行以下操作: 
+建议将数据拆分为开发集 (**development set**,供 ``GridSearchCV`` 实例使用)
+和评估集(**evaluation set**)来计算性能指标。
 
-This can be done by using the :func:`train_test_split`
-utility function.
+这可以通过使用函数  :func:`train_test_split` 来完成。 
 
 并行化
 -----------
@@ -223,7 +180,7 @@ of the data.  By default, this will cause the entire search to fail, even if
 some parameter settings could be fully evaluated. Setting ``error_score=0``
 (or `=np.NaN`) will make the procedure robust to such failure, issuing a
 warning and setting the score for that fold to 0 (or `NaN`), but completing
-the search.
+the search. 
 
 .. _alternative_cv:
 
