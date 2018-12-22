@@ -6,80 +6,51 @@
 
 .. currentmodule:: sklearn.tree
 
-**Decision Trees (DTs)** are a non-parametric supervised learning method used
-for :ref:`classification <tree_classification>` and :ref:`regression
-<tree_regression>`. The goal is to create a model that predicts the value of a
-target variable by learning simple decision rules inferred from the data
-features.
+**Decision Trees (DTs)** 是一种用来 :ref:`classification <tree_classification>` 和 :ref:`regression <tree_regression>` 的无参数监督学习方法。
+其目的是创建一种模型从数据特征中学习简单的决策规则来预测一个目标变量的值。
 
-For instance, in the example below, decision trees learn from data to
-approximate a sine curve with a set of if-then-else decision rules. The deeper
-the tree, the more complex the decision rules and the fitter the model.
+例如，在下面的图片中，决策树通过if-then-else的决策规则来学习数据从而估测数一个正弦图像。决策树越深入，
+决策规则就越复杂并且模型对数据的拟合越好。
 
 .. figure:: ../auto_examples/tree/images/sphx_glr_plot_tree_regression_001.png
    :target: ../auto_examples/tree/plot_tree_regression.html
    :scale: 75
    :align: center
 
-Some advantages of decision trees are:
+决策树的优势:
 
-    - Simple to understand and to interpret. Trees can be visualised.
+    - 便于理解和解释。树的结构可以可视化。
 
-    - Requires little data preparation. Other techniques often require data
-      normalisation, dummy variables need to be created and blank values to
-      be removed. Note however that this module does not support missing
-      values.
+    - 需要很少的数据预备工作。而其他机器学习模型通常需要数据规范化，比如构建虚拟变量和移除缺失值。不过请注意，这种决策树模型不支持缺失值。
 
-    - The cost of using the tree (i.e., predicting data) is logarithmic in the
-      number of data points used to train the tree.
+    - 训练树模型的时间复杂度是参与训练数据点的对数值。
 
-    - Able to handle both numerical and categorical data. Other techniques
-      are usually specialised in analysing datasets that have only one type
-      of variable. See :ref:`algorithms <tree_algorithms>` for more
-      information.
+    - 能够处理数值型数据和标称型数据。其他的技术通常只能用来专门分析某一种变量类型的数据集。详情请参阅 :ref:`algorithms <tree_algorithms>` 。
 
-    - Able to handle multi-output problems.
+    - 能够处理多路输出的问题。
 
-    - Uses a white box model. If a given situation is observable in a model,
-      the explanation for the condition is easily explained by boolean logic.
-      By contrast, in a black box model (e.g., in an artificial neural
-      network), results may be more difficult to interpret.
+    - 使用白盒模型。如果某种给定的情况在该模型中是可观的，那么就可以轻易的通过布尔逻辑来解释这种情况。
+      相比之下，在黑盒模型(比如神经网络)中的结果就是很难说明清楚地。
 
-    - Possible to validate a model using statistical tests. That makes it
-      possible to account for the reliability of the model.
+    - 可以通过数值统计测试来验证该模型。这对解释验证该模型的可靠性成为可能。
 
-    - Performs well even if its assumptions are somewhat violated by
-      the true model from which the data were generated.
+    - 即使该模型假设的结果与真实模型所提供的数据有些违反，其表现依旧良好。
 
 
-The disadvantages of decision trees include:
+决策树的缺点包括:
 
-    - Decision-tree learners can create over-complex trees that do not
-      generalise the data well. This is called overfitting. Mechanisms
-      such as pruning (not currently supported), setting the minimum
-      number of samples required at a leaf node or setting the maximum
-      depth of the tree are necessary to avoid this problem.
+    - 决策树模型容易产生一个过于复杂的模型,这样的模型对数据的泛化性能会很差。这就是所谓的过拟合。
+      一些策略像剪枝、设置叶节点所需的最小样本数或设置数的最大深度是避免出现 该问题最为有效地方法。
 
-    - Decision trees can be unstable because small variations in the
-      data might result in a completely different tree being generated.
-      This problem is mitigated by using decision trees within an
-      ensemble.
+    - 决策树可能是不稳定的，因为数据中的微小变化可能会导致生成完全不同的树。这个问题可以通过决策树的集成来得到缓解。
 
-    - The problem of learning an optimal decision tree is known to be
-      NP-complete under several aspects of optimality and even for simple
-      concepts. Consequently, practical decision-tree learning algorithms
-      are based on heuristic algorithms such as the greedy algorithm where
-      locally optimal decisions are made at each node. Such algorithms
-      cannot guarantee to return the globally optimal decision tree.  This
-      can be mitigated by training multiple trees in an ensemble learner,
-      where the features and samples are randomly sampled with replacement.
+    - 在多方面性能最优和简单化概念的要求下，学习一棵最优决策树通常是一个NP难问题。因此，实际的决策树学习算法是基于启发式算法，
+      例如在每个节点进行局部最优决策的贪心算法。这样的算法不能保证返回全局最优决策树。
+      这个问题可以通过集成学习来训练多棵决策树来缓解,这多棵决策树一般通过对特征和样本有放回的随机采样来生成。
+    
+    - 有些概念很难被决策树学习到,因为决策树很难清楚的表述这些概念。例如XOR，奇偶或者复用器的问题。
 
-    - There are concepts that are hard to learn because decision trees
-      do not express them easily, such as XOR, parity or multiplexer problems.
-
-    - Decision tree learners create biased trees if some classes dominate.
-      It is therefore recommended to balance the dataset prior to fitting
-      with the decision tree.
+    - 如果某些类在问题中占主导地位会使得创建的决策树有偏差。因此，我们建议在拟合前先对数据集进行平衡。
 
 
 .. _tree_classification:
@@ -87,13 +58,10 @@ The disadvantages of decision trees include:
 分类
 ==============
 
-:class:`DecisionTreeClassifier` is a class capable of performing multi-class
-classification on a dataset.
+:class:`DecisionTreeClassifier` 是能够在数据集上执行多分类的类。
 
-As with other classifiers, :class:`DecisionTreeClassifier` takes as input two arrays:
-an array X, sparse or dense, of size ``[n_samples, n_features]``  holding the
-training samples, and an array Y of integer values, size ``[n_samples]``,
-holding the class labels for the training samples::
+与其他分类器一样，:class:`DecisionTreeClassifier` 需要输入两个数组：数组X，或稀疏或稠密，shape为 ``[n_samples, n_features]`` ，用来存放训练样本。
+整数值数组 Y，shape为 ``[n_samples]`` 用来保存训练样本的类标签::
 
     >>> from sklearn import tree
     >>> X = [[0, 0], [1, 1]]
@@ -101,22 +69,19 @@ holding the class labels for the training samples::
     >>> clf = tree.DecisionTreeClassifier()
     >>> clf = clf.fit(X, Y)
 
-After being fitted, the model can then be used to predict the class of samples::
+当模型拟合好以后，就可以拿来预测未知样本的类标签啦：::
 
     >>> clf.predict([[2., 2.]])
     array([1])
 
-Alternatively, the probability of each class can be predicted, which is the
-fraction of training samples of the same class in a leaf::
+另外, 每个类的概率也可以预测出来, 它是在一个叶子中相同类的训练样本所占比例(the fraction of training samples of the same class in a leaf)::
 
     >>> clf.predict_proba([[2., 2.]])
     array([[0., 1.]])
 
-:class:`DecisionTreeClassifier` is capable of both binary (where the
-labels are [-1, 1]) classification and multiclass (where the labels are
-[0, ..., K-1]) classification.
+:class:`DecisionTreeClassifier` 既能用于二分类（其中标签为 [-1,1] ）也能用于多分类（其中标签为 [0, ..., K-1] ）。
 
-Using the Iris dataset, we can construct a tree as follows::
+使用Lris数据集，我们可以构造一个决策树，如下所示 ::
 
     >>> from sklearn.datasets import load_iris
     >>> from sklearn import tree
@@ -124,18 +89,14 @@ Using the Iris dataset, we can construct a tree as follows::
     >>> clf = tree.DecisionTreeClassifier()
     >>> clf = clf.fit(iris.data, iris.target)
 
-Once trained, we can export the tree in `Graphviz
-<http://www.graphviz.org/>`_ format using the :func:`export_graphviz`
-exporter. If you use the `conda <http://conda.io>`_ package manager, the graphviz binaries  
-and the python package can be installed with 
+一旦训练好后，我们可以使用 :func:`export_graphviz` 导出器以 `Graphviz <http://www.graphviz.org/>`_ 格式导出决策树. 
+如果你是用 `conda <http://conda.io>`_ 来管理包，那么安装 graphviz 二进制文件和 python 包可以用以下指令安装
 
     conda install python-graphviz
    
-Alternatively binaries for graphviz can be downloaded from the graphviz project homepage,
-and the Python wrapper installed from pypi with `pip install graphviz`. 
+或者，可以从 graphviz 项目主页下载 graphviz 的二进制文件，并从 pypi 安装 Python 包装器，并安装 `pip install graphviz` 。
 
-Below is an example graphviz export of the above tree trained on the entire
-iris dataset; the results are saved in an output file `iris.pdf`::
+以下是在整个 iris 数据集上训练的上述树的 graphviz 导出示例; 其结果被保存在 ·iris.pdf· 中::
 
 
     >>> import graphviz # doctest: +SKIP
@@ -143,10 +104,8 @@ iris dataset; the results are saved in an output file `iris.pdf`::
     >>> graph = graphviz.Source(dot_data) # doctest: +SKIP
     >>> graph.render("iris") # doctest: +SKIP
 
-The :func:`export_graphviz` exporter also supports a variety of aesthetic
-options, including coloring nodes by their class (or value for regression) and
-using explicit variable and class names if desired. Jupyter notebooks also
-render these plots inline automatically::
+:func:`export_graphviz` exporter 支持各种美化，包括通过他们的类着色节点（或回归值），如果需要，使用显式变量和类名。
+Jupyter notebook也可以自动内联式渲染这些绘制节点::
 
     >>> dot_data = tree.export_graphviz(clf, out_file=None, # doctest: +SKIP
     ...                      feature_names=iris.feature_names,  # doctest: +SKIP
@@ -171,7 +130,7 @@ render these plots inline automatically::
    :align: center
    :scale: 75
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_tree_plot_iris.py`
 
@@ -186,12 +145,9 @@ render these plots inline automatically::
    :scale: 75
    :align: center
 
-Decision trees can also be applied to regression problems, using the
-:class:`DecisionTreeRegressor` class.
+决策树也可用于解决回归问题, 使用 :class:`DecisionTreeRegressor` 类。
 
-As in the classification setting, the fit method will take as argument arrays X
-and y, only that in this case y is expected to have floating point values
-instead of integer values::
+与在分类中的设置是一样的, fit 方法依然接受数组 X 和 y 作为参数, 但是在回归中，目标变量 y 是浮点数而不是整型数值 ::
 
     >>> from sklearn import tree
     >>> X = [[0, 0], [2, 2]]
@@ -201,7 +157,7 @@ instead of integer values::
     >>> clf.predict([[1, 1]])
     array([0.5])
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_tree_plot_tree_regression.py`
 
@@ -211,61 +167,47 @@ instead of integer values::
 多输出问题
 =====================
 
-A multi-output problem is a supervised learning problem with several outputs
-to predict, that is when Y is a 2d array of size ``[n_samples, n_outputs]``.
+一个多值输出问题(multi-output problem)是一个类似当 Y 是大小为 ``[n_samples, n_outputs]`` 的2d数组时，有多个输出值需要预测的监督学习问题。
 
-When there is no correlation between the outputs, a very simple way to solve
-this kind of problem is to build n independent models, i.e. one for each
-output, and then to use those models to independently predict each one of the n
-outputs. However, because it is likely that the output values related to the
-same input are themselves correlated, an often better way is to build a single
-model capable of predicting simultaneously all n outputs. First, it requires
-lower training time since only a single estimator is built. Second, the
-generalization accuracy of the resulting estimator may often be increased.
+当输出值之间没有关联时，一个很简单的处理该类型的方法是建立n个独立模型，即每个模型对应一个输出，然后使用这些模型来独立地预测n个输出中的每一个。
+然而，由于可能与相同输入相关的输出值本身是相关的，所以通常更好的方法是构建能够同时预测所有n个输出的单个模型。
+首先，因为仅仅是建立了一个模型所以训练时间会更短。第二，最终模型的泛化性能也会有所提升。
 
-With regard to decision trees, this strategy can readily be used to support
-multi-output problems. This requires the following changes:
+对于决策树，这一策略可以很容易地用于支持多输出问题。这需要以下更改：
 
-  - Store n output values in leaves, instead of 1;
-  - Use splitting criteria that compute the average reduction across all
-    n outputs.
+  - 在叶子中存储n个输出值，而不是一个; 
+  - 通过计算所有n个输出的平均减少量来作为分裂标准。
 
-This module offers support for multi-output problems by implementing this
-strategy in both :class:`DecisionTreeClassifier` and
-:class:`DecisionTreeRegressor`. If a decision tree is fit on an output array Y
-of size ``[n_samples, n_outputs]`` then the resulting estimator will:
+该模块通过在 :class:`DecisionTreeClassifier` 和 :class:`DecisionTreeRegressor` 中实现该策略来支持多输出问题。
+如果决策树在shape为 ``[n_samples, n_outputs]`` 的输出数组 Y 上拟合，则得到的估计器将:
 
-  * Output n_output values upon ``predict``;
+  * 在 ``predict`` 中 输出 n_outputs 个值 ;
 
-  * Output a list of n_output arrays of class probabilities upon
-    ``predict_proba``.
+  * 在 ``predict_proba`` 上输出 n_outputs 个数组的列表。
 
 
-The use of multi-output trees for regression is demonstrated in
-:ref:`sphx_glr_auto_examples_tree_plot_tree_regression_multioutput.py`. In this example, the input
-X is a single real value and the outputs Y are the sine and cosine of X.
+用多输出决策树进行回归分析的例子 :ref:`sphx_glr_auto_examples_tree_plot_tree_regression_multioutput.py` 。 
+在该示例中，输入X是单个实数值，输出 Y 是 X 的正弦值和余弦值。
 
 .. figure:: ../auto_examples/tree/images/sphx_glr_plot_tree_regression_multioutput_001.png
    :target: ../auto_examples/tree/plot_tree_regression_multioutput.html
    :scale: 75
    :align: center
 
-The use of multi-output trees for classification is demonstrated in
-:ref:`sphx_glr_auto_examples_plot_multioutput_face_completion.py`. In this example, the inputs
-X are the pixels of the upper half of faces and the outputs Y are the pixels of
-the lower half of those faces.
+使用多输出树进行分类，在 :ref:`sphx_glr_auto_examples_plot_multioutput_face_completion.py` 例子中进行了演示。 
+在该示例中，输入 X 是人脸的上半部分的像素，并且输出 Y 是这些脸的下半部分的像素。
 
 .. figure:: ../auto_examples/images/sphx_glr_plot_multioutput_face_completion_001.png
    :target: ../auto_examples/plot_multioutput_face_completion.html
    :scale: 75
    :align: center
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_tree_plot_tree_regression_multioutput.py`
  * :ref:`sphx_glr_auto_examples_plot_multioutput_face_completion.py`
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * M. Dumont et al,  `Fast multi-class image annotation with random subwindows
    and multiple output randomized trees
@@ -277,82 +219,49 @@ the lower half of those faces.
 复杂度
 ==========
 
-In general, the run time cost to construct a balanced binary tree is
-:math:`O(n_{samples}n_{features}\log(n_{samples}))` and query time
-:math:`O(\log(n_{samples}))`.  Although the tree construction algorithm attempts
-to generate balanced trees, they will not always be balanced.  Assuming that the
-subtrees remain approximately balanced, the cost at each node consists of
-searching through :math:`O(n_{features})` to find the feature that offers the
-largest reduction in entropy.  This has a cost of
-:math:`O(n_{features}n_{samples}\log(n_{samples}))` at each node, leading to a
-total cost over the entire trees (by summing the cost at each node) of
-:math:`O(n_{features}n_{samples}^{2}\log(n_{samples}))`.
+总体来说，用来构建平衡二叉树的运行时间为 :math:`O(n_{samples}n_{features}\log(n_{samples}))` ，查询时间为 :math:`O(\log(n_{samples}))` 。
+尽管树的构造算法尝试生成平衡树，但它们并不总能保持平衡。假设子树能大概保持平衡，每个节点的成本包括通过 :math:`O(n_{features})` 
+时间复杂度来搜索找到提供熵减小最大的特征。每个节点的花费为 :math:`O(n_{features}n_{samples}\log(n_{samples}))` ，
+从而使得整个决策树的构造成本为 :math:`O(n_{features}n_{samples}^{2}\log(n_{samples}))` 。
 
-Scikit-learn offers a more efficient implementation for the construction of
-decision trees.  A naive implementation (as above) would recompute the class
-label histograms (for classification) or the means (for regression) at for each
-new split point along a given feature. Presorting the feature over all
-relevant samples, and retaining a running label count, will reduce the complexity
-at each node to :math:`O(n_{features}\log(n_{samples}))`, which results in a
-total cost of :math:`O(n_{features}n_{samples}\log(n_{samples}))`. This is an option
-for all tree based algorithms. By default it is turned on for gradient boosting,
-where in general it makes training faster, but turned off for all other algorithms as
-it tends to slow down training when training deep trees.
+
+Scikit-learn提供了更多有效的方法来创建决策树。初始实现（如上所述）将重新计算沿着给定特征的
+每个新分割点的类标签直方图（用于分类）或平均值（用于回归）。与分类所有的样本特征，
+然后再次训练时运行标签计数，可将每个节点的复杂度降低为 :math:`O(n_{features}\log(n_{samples}))` ，
+则总的成本花费为 :math:`O(n_{features}n_{samples}\log(n_{samples}))` 。这是一种对所有基于树的算法的改进选项。
+默认情况下，对于梯度提升模型该算法是打开的，一般来说它会让训练速度更快。但对于所有其他算法默认是关闭的，
+当训练深度很深的树时往往会减慢训练速度。
 
 
 实用小建议
 =====================
 
-  * Decision trees tend to overfit on data with a large number of features.
-    Getting the right ratio of samples to number of features is important, since
-    a tree with few samples in high dimensional space is very likely to overfit.
+  * 在拥有大量特征的数据上拟合模型的时候，决策树会倾向于出现过拟合的现象。
+    获得一个合适的样本比例和特征数量十分重要，因为在高维空间中只有少量的样本上训练出的树是十分容易过拟合的。
 
-  * Consider performing  dimensionality reduction (:ref:`PCA <PCA>`,
-    :ref:`ICA <ICA>`, or :ref:`feature_selection`) beforehand to
-    give your tree a better chance of finding features that are discriminative.
+  * 考虑事先对数据进行降维( :ref:`PCA <PCA>`, :ref:`ICA <ICA>`) ，使您的树能更好地找到具有分辨性的特征。
 
-  * Visualise your tree as you are training by using the ``export``
-    function.  Use ``max_depth=3`` as an initial tree depth to get a feel for
-    how the tree is fitting to your data, and then increase the depth.
+  * 当训练树的时候，通过 ``export`` 功能可以可视化您的决策树。使用 ``max_depth=3`` 作为初始树深度，
+    让决策树知道如何适应您的数据，然后再增加树的深度。
 
-  * Remember that the number of samples required to populate the tree doubles
-    for each additional level the tree grows to.  Use ``max_depth`` to control
-    the size of the tree to prevent overfitting.
+  * 请记住，填充树的样本数量会增加树的每个附加级别。使用 ``max_depth`` 来控制树的大小防止过拟合。
 
-  * Use ``min_samples_split`` or ``min_samples_leaf`` to ensure that multiple
-    samples inform every decision in the tree, by controlling which splits will
-    be considered. A very small number will usually mean the tree will overfit,
-    whereas a large number will prevent the tree from learning the data. Try
-    ``min_samples_leaf=5`` as an initial value. If the sample size varies
-    greatly, a float number can be used as percentage in these two parameters.
-    While ``min_samples_split`` can create arbitrarily small leaves,
-    ``min_samples_leaf`` guarantees that each leaf has a minimum size, avoiding
-    low-variance, over-fit leaf nodes in regression problems.  For
-    classification with few classes, ``min_samples_leaf=1`` is often the best
-    choice.
+  * 通过使用 ``min_samples_split`` 或 ``min_samples_leaf`` 来保证多个样本通知树中的每个决策，通过控制这两个参数决定执行什么划分。
+    当这个值很小时意味着生成的决策树将会过拟合，然而当这个值很大时将会不利于决策树对样本的学习。所以尝试 ``min_samples_leaf=5`` 作为初始值。
+    如果样本量的变化很大，可以使用浮点数作为百分比传给这两个参数。 ``min_samples_split`` 可以创建任意小的叶子， ``min_samples_leaf`` 
+    保证了每个叶结点中的最小样本量，在回归问题中可以避免低方差过拟合的叶节点。对于只有少量类的分类问题，``min_samples_leaf=1`` 通常是最好的选择。
 
-  * Balance your dataset before training to prevent the tree from being biased
-    toward the classes that are dominant. Class balancing can be done by
-    sampling an equal number of samples from each class, or preferably by
-    normalizing the sum of the sample weights (``sample_weight``) for each
-    class to the same value. Also note that weight-based pre-pruning criteria,
-    such as ``min_weight_fraction_leaf``, will then be less biased toward
-    dominant classes than criteria that are not aware of the sample weights,
-    like ``min_samples_leaf``.
+  * 在训练之前平衡数据集，以防止决策树偏向于主导类。可以通过从每个类中抽取相等数量的样本来进行类平衡，或者优选地通过将每个类的样本权重 (``sample_weight``)
+    之和归一化为相同的值。还要注意的是，基于权重的预修剪标准(比如 ``min_weight_fraction_leaf``) 对于主导类别的偏倚比不使用样本权重的标准更少，
+    如 ``min_samples_leaf`` 。
 
-  * If the samples are weighted, it will be easier to optimize the tree
-    structure using weight-based pre-pruning criterion such as
-    ``min_weight_fraction_leaf``, which ensure that leaf nodes contain at least
-    a fraction of the overall sum of the sample weights.
+  * 如果样本被加权的话, 使用基于权重的预修剪标准(比如 ``min_weight_fraction_leaf``) 能够更轻易的优化树结构。
+    ``min_weight_fraction_leaf`` 保证了叶节点至少包含样本权重的总和的一部分。
 
-  * All decision trees use ``np.float32`` arrays internally.
-    If training data is not in this format, a copy of the dataset will be made.
+  * 所有决策树内部使用 ``np.float32`` 数组。如果训练数据不是这种格式，将会发生数据集的拷贝。
 
-  * If the input matrix X is very sparse, it is recommended to convert to sparse
-    ``csc_matrix`` before calling fit and sparse ``csr_matrix`` before calling
-    predict. Training time can be orders of magnitude faster for a sparse
-    matrix input compared to a dense matrix when features have zero values in
-    most of the samples.
+  * 如果输入矩阵 X 非常稀疏， 在调用 ``fit`` 和 ``predict`` 之前建议将其转成格式为 ``csc_matrix`` 的稀疏矩阵。
+    当大多数样本的特征向量有很多0值的时候，相比用稠密矩阵，用稀疏矩阵作为输入，可以是训练时间快好几倍。
 
 
 
@@ -361,21 +270,16 @@ it tends to slow down training when training deep trees.
 树算法: ID3, C4.5, C5.0 和 CART
 ==========================================
 
-What are all the various decision tree algorithms and how do they differ
-from each other? Which one is implemented in scikit-learn?
+决策树算法有哪些以及它们之间的区别？scikit-learn 中实现何种算法呢？ 
 
-ID3_ (Iterative Dichotomiser 3) was developed in 1986 by Ross Quinlan.
-The algorithm creates a multiway tree, finding for each node (i.e. in
-a greedy manner) the categorical feature that will yield the largest
-information gain for categorical targets. Trees are grown to their
-maximum size and then a pruning step is usually applied to improve the
-ability of the tree to generalise to unseen data.
+ID3_ (Iterative Dichotomiser 3) 由 Ross Quinlan 在1986年提出。该算法创建一个多路树(multiway tree)，
+为每个节点（以贪心的方式）找到一个能够产生分类目标的最大信息增益的分类特征(categorical feature)。决策树增长到其最大尺寸，
+然后通常利用剪枝来提高树对未知数据的泛化能力。
 
-C4.5 is the successor to ID3 and removed the restriction that features
-must be categorical by dynamically defining a discrete attribute (based
-on numerical variables) that partitions the continuous attribute value
-into a discrete set of intervals. C4.5 converts the trained trees
-(i.e. the output of the ID3 algorithm) into sets of if-then rules.
+C4.5 是 ID3 的后继者，它去除了特征必须是标称型(categorical)特征的限制条件，动态的定义了一个(基于数值型的)离散属性,
+这个属性可以把连续属性值划分成离散的区间集合。 C4.5 可以把训练好的树(ID3 算法的输出)转换成if-then规则的集合。
+然后每个规则的准确率会被评估来决定这些规则被使用的顺序。 剪枝操作通过移除一个规则的前提条件来完成。
+如果去掉某个前提条件后这个规则的准确率得到了提升那么这个前提条件
 These accuracy of each rule is then evaluated to determine the order
 in which they should be applied. Pruning is done by removing a rule's
 precondition if the accuracy of the rule improves without it.
