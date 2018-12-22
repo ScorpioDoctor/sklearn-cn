@@ -279,22 +279,14 @@ ID3_ (Iterative Dichotomiser 3) 由 Ross Quinlan 在1986年提出。该算法创
 C4.5 是 ID3 的后继者，它去除了特征必须是标称型(categorical)特征的限制条件，动态的定义了一个(基于数值型的)离散属性,
 这个属性可以把连续属性值划分成离散的区间集合。 C4.5 可以把训练好的树(ID3 算法的输出)转换成if-then规则的集合。
 然后每个规则的准确率会被评估来决定这些规则被使用的顺序。 剪枝操作通过移除一个规则的前提条件来完成。
-如果去掉某个前提条件后这个规则的准确率得到了提升那么这个前提条件
-These accuracy of each rule is then evaluated to determine the order
-in which they should be applied. Pruning is done by removing a rule's
-precondition if the accuracy of the rule improves without it.
+如果去掉某个前提条件后这个规则的准确率得到了提升那么这个前提条件就会被剪掉。
 
-C5.0 is Quinlan's latest version release under a proprietary license.
-It uses less memory and builds smaller rulesets than C4.5 while being
-more accurate.
+C5.0 是 Quinlan 最近发布的新版本(带有知识产权的喔)。 它相比 C4.5 使用更少的内存并且构建更小的规则集,而且准确率更高。
 
-CART_ (Classification and Regression Trees) is very similar to C4.5, but
-it differs in that it supports numerical target variables (regression) and
-does not compute rule sets. CART constructs binary trees using the feature
-and threshold that yield the largest information gain at each node.
+CART_ (Classification and Regression Trees) 与 C4.5 非常相似, 不同之处是它支持数值型目标变量(所以可用于回归) 
+并且不计算规则集合。 CART 在每个节点使用能够产生最大信息增益的特征和阈值来构建二叉树(binary trees)。
 
-scikit-learn uses an optimised version of the CART algorithm; however, scikit-learn 
-implementation does not support categorical variables for now.
+scikit-learn 使用 CART 算法的优化版本; 然而, scikit-learn 的实现现在还不支持标称型变量(categorical variables) 。
 
 .. _ID3: https://en.wikipedia.org/wiki/ID3_algorithm
 .. _CART: https://en.wikipedia.org/wiki/Predictive_analytics#Classification_and_regression_trees_.28CART.29
@@ -329,7 +321,7 @@ The impurity at :math:`m` is computed using an impurity function
    G(Q, \theta) = \frac{n_{left}}{N_m} H(Q_{left}(\theta))
    + \frac{n_{right}}{N_m} H(Q_{right}(\theta))
 
-Select the parameters that minimises the impurity
+选择能够最小化不纯度(impurity)的参数:
 
 .. math::
 
@@ -342,38 +334,41 @@ Recurse for subsets :math:`Q_{left}(\theta^*)` and
 分类准则
 -----------------------
 
-If a target is a classification outcome taking on values 0,1,...,K-1,
-for node :math:`m`, representing a region :math:`R_m` with :math:`N_m`
-observations, let
+如果目标是在  0,1,...,K-1 上的分类输出，对节点 :math:`m` ，表示一个带有 :math:`N_m` 个观测值的区域 :math:`R_m`， 
+让
 
 .. math::
 
     p_{mk} = 1/ N_m \sum_{x_i \in R_m} I(y_i = k)
 
-be the proportion of class k observations in node :math:`m`
+成为在节点 :math:`m` 上类k的观测值的比例。
 
-Common measures of impurity are Gini
+不纯度(impurity)的常用度量是 Gini
 
 .. math::
 
     H(X_m) = \sum_k p_{mk} (1 - p_{mk})
 
-Entropy
+熵(Entropy)
 
 .. math::
 
     H(X_m) = - \sum_k p_{mk} \log(p_{mk})
 
-and Misclassification
+误分类(Misclassification)
 
 .. math::
 
     H(X_m) = 1 - \max(p_{mk})
 
-where :math:`X_m` is the training data in node :math:`m`
+其中 :math:`X_m` 是 节点 :math:`m` 上的训练数据。
 
 回归准则
 -------------------
+如果目标是连续值，那么，对 节点 :math:`m` ，表示一个有 :math:`N_m` 个观测值的区域 :math:`R_m` ，
+用于决定未来划分的位置的常用最小化准则是：Mean Squared Error 和 Mean Absolute Error； 其中，
+Mean Squared Error 使用 终结点的平均值 最小化 L2 误差；
+Mean Absolute Error 使用 终结点的中值 最小化 L1 误差。
 
 If the target is a continuous value, then for node :math:`m`,
 representing a region :math:`R_m` with :math:`N_m` observations, common
@@ -398,9 +393,9 @@ Mean Absolute Error:
 
     H(X_m) = \frac{1}{N_m} \sum_{i \in N_m} |y_i - \bar{y}_m|
 
-where :math:`X_m` is the training data in node :math:`m`
+其中 :math:`X_m` 是 节点 :math:`m` 上的训练数据。
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     * https://en.wikipedia.org/wiki/Decision_tree_learning
 
