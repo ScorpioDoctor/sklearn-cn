@@ -294,17 +294,14 @@ scikit-learn 使用 CART 算法的优化版本; 然而, scikit-learn 的实现�
 
 .. _tree_mathematical_formulation:
 
-数学化表达形式
+数学表达式
 ========================
 
-Given training vectors :math:`x_i \in R^n`, i=1,..., l and a label vector
-:math:`y \in R^l`, a decision tree recursively partitions the space such
-that the samples with the same labels are grouped together.
+给定训练向量 :math:`x_i \in R^n`, i=1,..., l 和 标签向量 :math:`y \in R^l`, 一个决策树通过递归(recursively)的划分空间
+使得具有相同标签的样本被划分到同一个组中。
 
-Let the data at node :math:`m` be represented by :math:`Q`. For
-each candidate split :math:`\theta = (j, t_m)` consisting of a
-feature :math:`j` and threshold :math:`t_m`, partition the data into
-:math:`Q_{left}(\theta)` and :math:`Q_{right}(\theta)` subsets
+我们把在节点 :math:`m` 的数据表示为 :math:`Q` 。 对每一个由特征 :math:`j` 和阈值 :math:`t_m` 构成的候选划分，把数据划分成两个子集： 
+:math:`Q_{left}(\theta)` 和 :math:`Q_{right}(\theta)` ，
 
 .. math::
 
@@ -312,9 +309,8 @@ feature :math:`j` and threshold :math:`t_m`, partition the data into
 
     Q_{right}(\theta) = Q \setminus Q_{left}(\theta)
 
-The impurity at :math:`m` is computed using an impurity function
-:math:`H()`, the choice of which depends on the task being solved
-(classification or regression)
+那么，节点 :math:`m` 处的不纯度(impurity) 就可以使用不纯度函数 :math:`H()` 来计算, 
+到底选择哪个不纯度准则依赖于要解决的问题(classification or regression)
 
 .. math::
 
@@ -327,14 +323,12 @@ The impurity at :math:`m` is computed using an impurity function
 
     \theta^* = \operatorname{argmin}_\theta  G(Q, \theta)
 
-Recurse for subsets :math:`Q_{left}(\theta^*)` and
-:math:`Q_{right}(\theta^*)` until the maximum allowable depth is reached,
-:math:`N_m < \min_{samples}` or :math:`N_m = 1`.
+在 :math:`Q_{left}(\theta^*)` 和 :math:`Q_{right}(\theta^*)` 子集上递归直到达到最大允许深度，:math:`N_m < \min_{samples}` 或 :math:`N_m = 1`.
 
 分类准则
 -----------------------
 
-如果目标是在  0,1,...,K-1 上的分类输出，对节点 :math:`m` ，表示一个带有 :math:`N_m` 个观测值的区域 :math:`R_m`， 
+如果目标是取值为 0,1,...,K-1 的分类输出，对节点 :math:`m` ，表示一个带有 :math:`N_m` 个观测值的区域 :math:`R_m`， 
 让
 
 .. math::
@@ -370,12 +364,6 @@ Recurse for subsets :math:`Q_{left}(\theta^*)` and
 Mean Squared Error 使用 终结点的平均值 最小化 L2 误差；
 Mean Absolute Error 使用 终结点的中值 最小化 L1 误差。
 
-If the target is a continuous value, then for node :math:`m`,
-representing a region :math:`R_m` with :math:`N_m` observations, common
-criteria to minimise as for determining locations for future
-splits are Mean Squared Error, which minimizes the L2 error
-using mean values at terminal nodes, and Mean Absolute Error, which 
-minimizes the L1 error using median values at terminal nodes. 
 
 Mean Squared Error:
 

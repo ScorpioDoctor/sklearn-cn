@@ -258,7 +258,7 @@ contains one entry of one. The size of the coding is at most ``n_estimators * 2
 As neighboring data points are more likely to lie within the same leaf of a tree,
 the transformation performs an implicit, non-parametric density estimation.
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_ensemble_plot_random_forest_embedding.py`
 
@@ -280,44 +280,31 @@ the transformation performs an implicit, non-parametric density estimation.
 自适应推举算法(AdaBoost)
 ========
 
-The module :mod:`sklearn.ensemble` includes the popular boosting algorithm
-AdaBoost, introduced in 1995 by Freund and Schapire [FS1995]_.
+:mod:`sklearn.ensemble` 模块 包括了一种推举算法(boosting algorithm)，叫 **AdaBoost**, 它是1995年由 Freund 和 Schapire [FS1995]_ 引入的。
 
-The core principle of AdaBoost is to fit a sequence of weak learners (i.e.,
-models that are only slightly better than random guessing, such as small
-decision trees) on repeatedly modified versions of the data. The predictions
-from all of them are then combined through a weighted majority vote (or sum) to
-produce the final prediction. The data modifications at each so-called boosting
-iteration consist of applying weights :math:`w_1`, :math:`w_2`, ..., :math:`w_N`
-to each of the training samples. Initially, those weights are all set to
-:math:`w_i = 1/N`, so that the first step simply trains a weak learner on the
-original data. For each successive iteration, the sample weights are
-individually modified and the learning algorithm is reapplied to the reweighted
-data. At a given step, those training examples that were incorrectly predicted
-by the boosted model induced at the previous step have their weights increased,
-whereas the weights are decreased for those that were predicted correctly. As
-iterations proceed, examples that are difficult to predict receive
-ever-increasing influence. Each subsequent weak learner is thereby forced to
-concentrate on the examples that are missed by the previous ones in the sequence
-[HTF]_.
+AdaBoost 的主要原则是 在被重复采样的数据上拟合一个弱学习器序列。(weak learner: 指的是那些比随机猜测稍好一点的模型，比如 小决策树)。
+这些弱学习器的预测结果随后会通过加权投票的方式被组合起来产生最终的预测。
+在每一次称之为 推举迭代(boosting iteration) 中，数据修改(data modifications)就是把权重 :math:`w_1`, :math:`w_2`, ..., :math:`w_N` 
+分配给每一个训练样本。在迭代开始的时候，所有的样本权重都被设置为 :math:`w_i = 1/N`，这样第一步迭代就是在原始数据上简单的训练一个弱分类器 。
+在后续的迭代步骤中，样本权重会被单独修改，然后学习算法被重新用到被重新加权的样本数据上。在某个给定的迭代步，那些没有被上一步得到的boosted model
+正确预测的训练样本的权重就会增加，而那些已经被上一步得到的模型(boosted model)正确预测的样本的权重会被降低。
+随着迭代过程的推进，那些比较难预测的样本会获得不断增加的权重。每一个后继的弱学习器就会被强制聚焦到这些被以前的学习器序列错分的权重较高的难分样本上[HTF]_。
 
 .. figure:: ../auto_examples/ensemble/images/sphx_glr_plot_adaboost_hastie_10_2_001.png
    :target: ../auto_examples/ensemble/plot_adaboost_hastie_10_2.html
    :align: center
    :scale: 75
 
-AdaBoost can be used both for classification and regression problems:
+AdaBoost 既可以用于分类问题也可以用于回归问题:
 
-  - For multi-class classification, :class:`AdaBoostClassifier` implements
-    AdaBoost-SAMME and AdaBoost-SAMME.R [ZZRH2009]_.
+  - 对于多类分类问题, :class:`AdaBoostClassifier` 类实现了两个变体版本：AdaBoost-SAMME 和 AdaBoost-SAMME.R [ZZRH2009]_。
 
-  - For regression, :class:`AdaBoostRegressor` implements AdaBoost.R2 [D1997]_.
+  - 对于回归问题, :class:`AdaBoostRegressor` 类实现了 AdaBoost.R2 [D1997]_.
 
 用法
 -----
 
-The following example shows how to fit an AdaBoost classifier with 100 weak
-learners::
+下面的例子展示了如何拟合一个用100个弱学习器构建的 AdaBoost 分类器::
 
     >>> from sklearn.model_selection import cross_val_score
     >>> from sklearn.datasets import load_iris
@@ -329,15 +316,11 @@ learners::
     >>> scores.mean()                             # doctest: +ELLIPSIS
     0.9...
 
-The number of weak learners is controlled by the parameter ``n_estimators``. The
-``learning_rate`` parameter controls the contribution of the weak learners in
-the final combination. By default, weak learners are decision stumps. Different
-weak learners can be specified through the ``base_estimator`` parameter.
-The main parameters to tune to obtain good results are ``n_estimators`` and
-the complexity of the base estimators (e.g., its depth ``max_depth`` or
-minimum required number of samples to consider a split ``min_samples_split``).
+弱学习器的数量由参数 ``n_estimators`` 控制。 参数 ``learning_rate`` 控制着在最终的集成学习器中每个弱学习器的贡献量。
+默认情况下，弱学习器都是 决策树桩(decision stumps)。弱学习器可以通过参数 ``base_estimator`` 指定。为了获得好的结果需要调节的主要参数
+有 ``n_estimators`` 和 基本学习器的复杂度参数(比如 树的最大深度 ``max_depth`` 和 单个划分上需要的最小样本量 ``min_samples_split``)。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_ensemble_plot_adaboost_hastie_10_2.py` compares the
    classification error of a decision stump, decision tree, and a boosted
@@ -353,7 +336,7 @@ minimum required number of samples to consider a split ``min_samples_split``).
  * :ref:`sphx_glr_auto_examples_ensemble_plot_adaboost_regression.py` demonstrates regression
    with the AdaBoost.R2 algorithm.
 
-.. topic:: References
+.. topic:: 参考文献
 
  .. [FS1995] Y. Freund, and R. Schapire, "A Decision-Theoretic Generalization of
              On-Line Learning and an Application to Boosting", 1997.
@@ -369,41 +352,35 @@ minimum required number of samples to consider a split ``min_samples_split``).
 
 .. _gradient_boosting:
 
-梯度树推举(Gradient Tree Boosting)
+Gradient Tree Boosting
 ======================
 
 `Gradient Tree Boosting <https://en.wikipedia.org/wiki/Gradient_boosting>`_
-or Gradient Boosted Regression Trees (GBRT) is a generalization
-of boosting to arbitrary
-differentiable loss functions. GBRT is an accurate and effective
-off-the-shelf procedure that can be used for both regression and
-classification problems.  Gradient Tree Boosting models are used in a
-variety of areas including Web search ranking and ecology.
+或者叫 Gradient Boosted Regression Trees (GBRT) 是 boosting 在任意可微损失函数上的推广。
+GBRT 是一个准确高效的现成的程序(procedure)，可被用于回归和分类问题。
+Gradient Tree Boosting 模型被广泛用于各个领域包括网站搜索排序和生态学。
 
-The advantages of GBRT are:
+GBRT 的优点是:
 
-  + Natural handling of data of mixed type (= heterogeneous features)
+  + 混合数据类型的自然操作 (= 各种各样的异质特征 heterogeneous features)
 
-  + Predictive power
+  + 预测能力(Predictive power)
 
-  + Robustness to outliers in output space (via robust loss functions)
+  + 对输出空间中离群点的鲁棒性 (通过鲁棒的损失函数做到这一点)
 
-The disadvantages of GBRT are:
+GBRT的缺点:
 
-  + Scalability, due to the sequential nature of boosting it can
-    hardly be parallelized.
+  + 可伸缩性(Scalability), 由于 boosting 方法的序列化特性， 很难被并行化。
 
-The module :mod:`sklearn.ensemble` provides methods
-for both classification and regression via gradient boosted regression
-trees.
+:mod:`sklearn.ensemble` 模块 提供了使用 gradient boosted regression trees 的 分类和回归算法。
+
 
 分类
 ---------------
 
-:class:`GradientBoostingClassifier` supports both binary and multi-class
-classification.
-The following example shows how to fit a gradient boosting classifier
-with 100 decision stumps as weak learners::
+类 :class:`GradientBoostingClassifier` 支持 二分类和多分类任务。
+
+下面的例子展示了如何拟合一个 带有100个决策树桩(decision stumps)作为弱学习器的 gradient boosting classifier ::
 
     >>> from sklearn.datasets import make_hastie_10_2
     >>> from sklearn.ensemble import GradientBoostingClassifier
@@ -417,24 +394,22 @@ with 100 decision stumps as weak learners::
     >>> clf.score(X_test, y_test)                 # doctest: +ELLIPSIS
     0.913...
 
-The number of weak learners (i.e. regression trees) is controlled by the parameter ``n_estimators``; :ref:`The size of each tree <gradient_boosting_tree_size>` can be controlled either by setting the tree depth via ``max_depth`` or by setting the number of leaf nodes via ``max_leaf_nodes``. The ``learning_rate`` is a hyper-parameter in the range (0.0, 1.0] that controls overfitting via :ref:`shrinkage <gradient_boosting_shrinkage>` .
+弱学习器的数量 (i.e. regression trees) 通过参数 ``n_estimators`` 设置; 
+:ref:`The size of each tree <gradient_boosting_tree_size>` 可以通过设置树深度 ``max_depth`` 或者 
+通过 ``max_leaf_nodes`` 设置叶节点的数量。 学习率(``learning_rate``)是一个介于(0.0, 1.0]之间的超参数，
+它通过 :ref:`shrinkage <gradient_boosting_shrinkage>` 控制着过拟合 .
 
 .. note::
 
-   Classification with more than 2 classes requires the induction
-   of ``n_classes`` regression trees at each iteration,
-   thus, the total number of induced trees equals
-   ``n_classes * n_estimators``. For datasets with a large number
-   of classes we strongly recommend to use
-   :class:`RandomForestClassifier` as an alternative to :class:`GradientBoostingClassifier` .
-
+   
+   超过两类的分类问题在每一次迭代时需要归纳 ``n_classes`` 个回归树。因此，所有的需要归纳的树数量等于 ``n_classes * n_estimators`` 。
+   对于拥有大量类别的数据集我们强烈推荐使用 :class:`RandomForestClassifier` 来代替 :class:`GradientBoostingClassifier`  。
+   
 回归
 ----------
 
-:class:`GradientBoostingRegressor` supports a number of
-:ref:`different loss functions <gradient_boosting_loss>`
-for regression which can be specified via the argument
-``loss``; the default loss function for regression is least squares (``'ls'``).
+:class:`GradientBoostingRegressor` 支持一系列 ref:`不同的损失函数 <gradient_boosting_loss>`
+用于回归，可以用参数 ``loss`` 来设置; 用于回归的默认损失函数是： least squares (``'ls'``).
 
 ::
 
@@ -451,25 +426,19 @@ for regression which can be specified via the argument
     >>> mean_squared_error(y_test, est.predict(X_test))    # doctest: +ELLIPSIS
     5.00...
 
-The figure below shows the results of applying :class:`GradientBoostingRegressor`
-with least squares loss and 500 base learners to the Boston house price dataset
-(:func:`sklearn.datasets.load_boston`).
-The plot on the left shows the train and test error at each iteration.
-The train error at each iteration is stored in the
-:attr:`~GradientBoostingRegressor.train_score_` attribute
-of the gradient boosting model. The test error at each iterations can be obtained
-via the :meth:`~GradientBoostingRegressor.staged_predict` method which returns a
-generator that yields the predictions at each stage. Plots like these can be used
-to determine the optimal number of trees (i.e. ``n_estimators``) by early stopping.
-The plot on the right shows the feature importances which can be obtained via
-the ``feature_importances_`` property.
+下图展示了应用损失函数为最小二乘损失，基学习器个数为 500 的 :class:`GradientBoostingRegressor` 来处理 
+波士顿房价数据集 (:func:`sklearn.datasets.load_boston`) 的结果。左图表示每一次迭代的训练误差和测试误差。
+每一次迭代的训练误差保存在 gradient boosting model 的 :attr:`~GradientBoostingRegressor.train_score_` 属性中，
+每一次迭代的测试误差能够通过 :meth:`~GradientBoostingRegressor.staged_predict` 方法获取，该方法返回一个生成器，
+用来产生每一步迭代的预测结果。类似下面这样的图表， 可以用于决定最优的树的数量，从而进行提前停止。右图表示每个特征的重要性，
+它 可以通过 ``feature_importances_`` 属性来获取.
 
 .. figure:: ../auto_examples/ensemble/images/sphx_glr_plot_gradient_boosting_regression_001.png
    :target: ../auto_examples/ensemble/plot_gradient_boosting_regression.html
    :align: center
    :scale: 75
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_regression.py`
  * :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_oob.py`
@@ -479,9 +448,8 @@ the ``feature_importances_`` property.
 拟合附加的弱学习器
 --------------------------------
 
-Both :class:`GradientBoostingRegressor` and :class:`GradientBoostingClassifier`
-support ``warm_start=True`` which allows you to add more estimators to an already
-fitted model.
+:class:`GradientBoostingRegressor` 和 :class:`GradientBoostingClassifier` 都支持 ``warm_start=True`` ，
+它允许你添加更多的估计器到一个已经训练好的模型上。
 
 ::
 
@@ -495,22 +463,21 @@ fitted model.
 控制Tree的size
 -------------------------
 
-The size of the regression tree base learners defines the level of variable
-interactions that can be captured by the gradient boosting model. In general,
-a tree of depth ``h`` can capture interactions of order ``h`` .
-There are two ways in which the size of the individual regression trees can
-be controlled.
+回归树基学习器的大小定义了能够被  gradient boosting model 捕捉的变量（即特征）相互作用（即多个特征共同对预测产生影响）的程度。
+总的来讲, 一棵深度为 ``h`` 的树能够捕捉 ``h`` 阶的相互作用(interactions)。有两种方法用来控制单个回归树的大小：
 
-If you specify ``max_depth=h`` then complete binary trees
-of depth ``h`` will be grown. Such trees will have (at most) ``2**h`` leaf nodes
-and ``2**h - 1`` split nodes.
+如果你指定 ``max_depth=h`` ，那么将会产生一个深度为 ``h`` 的完全二叉树。这棵树将会有（至多） ``2**h`` 个叶子节点(leaf nodes)和
+``2**h - 1`` 个切分节点(split nodes)。
 
-Alternatively, you can control the tree size by specifying the number of
-leaf nodes via the parameter ``max_leaf_nodes``. In this case,
-trees will be grown using best-first search where nodes with the highest improvement
-in impurity will be expanded first.
-A tree with ``max_leaf_nodes=k`` has ``k - 1`` split nodes and thus can
-model interactions of up to order ``max_leaf_nodes - 1`` .
+另外，你能通过参数 ``max_leaf_nodes`` 指定叶子节点的数量来控制树的大小。在这种情况下，
+树将会使用最优优先搜索(best-first search)来生成，这种搜索方式是通过每次选取对不纯度提升最大的节点来展开。
+一棵 ``max_leaf_nodes=k`` 的树拥有 ``k - 1`` 个切分节点，因此可以建模阶数最高达到 ``max_leaf_nodes - 1`` 阶
+的相互作用（即 max_leaf_nodes - 1 个特征共同决定预测值）。
+
+我们发现 ``max_leaf_nodes=k`` 可以给出与  ``max_depth=k-1`` 品质相当的结果，但是其训练速度明显更快，
+同时也会以多一点的训练误差作为代价。
+参数 ``max_leaf_nodes`` 对应于文章 [F2001] 中梯度提升章节中的变量 ``J`` ，同时与 R 语言的 gbm 包的参数 ``interaction.depth``
+相关， 两者间的关系是 ``max_leaf_nodes == interaction.depth + 1`` 。
 
 We found that ``max_leaf_nodes=k`` gives comparable results to ``max_depth=k-1``
 but is significantly faster to train at the expense of a slightly higher
@@ -868,41 +835,37 @@ averaged.
 投票分类器(Voting Classifier)
 ========================
 
-The idea behind the :class:`VotingClassifier` is to combine
-conceptually different machine learning classifiers and use a majority vote
-or the average predicted probabilities (soft vote) to predict the class labels.
-Such a classifier can be useful for a set of equally well performing model
-in order to balance out their individual weaknesses.
+投票分类器(:class:`VotingClassifier`)背后的思想是组合概念上不同的分类器然后使用多数表决法(majority vote) 
+或 使用对预测概率取平均的方法 来预测类标签。 这种投票分类器在组合一些性能不相上下的模型的时候比较有用，因为这样可以平衡每个单独分类器的弱点。
 
 
-多数类标签 (又称为 多数/硬投票)
+多数/硬投票(majority voting)
 --------------------------------------------
 
-In majority voting, the predicted class label for a particular sample is
-the class label that represents the majority (mode) of the class labels
-predicted by each individual classifier.
+在majority voting中，对一个特定样本的预测类标签是所有由每个单独分类器预测出的类标签中出现次数最多的那个类标签。
+(译者注：其实就是 票多者胜出 的意思，所以叫 "硬投票" )
 
-E.g., if the prediction for a given sample is
+举个栗子,对一个给定的样本，有三个分类器都给出他们的预测结果：
 
 - classifier 1 -> class 1
 - classifier 2 -> class 1
 - classifier 3 -> class 2
 
-the VotingClassifier (with ``voting='hard'``) would classify the sample
-as "class 1" based on the majority class label.
+VotingClassifier (with ``voting='hard'``) 将会把这个样本分为 "class 1" 类，因为"class 1" 类得了两票而"class 2" 类只有一票。
 
-In the cases of a tie, the `VotingClassifier` will select the class based
-on the ascending sort order. E.g., in the following scenario
+在得票数势均力敌的情况下，`VotingClassifier` 将会基于升序来选择类标签。
+举个栗子, 在下面的场景中，
 
 - classifier 1 -> class 2
 - classifier 2 -> class 1
 
-the class label 1 will be assigned to the sample.
+class label 1 将会被分配给样本。
+
 
 用法
 .....
 
-The following example shows how to fit the majority rule classifier::
+下面的例子展示了怎样去拟合硬投票规则的分类器 ::
 
    >>> from sklearn import datasets
    >>> from sklearn.model_selection import cross_val_score
@@ -933,21 +896,14 @@ The following example shows how to fit the majority rule classifier::
 加权平均概率(软投票)
 --------------------------------------------
 
-相比于多数(硬)投票法(majority voting (hard voting))， soft voting 返回
-returns the class label as argmax of the sum of predicted probabilities.
+相比于多数(硬)投票法(hard voting), 软投票法(soft voting) 返回预测概率的和的最大值所对应的那个标签作为最终的预测类标签。
 
-Specific weights can be assigned to each classifier via the ``weights``
-parameter. When weights are provided, the predicted class probabilities
-for each classifier are collected, multiplied by the classifier weight,
-and averaged. The final class label is then derived from the class label
-with the highest average probability.
+可以通过参数 ``weights`` 给每个分类器分配特定的权重。如果提供了权重，每个分类器预测出的类概率分布都会收集起来并乘以对应的权重然后再取平均。
+最终的类标签就是取平均以后的概率分布中最大概率值所对应的那个类标签。
 
-To illustrate this with a simple example, let's assume we have 3
-classifiers and a 3-class classification problems where we assign
-equal weights to all classifiers: w1=1, w2=1, w3=1.
+为了用一个简单的例子说明其用法, 假定我们有3个分类器和一个3个类的分类问题，我们给每个分类器分配相同的权重: w1=1, w2=1, w3=1.
 
-The weighted average probabilities for a sample would then be
-calculated as follows:
+对一个给定样本， 其加权平均概率的计算如下所示：
 
 ================  ==========    ==========      ==========
 classifier        class 1       class 2         class 3
@@ -958,12 +914,11 @@ classifier 3      w3 * 0.3      w3 * 0.4        w3 * 0.3
 weighted average  0.37	        0.4             0.23
 ================  ==========    ==========      ==========
 
-Here, the predicted class label is 2, since it has the
-highest average probability.
+在这里, 预测出的类标签是 2, 因为它有最高的平均概率值。
 
-The following example illustrates how the decision regions may change
-when a soft `VotingClassifier` is used based on an linear Support
-Vector Machine, a Decision Tree, and a K-nearest neighbor classifier::
+
+下面的这个例子展示的是用线性SVM, 决策树, 和 K-最近邻 作为基本分类器构建一个soft `VotingClassifier`。 
+我们要观察当使用这样一个 soft `VotingClassifier` 时决策区域将会如何变化::
 
    >>> from sklearn import datasets
    >>> from sklearn.tree import DecisionTreeClassifier
@@ -1018,7 +973,7 @@ Vector Machine, a Decision Tree, and a K-nearest neighbor classifier::
 
    >>> eclf = VotingClassifier(estimators=[('lr', clf1), ('rf', clf2), ('gnb', clf3)], voting='soft')
 
-可选的, 权重可以被提供给每个单独的分类器s::
+可选的, 权重可以被提供给每个单独的分类器 ::
 
    >>> eclf = VotingClassifier(estimators=[('lr', clf1), ('rf', clf2), ('gnb', clf3)],
    ...                         voting='soft', weights=[2, 5, 1])
