@@ -565,39 +565,34 @@ Bayesian Ridge Regression 用于回归问题 ::
 主动相关决策理论 - ARD
 ---------------------------------------
 
-:class:`ARDRegression` is very similar to `Bayesian Ridge Regression`_,
-but can lead to sparser weights :math:`w` [1]_ [2]_.
-:class:`ARDRegression` poses a different prior over :math:`w`, by dropping the
-assumption of the Gaussian being spherical.
+:class:`ARDRegression` 类 与  `Bayesian Ridge Regression`_ 非常相似,
+但是可以学习到更稀疏的模型权重参数(sparser weights) :math:`w` [1]_ [2]_。
+:class:`ARDRegression` 通过放弃球形高斯分布的假设(assumption of the Gaussian being spherical)
+在 :math:`w` 上强加了一个不同的先验分布。
 
-Instead, the distribution over :math:`w` is assumed to be an axis-parallel,
-elliptical Gaussian distribution.
+与贝叶斯岭回归不同的是, :math:`w` 上的分布被假定为是一个与坐标轴平行的(axis-parallel),椭圆形高斯分布。
 
-This means each weight :math:`w_{i}` is drawn from a Gaussian distribution,
-centered on zero and with a precision :math:`\lambda_{i}`:
+这意味着 每一个权重 :math:`w_{i}` 是从一个高斯分布抽取的，此高斯分布以0位中心并且有一个精度 :math:`\lambda_{i}`:
 
 .. math:: p(w|\lambda) = \mathcal{N}(w|0,A^{-1})
 
 with :math:`diag \; (A) = \lambda = \{\lambda_{1},...,\lambda_{p}\}`.
 
-In contrast to `Bayesian Ridge Regression`_, each coordinate of :math:`w_{i}`
-has its own standard deviation :math:`\lambda_i`. The prior over all
-:math:`\lambda_i` is chosen to be the same gamma distribution given by
-hyperparameters :math:`\lambda_1` and :math:`\lambda_2`.
+与 `Bayesian Ridge Regression`_ 相比, :math:`w_{i}` 的每一个坐标都有自己的标准差 :math:`\lambda_i`。 在所有
+:math:`\lambda_i` 上的先验分布被选择为由超参数 :math:`\lambda_1` 和 :math:`\lambda_2` 给出的相同的伽马分布(gamma distribution) 。
 
 .. figure:: ../auto_examples/linear_model/images/sphx_glr_plot_ard_001.png
    :target: ../auto_examples/linear_model/plot_ard.html
    :align: center
    :scale: 50%
 
-ARD is also known in the literature as *Sparse Bayesian Learning* and
-*Relevance Vector Machine* [3]_ [4]_.
+ARD 在文献中也被称之为 *Sparse Bayesian Learning* 和 *Relevance Vector Machine* [3]_ [4]_.
 
-.. topic:: Examples:
+.. topic:: 案例:
 
   * :ref:`sphx_glr_auto_examples_linear_model_plot_ard.py`
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     .. [1] Christopher M. Bishop: Pattern Recognition and Machine Learning, Chapter 7.2.1
 
@@ -614,12 +609,11 @@ ARD is also known in the literature as *Sparse Bayesian Learning* and
 Logistic 回归
 ===================
 
-Logistic 回归，虽然名字里有 “回归” 二字，但实际上是解决分类问题的一类线性模型。
-在某些文献中，logistic 回归又被称作 logit 回归，maximum-entropy classification（MaxEnt，最大熵分类），
-或 log-linear classifier（对数线性分类器）。
-该模型利用函数 `logistic function <https://en.wikipedia.org/wiki/Logistic_function>`_ 将单次试验（single trial）的可能结果输出为概率。
+Logistic回归，虽然名字里有 “回归” 二字，但实际上是解决分类问题的一类线性模型。
+在某些文献中，logistic回归又被称作 logit回归，最大熵分类(maximum-entropy classification (MaxEnt))，或 对数线性分类器(log-linear classifier)。
+在该模型中，使用函数 `logistic function <https://en.wikipedia.org/wiki/Logistic_function>`_  把单次试验（single trial）的可能的输出结果建模为概率分布。
 
-scikit-learn 中 logistic regression 在 :class:`LogisticRegression` 类中实现了二分类（binary）、
+scikit-learn 中的 logistic regression 在 :class:`LogisticRegression` 类中实现了二分类（binary）、
 一对多分类（one-vs-rest）及多项式 logistic 回归，并带有可选的 L1 和 L2 正则化。
 
 作为一个优化问题，带 L2 惩罚项的二分类 logistic 回归要最小化以下代价函数（cost function）：
@@ -630,38 +624,29 @@ scikit-learn 中 logistic regression 在 :class:`LogisticRegression` 类中实�
 
 .. math:: \min_{w, c} \|w\|_1 + C \sum_{i=1}^n \log(\exp(- y_i (X_i^T w + c)) + 1).
 
-注意, 在这个记法中, 假定了观测 :math:`y_i` 在集合 :math:`{-1, 1}` 中获取值(takes values in the set
-:math:`{-1, 1}` at trial :math:`i`)。
+注意, 在这个记法中, 假定了第 :math:`i` 次试验的观测值 :math:`y_i` 在集合 :math:`{-1, 1}` 中取值。
 
 在 :class:`LogisticRegression` 类中实现了这些优化算法: "liblinear", "newton-cg", "lbfgs", "sag" 和 "saga"。
 
-The solver "liblinear" uses a coordinate descent (CD) algorithm, and relies
-on the excellent C++ `LIBLINEAR library
-<https://www.csie.ntu.edu.tw/~cjlin/liblinear/>`_, which is shipped with
-scikit-learn. However, the CD algorithm implemented in liblinear cannot learn
-a true multinomial (multiclass) model; instead, the optimization problem is
-decomposed in a "one-vs-rest" fashion so separate binary classifiers are
-trained for all classes. This happens under the hood, so
-:class:`LogisticRegression` instances using this solver behave as multiclass
-classifiers. For L1 penalization :func:`sklearn.svm.l1_min_c` allows to
-calculate the lower bound for C in order to get a non "null" (all feature
-weights to zero) model.
+求解器 "liblinear" 使用一种坐标下降算法(coordinate descent (CD) algorithm), 并且依赖于优秀的C++库 
+`LIBLINEAR library <https://www.csie.ntu.edu.tw/~cjlin/liblinear/>`_, 这个库已经被scikit-learn集成了进来。
+然而，用liblinear库中实现的CD算法不能学习真正的多项式(多类)模型；作为替代方案，优化问题是以"one-vs-rest"的方式分解的，
+因此对所有类都分别进行了binary classifier的训练。这一切都发生在底层，因此使用此 "liblinear" 求解器的 :class:`LogisticRegression` 
+类的实例表现的像个多类分类器一样。 对于 L1 惩罚，函数 :func:`sklearn.svm.l1_min_c` 允许计算 C 的下界以便获得一个非空的模型(non "null" model)。
+所谓 "null model" 是指 所有特征分量的权重系数都为0，也就是 coefficients 都是0。
 
-The "lbfgs", "sag" and "newton-cg" solvers only support L2 penalization and
-are found to converge faster for some high dimensional data. Setting
-`multi_class` to "multinomial" with these solvers learns a true multinomial
-logistic regression model [5]_, which means that its probability estimates
-should be better calibrated than the default "one-vs-rest" setting.
+"lbfgs", "sag" 和 "newton-cg" 求解器仅支持L2惩罚项而且被发现对某些高维数据收敛更快。
+把 `multi_class` 设置成 "multinomial" 可以学习到一个真正的多项式(multinomial) logistic回归模型 [5]_, 这意味着与默认的 "one-vs-rest" 设置相比，
+它的概率分布估计应该被更好的校准。
 
-The "sag" solver uses a Stochastic Average Gradient descent [6]_. It is faster
-than other solvers for large datasets, when both the number of samples and the
-number of features are large.
+"sag" 求解器使用随机平均梯度下降(SAGD: Stochastic Average Gradient descent [6]_)算法。在大数据集(样本数量和特征数量都很多的数据集)上，
+它比其他求解器要快很多。
 
-The "saga" solver [7]_ is a variant of "sag" that also supports the
-non-smooth `penalty="l1"` option. This is therefore the solver of choice
-for sparse multinomial logistic regression.
+"saga" 求解器 [7]_ 是 "sag" 的一个变体，也支持 non-smooth `penalty="l1"` 选项。因此，当需要进行 稀疏多项式回归
+(sparse multinomial logistic regression)的时候，就应该选择这个求解器。
 
-In a nutshell, the following table summarizes the penalties supported by each solver:
+
+简而言之，下表总结了每个求解器所支持的惩罚。
 
 +------------------------------+-----------------+-------------+-----------------+-----------+------------+
 |                              |                       **Solvers**                                        |
@@ -685,8 +670,7 @@ In a nutshell, the following table summarizes the penalties supported by each so
 | Robust to unscaled datasets  |       yes       |     yes     |       yes       |    no     |    no      |
 +------------------------------+-----------------+-------------+-----------------+-----------+------------+
 
-The "saga" solver is often the best choice but requires scaling. The "liblinear" solver is
-used by default for historical reasons.
+"saga" 求解器通常是最好的选择但是需要做特征尺度缩放。 "liblinear" 求解器因为某些历史原因被用作默认值。
 
 对于大数据集，还可以用 :class:`SGDClassifier` ，并使用对数损失（'log' loss）。
 
@@ -706,16 +690,11 @@ used by default for historical reasons.
 
 .. topic:: 与 liblinear 的不同:
 
-   There might be a difference in the scores obtained between
-   :class:`LogisticRegression` with ``solver=liblinear``
-   or :class:`LinearSVC` and the external liblinear library directly,
-   when ``fit_intercept=False`` and the fit ``coef_`` (or) the data to
-   be predicted are zeroes. This is because for the sample(s) with
-   ``decision_function`` zero, :class:`LogisticRegression` and :class:`LinearSVC`
-   predict the negative class, while liblinear predicts the positive class.
-   Note that a model with ``fit_intercept=False`` and having many samples with
-   ``decision_function`` zero, is likely to be a underfit, bad model and you are
-   advised to set ``fit_intercept=True`` and increase the intercept_scaling.
+   当 ``fit_intercept=False`` 和 拟合得到的 ``coef_`` 是0 (或) 用于预测的数据是 0 的时候，使用参数为``solver=liblinear``的 
+   :class:`LogisticRegression` 类 或 :class:`LinearSVC` 类 与 直接使用外部库liblinear 所获得的 得分 可能会有一些差别。
+   这是因为 对于那些 ``decision_function`` 为zero的样本, :class:`LogisticRegression` 和 :class:`LinearSVC` 给出的预测是负类，而liblinear库给出的预测
+   是正类。请注意 一个参数为 ``fit_intercept=False`` 并且在很多样本上 ``decision_function`` 为0的模型很可能是一个欠拟合的坏模型，并且建议你设置 
+   ``fit_intercept=True`` 并且增加 intercept_scaling。
 
 .. note:: **利用稀疏 logistic 回归进行特征选择**
 
@@ -723,14 +702,10 @@ used by default for historical reasons.
    相当于进行了特征选择（feature selection），详情参见 :ref:`l1_feature_selection` 。
    .
 
-:class:`LogisticRegressionCV` implements Logistic Regression with
-builtin cross-validation to find out the optimal C parameter.
-"newton-cg", "sag", "saga" and "lbfgs" solvers are found to be faster
-for high-dimensional dense data, due to warm-starting. For the
-multiclass case, if `multi_class` option is set to "ovr", an optimal C
-is obtained for each class and if the `multi_class` option is set to
-"multinomial", an optimal C is obtained by minimizing the cross-entropy
-loss.
+:class:`LogisticRegressionCV` 类实现了Logistic Regression 和内建的 cross-validation 的融合用以寻找最优的 C 参数。
+"newton-cg", "sag", "saga" 和 "lbfgs" 求解器 被发现在高维稠密数据上比较快, 因为其可以 warm-starting。 对于多分类情况，
+如果 `multi_class` 选项被设置为 "ovr", 那么会为每个类都获取一个最优的 C ;如果 `multi_class` 选项被设置为 "multinomial", 
+那么一个最优的 C 是通过最小化交叉熵损失来获得的。
 
 .. topic:: 参考文献:
 
@@ -773,18 +748,14 @@ loss.
 被动攻击算法(Passive Aggressive Algorithms)
 =============================
 
-The passive-aggressive algorithms are a family of algorithms for large-scale
-learning. They are similar to the Perceptron in that they do not require a
-learning rate. However, contrary to the Perceptron, they include a
-regularization parameter ``C``.
+The passive-aggressive algorithms 是一个用于大规模学习的算法家族。
+他们与感知器(Perceptron)相似,因为他们不需要学习器。 然而, 与感知器不同的是，他们包括了一个正则化参数 ``C``。
 
-For classification, :class:`PassiveAggressiveClassifier` can be used with
-``loss='hinge'`` (PA-I) or ``loss='squared_hinge'`` (PA-II).  For regression,
-:class:`PassiveAggressiveRegressor` can be used with
-``loss='epsilon_insensitive'`` (PA-I) or
-``loss='squared_epsilon_insensitive'`` (PA-II).
+对于分类问题, :class:`PassiveAggressiveClassifier` 类 可以和 ``loss='hinge'`` (PA-I) 或 ``loss='squared_hinge'`` (PA-II)
+一起使用。  对于回归问题, :class:`PassiveAggressiveRegressor` 类 可以和 ``loss='epsilon_insensitive'`` (PA-I) 或
+``loss='squared_epsilon_insensitive'`` (PA-II) 一起使用。
 
-.. topic:: References:
+.. topic:: 参考文献:
 
 
  * `"Online Passive-Aggressive Algorithms"
@@ -819,7 +790,7 @@ Robust regression 特别适用于回归模型包含损坏数据（corrupt data�
    :target: ../auto_examples/linear_model/plot_robust_fit.html
    :scale: 60%
 
-* **Outliers in X or in y**?
+* **  异常值在 X 中 还是在 y 中  ** ?
 
   ==================================== ====================================
   Outliers in the y direction          Outliers in the X direction
@@ -827,10 +798,10 @@ Robust regression 特别适用于回归模型包含损坏数据（corrupt data�
   |y_outliers|                         |X_outliers|
   ==================================== ====================================
 
-* **Fraction of outliers versus amplitude of error**
+* **  异常值的比例 versus 误差幅度  **
 
-  The number of outlying points matters, but also how much they are
-  outliers.
+  外围点(outlying points)的数目很重要，但其中有多少是离群点(The number of outlying points matters, but also how much they are
+  outliers.)。
 
   ==================================== ====================================
   Small outliers                       Large outliers
@@ -838,41 +809,32 @@ Robust regression 特别适用于回归模型包含损坏数据（corrupt data�
   |y_outliers|                         |large_y_outliers|
   ==================================== ====================================
 
-An important notion of robust fitting is that of breakdown point: the
-fraction of data that can be outlying for the fit to start missing the
-inlying data.
+鲁棒回归的一个非常重要的概念就是 崩溃点(breakdown point): the fraction of data that can be outlying for the fit 
+to start missing the inlying data.
 
-Note that in general, robust fitting in high-dimensional setting (large
-`n_features`) is very hard. The robust models here will probably not work
-in these settings.
+注意，一般来说，在高维(比较大的 `n_features` )情况中，鲁棒的拟合是非常困难的.这里的鲁棒模型可能无法在这些设置中工作。
 
 
-.. topic:: **Trade-offs: which estimator?**
+.. topic:: **折中权衡: 该用哪个估计器 ?**
 
-  Scikit-learn provides 3 robust regression estimators:
+  Scikit-learn 提供了 3 个 鲁棒回归估计器:
   :ref:`RANSAC <ransac_regression>`,
-  :ref:`Theil Sen <theil_sen_regression>` and
+  :ref:`Theil Sen <theil_sen_regression>` 和
   :ref:`HuberRegressor <huber_regression>`
 
-  * :ref:`HuberRegressor <huber_regression>` should be faster than
-    :ref:`RANSAC <ransac_regression>` and :ref:`Theil Sen <theil_sen_regression>`
-    unless the number of samples are very large, i.e ``n_samples`` >> ``n_features``.
-    This is because :ref:`RANSAC <ransac_regression>` and :ref:`Theil Sen <theil_sen_regression>`
-    fit on smaller subsets of the data. However, both :ref:`Theil Sen <theil_sen_regression>`
-    and :ref:`RANSAC <ransac_regression>` are unlikely to be as robust as
-    :ref:`HuberRegressor <huber_regression>` for the default parameters.
+  * :ref:`HuberRegressor <huber_regression>` 应该比 :ref:`RANSAC <ransac_regression>` 和 :ref:`Theil Sen <theil_sen_regression>` 更快，
+    除非样本数量非常大(i.e ``n_samples`` >> ``n_features``)。
+    这是因为 :ref:`RANSAC <ransac_regression>` 和 :ref:`Theil Sen <theil_sen_regression>` 在数据集的一个较小的子集上进行拟合。
+    然而,在默认参数下， :ref:`Theil Sen <theil_sen_regression>` 和 :ref:`RANSAC <ransac_regression>` 都不太可能与
+    :ref:`HuberRegressor <huber_regression>` 一样鲁棒。
 
-  * :ref:`RANSAC <ransac_regression>` is faster than :ref:`Theil Sen <theil_sen_regression>`
-    and scales much better with the number of samples
+  * :ref:`RANSAC <ransac_regression>` 比 :ref:`Theil Sen <theil_sen_regression>` 更快，并且在样本量大的时候可伸缩性更好。
 
-  * :ref:`RANSAC <ransac_regression>` will deal better with large
-    outliers in the y direction (most common situation)
+  * :ref:`RANSAC <ransac_regression>` 在 y 上有比较大的异常值的时候处理的更好点儿。
 
-  * :ref:`Theil Sen <theil_sen_regression>` will cope better with
-    medium-size outliers in the X direction, but this property will
-    disappear in large dimensional settings.
+  * :ref:`Theil Sen <theil_sen_regression>` 在 X 上有中等大小的异常值的时候可以应付的更好，但是这一优点在高维空间中的问题上就消失了。
 
- When in doubt, use :ref:`RANSAC <ransac_regression>`
+ 当你犹豫不决的时候, 使用 :ref:`RANSAC <ransac_regression>` 吧!
 
 .. _ransac_regression:
 
@@ -900,24 +862,20 @@ RANSAC算法的每个迭代执行以下步骤：
 
 1. 从原始数据中随机选择 ``min_samples`` 个样本，然后检查这些样本是否是有效的(请看 ``is_data_valid``)。
 2. 在上一步选出的随机子集上拟合一个模型 (``base_estimator.fit``) 并检查估计出的模型是否有效 (请看 ``is_model_valid``)。
-3. Classify all data as inliers or outliers by calculating the residuals
-   to the estimated model (``base_estimator.predict(X) - y``) - all data
-   samples with absolute residuals smaller than the ``residual_threshold``
-   are considered as inliers.
-4. Save fitted model as best model if number of inlier samples is
-   maximal. In case the current estimated model has the same number of
-   inliers, it is only considered as the best model if it has better score.
+3. 通过计算样本与估计出的模型的预测值之间的残差(residuals)把所有样本数据分为 inliers 或 outliers  (``base_estimator.predict(X) - y``) 。
+   那些绝对残差小于残差阈值 ``residual_threshold`` 的所有样本被认为是 inliers。
+4. 如果inlier样本的数量达到最大值就把拟合好的模型保存下来作为最优模型。
+   如果 当前估计出的模型(current estimated model)与历史最优模型有同样多的inlier样本量 这样的情况发生了，
+   那么只有在当前估计出的模型的得分更高的时候它才会被认为是最优模型。
 
-These steps are performed either a maximum number of times (``max_trials``) or
-until one of the special stop criteria are met (see ``stop_n_inliers`` and
-``stop_score``). The final model is estimated using all inlier samples (consensus
-set) of the previously determined best model.
+上述几个步骤会一直执行 直到达到最大迭代次数(``max_trials``) 或 其中一个特定的停止准则被满足了 (请看 ``stop_n_inliers`` 和
+``stop_score``)。 最终的模型是使用所有inlier样本(consensus set:一致集)估计得到的。
+而最后使用的所有inlier样本是由之前迭代过程中确定的历史最优模型在原始样本集上挑选出的。
 
-The ``is_data_valid`` and ``is_model_valid`` functions allow to identify and reject
-degenerate combinations of random sub-samples. If the estimated model is not
-needed for identifying degenerate cases, ``is_data_valid`` should be used as it
-is called prior to fitting the model and thus leading to better computational
-performance.
+``is_data_valid`` 和 ``is_model_valid`` 函数允许辨识和拒绝(identify and reject)随机子样本集的退化组合( degenerate combinations)。
+如果不需要估计出的模型(estimated model)来识别退化情形，那么 ``is_data_valid`` 应该被使用，因为
+它被称为 prior to fitting the model ，从而获得更好的计算性能。(``is_data_valid`` should be used as it is called prior to 
+fitting the model and thus leading to better computational performance.)
 
 
 .. topic:: 案例:
@@ -957,35 +915,27 @@ Theil-Sen 估计器: 广义中值估计器
 理论方面的思考
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:class:`TheilSenRegressor` is comparable to the :ref:`Ordinary Least Squares
-(OLS) <ordinary_least_squares>` in terms of asymptotic efficiency and as an
-unbiased estimator. In contrast to OLS, Theil-Sen is a non-parametric
-method which means it makes no assumption about the underlying
-distribution of the data. Since Theil-Sen is a median-based estimator, it
-is more robust against corrupted data aka outliers. In univariate
-setting, Theil-Sen has a breakdown point of about 29.3% in case of a
-simple linear regression which means that it can tolerate arbitrary
-corrupted data of up to 29.3%.
+在渐近效率和作为无偏估计器方面，:class:`TheilSenRegressor` 与 :ref:`Ordinary Least Squares (OLS) <ordinary_least_squares>`  
+是具有可比性的。与OLS相比, Theil-Sen 是一个无参(non-parametric)的方法，这意味着它没有对数据的潜在分布做出任何假设。
+因为 Theil-Sen 是一个基于中值的估计器(median-based estimator), 它在对抗损坏的数据也称为异常值(outliers)时更加的鲁棒。
+在单变量(univariate)设置下，在简单线性回归任务上，Theil-Sen 算法有一个大概29.3%的崩溃点(breakdown point of about 29.3%)，
+这意味着它可以容忍的任意损坏数据的占比可以达到29.3%。
 
 .. figure:: ../auto_examples/linear_model/images/sphx_glr_plot_theilsen_001.png
    :target: ../auto_examples/linear_model/plot_theilsen.html
    :align: center
    :scale: 50%
 
-The implementation of :class:`TheilSenRegressor` in scikit-learn follows a
-generalization to a multivariate linear regression model [#f1]_ using the
-spatial median which is a generalization of the median to multiple
-dimensions [#f2]_.
+scikit-learn 的 :class:`TheilSenRegressor` 类用 空间中位数(spatial median: 把一维中位数推广到多维空间 [#f2]_) 
+实现了对多变量线性回归模型的推广 [#f1]_。
 
-In terms of time and space complexity, Theil-Sen scales according to
+就时间与空间复杂度来说, Theil-Sen 可以依据下式进行伸缩(scale):
 
 .. math::
     \binom{n_{samples}}{n_{subsamples}}
 
-which makes it infeasible to be applied exhaustively to problems with a
-large number of samples and features. Therefore, the magnitude of a
-subpopulation can be chosen to limit the time and space complexity by
-considering only a random subset of all possible combinations.
+这使得在具有大量样本和大量特征的问题上进行全面的应用是不可行的。
+因此, 通过只考虑所有可能组合的一个随机子集，可以选择子种群的大小来限制时间和空间复杂性。
 
 .. topic:: 案例:
 
