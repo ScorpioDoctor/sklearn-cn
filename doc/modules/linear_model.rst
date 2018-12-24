@@ -879,19 +879,14 @@ in these settings.
 RANSAC:随机抽样一致性算法
 --------------------------------
 
-RANSAC (RANdom SAmple Consensus) fits a model from random subsets of
-inliers from the complete data set.
+RANSAC (RANdom SAmple Consensus) 在完整数据集的所有inliers的随机子集上拟合一个模型(
+fits a model from random subsets of inliers from the complete data set.)。
 
-RANSAC is a non-deterministic algorithm producing only a reasonable result with
-a certain probability, which is dependent on the number of iterations (see
-`max_trials` parameter). It is typically used for linear and non-linear
-regression problems and is especially popular in the fields of photogrammetric
-computer vision.
+RANSAC 是一种不确定性算法(non-deterministic algorithm),它以某个概率产生一个合理的结果(reasonable result ),
+这依赖于迭代次数(请看参数 `max_trials` 的解释)。 它通常用于线性和非线性回归问题，在摄影测量计算机视觉领域尤其流行。
 
-The algorithm splits the complete input sample data into a set of inliers,
-which may be subject to noise, and outliers, which are e.g. caused by erroneous
-measurements or invalid hypotheses about the data. The resulting model is then
-estimated only from the determined inliers.
+RANSAC 算法把完整的输入样本数据划分成两个集合：inliers 和 outliers。inliers样本可能会受噪声影响，
+outliers样本可能是由于测量错误或对数据的无效假设而产生的。所以，RANSAC产生的模型是只在确定的inliers样本集上估计出来的。
 
 .. figure:: ../auto_examples/linear_model/images/sphx_glr_plot_ransac_001.png
    :target: ../auto_examples/linear_model/plot_ransac.html
@@ -901,12 +896,10 @@ estimated only from the determined inliers.
 算法细节
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Each iteration performs the following steps:
+RANSAC算法的每个迭代执行以下步骤：
 
-1. Select ``min_samples`` random samples from the original data and check
-   whether the set of data is valid (see ``is_data_valid``).
-2. Fit a model to the random subset (``base_estimator.fit``) and check
-   whether the estimated model is valid (see ``is_model_valid``).
+1. 从原始数据中随机选择 ``min_samples`` 个样本，然后检查这些样本是否是有效的(请看 ``is_data_valid``)。
+2. 在上一步选出的随机子集上拟合一个模型 (``base_estimator.fit``) 并检查估计出的模型是否有效 (请看 ``is_model_valid``)。
 3. Classify all data as inliers or outliers by calculating the residuals
    to the estimated model (``base_estimator.predict(X) - y``) - all data
    samples with absolute residuals smaller than the ``residual_threshold``
@@ -927,12 +920,12 @@ is called prior to fitting the model and thus leading to better computational
 performance.
 
 
-.. topic:: Examples:
+.. topic:: 案例:
 
   * :ref:`sphx_glr_auto_examples_linear_model_plot_ransac.py`
   * :ref:`sphx_glr_auto_examples_linear_model_plot_robust_fit.py`
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * https://en.wikipedia.org/wiki/RANSAC
  * `"Random Sample Consensus: A Paradigm for Model Fitting with Applications to
@@ -948,18 +941,16 @@ performance.
 Theil-Sen 估计器: 广义中值估计器
 --------------------------------------------------------
 
-The :class:`TheilSenRegressor` estimator uses a generalization of the median in
-multiple dimensions. It is thus robust to multivariate outliers. Note however
-that the robustness of the estimator decreases quickly with the dimensionality
-of the problem. It looses its robustness properties and becomes no
-better than an ordinary least squares in high dimension.
+:class:`TheilSenRegressor` estimator uses a generalization of the median in multiple dimensions. 
+因此它对多变量离群点(multivariate outliers 或者叫 多元outliers) 比较鲁棒。但是，需要注意的是该估计器的鲁棒性会随着问题的维数增大而迅速降低。
+在高维情形中它会丧失鲁棒性并且变得不会比普通最小二乘法更好。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
   * :ref:`sphx_glr_auto_examples_linear_model_plot_theilsen.py`
   * :ref:`sphx_glr_auto_examples_linear_model_plot_robust_fit.py`
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * https://en.wikipedia.org/wiki/Theil%E2%80%93Sen_estimator
 
@@ -996,11 +987,11 @@ large number of samples and features. Therefore, the magnitude of a
 subpopulation can be chosen to limit the time and space complexity by
 considering only a random subset of all possible combinations.
 
-.. topic:: Examples:
+.. topic:: 案例:
 
   * :ref:`sphx_glr_auto_examples_linear_model_plot_theilsen.py`
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     .. [#f1] Xin Dang, Hanxiang Peng, Xueqin Wang and Heping Zhang: `Theil-Sen Estimators in a Multiple Linear Regression Model. <http://home.olemiss.edu/~xdang/papers/MTSE.pdf>`_
 
@@ -1011,25 +1002,22 @@ considering only a random subset of all possible combinations.
 Huber 回归
 ----------------
 
-The :class:`HuberRegressor` is different to :class:`Ridge` because it applies a
-linear loss to samples that are classified as outliers.
-A sample is classified as an inlier if the absolute error of that sample is
-lesser than a certain threshold. It differs from :class:`TheilSenRegressor`
-and :class:`RANSACRegressor` because it does not ignore the effect of the outliers
-but gives a lesser weight to them.
+:class:`HuberRegressor` 类与 :class:`Ridge` 类有所不同，因为它将一个线性损失应用到那些被判断为是离群点的样本上。
+如果一个样本的绝对误差小于某个指定的阈值，那么这个样本就被判断为是一个 inlier。
+这与 :class:`TheilSenRegressor` 类 和 :class:`RANSACRegressor` 类是有区别的，因为它不忽略outliers的影响而是会给这些outliers一个比较小的权重。
 
 .. figure:: /auto_examples/linear_model/images/sphx_glr_plot_huber_vs_ridge_001.png
    :target: ../auto_examples/linear_model/plot_huber_vs_ridge.html
    :align: center
    :scale: 50%
 
-The loss function that :class:`HuberRegressor` minimizes is given by
+:class:`HuberRegressor` 类所要最小的损失函数由下式给出：
 
 .. math::
 
   \min_{w, \sigma} {\sum_{i=1}^n\left(\sigma + H_{\epsilon}\left(\frac{X_{i}w - y_{i}}{\sigma}\right)\sigma\right) + \alpha {||w||_2}^2}
 
-where
+其中
 
 .. math::
 
@@ -1038,34 +1026,28 @@ where
          2\epsilon|z| - \epsilon^2, & \text{otherwise}
   \end{cases}
 
-It is advised to set the parameter ``epsilon`` to 1.35 to achieve 95% statistical efficiency.
+建议把参数 ``epsilon`` 的值设为 1.35 以达到 95% 的统计效率(statistical efficiency)。
 
 注意
 -----
-The :class:`HuberRegressor` differs from using :class:`SGDRegressor` with loss set to `huber`
-in the following ways.
+:class:`HuberRegressor` 类 与 把损失参数设为 `huber` 的 :class:`SGDRegressor` 类 的区别主要有以下方面：
 
-- :class:`HuberRegressor` is scaling invariant. Once ``epsilon`` is set, scaling ``X`` and ``y``
-  down or up by different values would produce the same robustness to outliers as before.
-  as compared to :class:`SGDRegressor` where ``epsilon`` has to be set again when ``X`` and ``y`` are
-  scaled.
+- :class:`HuberRegressor` 是尺度不变的(scaling invariant)。 一旦设置了 ``epsilon`` , 把 ``X`` 和 ``y``
+  放大或缩小不同的值将会产生对outliers一样的鲁棒性，就跟没有缩放之前一样。但是在 :class:`SGDRegressor` 类中，
+  如果调整了 ``X`` 和 ``y`` 的尺度则 ``epsilon`` 也得被重新设置。
 
-- :class:`HuberRegressor` should be more efficient to use on data with small number of
-  samples while :class:`SGDRegressor` needs a number of passes on the training data to
-  produce the same robustness.
+- :class:`HuberRegressor` 在数据量比较小的时候应该会更有效率，而 :class:`SGDRegressor` 需要在训练数据集上的很多次迭代才能产生相同的鲁棒性。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
   * :ref:`sphx_glr_auto_examples_linear_model_plot_huber_vs_ridge.py`
 
-.. topic:: References:
+.. topic:: 参考文献:
 
   * Peter J. Huber, Elvezio M. Ronchetti: Robust Statistics, Concomitant scale estimates, pg 172
 
-Also, this estimator is different from the R implementation of Robust Regression
-(http://www.ats.ucla.edu/stat/r/dae/rreg.htm) because the R implementation does a weighted least
-squares implementation with weights given to each sample on the basis of how much the residual is
-greater than a certain threshold.
+另外, 这个估计器不同于鲁邦回归的R语言实现(http://www.ats.ucla.edu/stat/r/dae/rreg.htm)，因为R语言的实现做了
+一个加权最小二乘。基于 残差比给定阈值大多少 而产生的权重被赋予了每个样本。 
 
 .. _polynomial_regression:
 
