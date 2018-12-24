@@ -476,116 +476,83 @@ GBRT的缺点:
 
 我们发现 ``max_leaf_nodes=k`` 可以给出与  ``max_depth=k-1`` 品质相当的结果，但是其训练速度明显更快，
 同时也会以多一点的训练误差作为代价。
-参数 ``max_leaf_nodes`` 对应于文章 [F2001] 中梯度提升章节中的变量 ``J`` ，同时与 R 语言的 gbm 包的参数 ``interaction.depth``
-相关， 两者间的关系是 ``max_leaf_nodes == interaction.depth + 1`` 。
+参数 ``max_leaf_nodes`` 对应于文章 [F2001]_ 中gradient boosting章节中的变量 ``J`` ，同时与 R 语言的 gbm 包的参数 
+``interaction.depth`` 相关， 两者间的关系是 ``max_leaf_nodes == interaction.depth + 1`` 。
 
-We found that ``max_leaf_nodes=k`` gives comparable results to ``max_depth=k-1``
-but is significantly faster to train at the expense of a slightly higher
-training error.
-The parameter ``max_leaf_nodes`` corresponds to the variable ``J`` in the
-chapter on gradient boosting in [F2001]_ and is related to the parameter
-``interaction.depth`` in R's gbm package where ``max_leaf_nodes == interaction.depth + 1`` .
 
-数学化表达形式
+数学表达式
 -------------------------
 
-GBRT considers additive models of the following form:
+GBRT 是一种具有以下形式的加性模型(additive models):
 
   .. math::
 
     F(x) = \sum_{m=1}^{M} \gamma_m h_m(x)
 
-where :math:`h_m(x)` are the basis functions which are usually called
-*weak learners* in the context of boosting. Gradient Tree Boosting
-uses :ref:`decision trees <tree>` of fixed size as weak
-learners. Decision trees have a number of abilities that make them
-valuable for boosting, namely the ability to handle data of mixed type
-and the ability to model complex functions.
+其中 :math:`h_m(x)` 是基本函数，在 Boosting 算法家族中通常被称为 弱学习器 (*weak learners* )。
+Gradient Tree Boosting 使用固定大小的 :ref:`decision trees <tree>` 作为弱学习器。
+决策树具有许多有价值的提升能力，即处理混合类型数据的能力和建立复杂函数模型的能力。
 
-Similar to other boosting algorithms, GBRT builds the additive model in
-a greedy fashion:
+与其他的boosting算法类似, GBRT以贪心(greedy)的方式构建加性模型:
 
   .. math::
 
     F_m(x) = F_{m-1}(x) + \gamma_m h_m(x),
 
-where the newly added tree :math:`h_m` tries to minimize the loss :math:`L`,
-given the previous ensemble :math:`F_{m-1}`:
+当给定上一步产生的集成模型(previous ensemble) :math:`F_{m-1}` 时， 新添加的树 :math:`h_m` 尝试最小化损失 :math:`L` :
 
   .. math::
 
     h_m =  \arg\min_{h} \sum_{i=1}^{n} L(y_i,
     F_{m-1}(x_i) + h(x_i)).
 
-The initial model :math:`F_{0}` is problem specific, for least-squares
-regression one usually chooses the mean of the target values.
+初始模型 :math:`F_{0}` 是问题相关(problem specific)的，对于最小二乘回归，通常选择目标值的均值。
 
-.. note:: The initial model can also be specified via the ``init``
-          argument. The passed object has to implement ``fit`` and ``predict``.
+.. note:: 初始化模型 :math:`F_{0}` 也可以通过参数 ``init`` 来指定。
+          传入的对象必须实现 ``fit`` 和 ``predict`` 方法。
 
-Gradient Boosting attempts to solve this minimization problem
-numerically via steepest descent: The steepest descent direction is
-the negative gradient of the loss function evaluated at the current
-model :math:`F_{m-1}` which can be calculated for any differentiable
-loss function:
+Gradient Boosting 尝试通过最陡下降(steepest descent)方法来数值化地求解上述最小化问题: 
+最陡下降方向是在当前模型 :math:`F_{m-1}` 上计算出的损失函数的负梯度方向，这可以为任何可微损失函数计算:
 
   .. math::
 
     F_m(x) = F_{m-1}(x) - \gamma_m \sum_{i=1}^{n} \nabla_F L(y_i,
     F_{m-1}(x_i))
 
-Where the step length :math:`\gamma_m` is chosen using line search:
+其中 步长 :math:`\gamma_m` 是使用线性搜索(line search)选择的:
 
   .. math::
 
     \gamma_m = \arg\min_{\gamma} \sum_{i=1}^{n} L(y_i, F_{m-1}(x_i)
     - \gamma \frac{\partial L(y_i, F_{m-1}(x_i))}{\partial F_{m-1}(x_i)})
 
-The algorithms for regression and classification
-only differ in the concrete loss function used.
+用于回归的GBRT算法和用于分类的GBRT算法的区别仅在于具体的损失函数的使用上。
 
 .. _gradient_boosting_loss:
 
 损失函数
 ...............
 
-The following loss functions are supported and can be specified using
-the parameter ``loss``:
+GBRT支持以下损失函数，可以通过参数 ``loss`` 指定 :
 
-  * Regression
+  * 用于回归的损失函数
 
-    * Least squares (``'ls'``): The natural choice for regression due
-      to its superior computational properties. The initial model is
-      given by the mean of the target values.
-    * Least absolute deviation (``'lad'``): A robust loss function for
-      regression. The initial model is given by the median of the
-      target values.
-    * Huber (``'huber'``): Another robust loss function that combines
-      least squares and least absolute deviation; use ``alpha`` to
-      control the sensitivity with regards to outliers (see [F2001]_ for
-      more details).
-    * Quantile (``'quantile'``): A loss function for quantile regression.
-      Use ``0 < alpha < 1`` to specify the quantile. This loss function
-      can be used to create prediction intervals
-      (see :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_quantile.py`).
+    * Least squares (``'ls'``): 由于其优越的计算性能，是回归问题的自然选择。初始模型 :math:`F_{0}` 由 目标变量的平均值 给出。
+    * Least absolute deviation (``'lad'``): 一个用于回归的鲁棒的损失函数。初始模型 :math:`F_{0}` 由 目标变量的中值 给出。
+    * Huber (``'huber'``): 另一个用于回归的鲁棒的损失函数，它组合了least squares 和 least absolute deviation; 
+      使用 ``alpha`` 参数来控制损失函数对离群点(outliers)的敏感度(sensitivity)，(请看 [F2001]_ 获得更多详情)。
+    * Quantile (``'quantile'``): 一个用于分位数回归(quantile regression)的损失函数。
+      使用 ``0 < alpha < 1`` 来指定分位数。 这个损失函数可以用来创造预测区间(prediction intervals)
+      (请看案例 :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_quantile.py`)。
 
-  * Classification
+  * 用于分类的损失函数
 
-    * Binomial deviance (``'deviance'``): The negative binomial
-      log-likelihood loss function for binary classification (provides
-      probability estimates).  The initial model is given by the
-      log odds-ratio.
-    * Multinomial deviance (``'deviance'``): The negative multinomial
-      log-likelihood loss function for multi-class classification with
-      ``n_classes`` mutually exclusive classes. It provides
-      probability estimates.  The initial model is given by the
-      prior probability of each class. At each iteration ``n_classes``
-      regression trees have to be constructed which makes GBRT rather
-      inefficient for data sets with a large number of classes.
-    * Exponential loss (``'exponential'``): The same loss function
-      as :class:`AdaBoostClassifier`. Less robust to mislabeled
-      examples than ``'deviance'``; can only be used for binary
-      classification.
+    * Binomial deviance (``'deviance'``): 用于二元分类的负二项式对数似然损失函数(提供概率估计(probability estimates))。初始模型 :math:`F_{0}` 由
+      log odds-ratio 给出。
+    * Multinomial deviance (``'deviance'``): 用于多元分类(有 ``n_classes`` 个互斥类)的负多项式对数似然损失函数(也提供概率估计(probability estimates))。
+      初始模型 :math:`F_{0}` 由每个类的先验概率给出。在每一次迭代中必须构建 ``n_classes`` 棵回归树使得 GBRT 在具有大量类的数据集上相当低效。
+    * Exponential loss (``'exponential'``): 与 :class:`AdaBoostClassifier` 的损失函数一样。 与 ``'deviance'`` 相比，对于误标记的样本的鲁棒性较差。
+      只能用于二元分类问题。
 
 正则化
 ----------------
@@ -595,67 +562,48 @@ the parameter ``loss``:
 Shrinkage
 ..........
 
-[F2001]_ proposed a simple regularization strategy that scales
-the contribution of each weak learner by a factor :math:`\nu`:
+[F2001]_ 提出了一种简单的正则化策略，通过因子 :math:`\nu` 来衡量(scale)每个弱学习器的贡献：
 
 .. math::
 
     F_m(x) = F_{m-1}(x) + \nu \gamma_m h_m(x)
 
-The parameter :math:`\nu` is also called the **learning rate** because
-it scales the step length the gradient descent procedure; it can
-be set via the ``learning_rate`` parameter.
+参数 :math:`\nu` 被称之为 **learning rate**， 因为它可以控制梯度下降的步长, 并且可以通过 ``learning_rate`` 参数来设置。
 
-The parameter ``learning_rate`` strongly interacts with the parameter
-``n_estimators``, the number of weak learners to fit. Smaller values
-of ``learning_rate`` require larger numbers of weak learners to maintain
-a constant training error. Empirical evidence suggests that small
-values of ``learning_rate`` favor better test error. [HTF2009]_
-recommend to set the learning rate to a small constant
-(e.g. ``learning_rate <= 0.1``) and choose ``n_estimators`` by early
-stopping. For a more detailed discussion of the interaction between
-``learning_rate`` and ``n_estimators`` see [R2007]_.
+参数 ``learning_rate`` 和参数 ``n_estimators`` 之间有很强的制约关系。 
+较小的 ``learning_rate`` 需要大量的弱分类器才能维持训练误差的稳定。经验表明数值较小的 ``learning_rate`` 将会得到更好的测试误差。 
+[HTF2009]_ 推荐把 ``learning_rate`` 设置为一个较小的常数 (例如: ``learning_rate <= 0.1`` )同时通过提前停止策略来选择合适的 ``n_estimators``。 
+有关 ``learning_rate`` 和 ``n_estimators`` 更详细的讨论可以参考 [R2007]_.
+
 
 Subsampling
 ............
 
-[F1999]_ proposed stochastic gradient boosting, which combines gradient
-boosting with bootstrap averaging (bagging). At each iteration
-the base classifier is trained on a fraction ``subsample`` of
-the available training data. The subsample is drawn without replacement.
-A typical value of ``subsample`` is 0.5.
+[F1999]_ 提出了一种将梯度增强(gradient boosting)和自举平均(bootstrap averaging (bagging))相结合的随机梯度增强方法。
+在每次迭代中，基分类器在可用训练数据的一部分子样本 ``subsample`` 上被训练。子采样(subsample)是通过无放回采样获得的(drawn without replacement)。
+``subsample`` 的典型值为0.5。
 
-The figure below illustrates the effect of shrinkage and subsampling
-on the goodness-of-fit of the model. We can clearly see that shrinkage
-outperforms no-shrinkage. Subsampling with shrinkage can further increase
-the accuracy of the model. Subsampling without shrinkage, on the other hand,
-does poorly.
+下图展示了收缩和子采样对于模型拟合好坏的影响。我们可以明显看到指定收缩率比没有收缩拥有更好的表现。
+而将子采样和收缩率相结合能进一步的提高模型的准确率。相反，使用子采样而不使用收缩的结果十分糟糕。
 
 .. figure:: ../auto_examples/ensemble/images/sphx_glr_plot_gradient_boosting_regularization_001.png
    :target: ../auto_examples/ensemble/plot_gradient_boosting_regularization.html
    :align: center
    :scale: 75
 
-Another strategy to reduce the variance is by subsampling the features
-analogous to the random splits in :class:`RandomForestClassifier` .
-The number of subsampled features can be controlled via the ``max_features``
-parameter.
+另一个减少方差的策略是特征子采样,这种方法类似于 :class:`RandomForestClassifier` 中的随机分割。子采样的特征数量可以通过参数 ``max_features`` 来控制。
 
-.. note:: Using a small ``max_features`` value can significantly decrease the runtime.
+.. note:: 使用一个小的 ``max_features`` 值能够显著降低计算时间。
 
-Stochastic gradient boosting allows to compute out-of-bag estimates of the
-test deviance by computing the improvement in deviance on the examples that are
-not included in the bootstrap sample (i.e. the out-of-bag examples).
-The improvements are stored in the attribute
-:attr:`~GradientBoostingRegressor.oob_improvement_`. ``oob_improvement_[i]`` holds
-the improvement in terms of the loss on the OOB samples if you add the i-th stage
-to the current predictions.
-Out-of-bag estimates can be used for model selection, for example to determine
-the optimal number of iterations. OOB estimates are usually very pessimistic thus
-we recommend to use cross-validation instead and only use OOB if cross-validation
-is too time consuming.
+随机梯度提升(Stochastic gradient boosting)允许计算测试偏差的袋外估计值（Out-of-bag），方法是计算那些不在自助采样之内的样本偏差的改进
+(i.e. the out-of-bag examples)。
+这个改进保存在属性 :attr:`~GradientBoostingRegressor.oob_improvement_` 中。
+``oob_improvement_[i]`` holds the improvement in terms of the loss on the OOB samples if you add the i-th stage
+to the current predictions. 
+袋外估计可以用于模型选择中，例如决定最优迭代次数。 OOB 估计通常都很悲观(pessimistic), 因此我们推荐使用交叉验证来代替它，
+而当交叉验证太耗时时我们就只能使用 OOB 了。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_regularization.py`
  * :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_oob.py`
