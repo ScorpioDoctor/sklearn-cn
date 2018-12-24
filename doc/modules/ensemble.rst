@@ -200,32 +200,23 @@ RandomForest 算法和 Extra-Trees 算法。这两种算法都是专门为树而
 决策树顶部使用的特征对更大一部分输入样本的最终预测决策做出贡献；
 因此，树顶部的那些特征所贡献的期望样本比例(**expected fraction of the samples**) 可以作为 
 特征的相对重要性(**relative importance of the features**) 的一个估计 。
-在 scikit-learn 中, 某个特征所贡献的样本比例
+在scikit-learn中，一个特征所贡献的样本的比例与分解它们所产生的不纯度的减少相结合，从而创建了对该特征的预测能力的归一化估计。
 
-the fraction of samples a feature contributes to is combined with the decrease in impurity
-from splitting them to create a normalized estimate of the predictive power
-of that feature.
+通过对多个随机树的预测能力的估计进行平均化(**averaging** )，可以**减小该估计的方差**，并将其用于特征选择。
+这种方法被称为 不纯度平均减小(mean decrease in impurity), 或 MDI。
+请参考 [L2014]_ 获得更多关于 MDI 和 用随机森林进行特征重要行评估 的信息。
 
-By **averaging** the estimates of predictive ability over several randomized
-trees one can **reduce the variance** of such an estimate and use it
-for feature selection. This is known as the mean decrease in impurity, or MDI.
-Refer to [L2014]_ for more information on MDI and feature importance
-evaluation with Random Forests.
-
-The following example shows a color-coded representation of the relative
-importances of each individual pixel for a face recognition task using
-a :class:`ExtraTreesClassifier` model.
+下面的例子展示了一个面部识别任务中每个像素的相对重要性，其中重要性由颜色（的深浅）来表示，使用的模型是 
+:class:`ExtraTreesClassifier` 模型.
 
 .. figure:: ../auto_examples/ensemble/images/sphx_glr_plot_forest_importances_faces_001.png
    :target: ../auto_examples/ensemble/plot_forest_importances_faces.html
    :align: center
    :scale: 75
 
-In practice those estimates are stored as an attribute named
-``feature_importances_`` on the fitted model. This is an array with shape
-``(n_features,)`` whose values are positive and sum to 1.0. The higher
-the value, the more important is the contribution of the matching feature
-to the prediction function.
+实际上，对于训练完成的模型这些估计值存储在 ``feature_importances_`` 属性中。 
+这是一个大小为 ``(n_features,)`` 的数组，其每个元素值为正，并且总和为 1.0。
+一个元素的值越高，其对应的特征对预测函数的贡献越大。
 
 .. topic:: 案例:
 
@@ -612,33 +603,21 @@ to the current predictions.
 对结果的解释
 --------------
 
-Individual decision trees can be interpreted easily by simply
-visualizing the tree structure. Gradient boosting models, however,
-comprise hundreds of regression trees thus they cannot be easily
-interpreted by visual inspection of the individual trees. Fortunately,
-a number of techniques have been proposed to summarize and interpret
-gradient boosting models.
+通过简单地可视化树结构可以很容易地解释单个决策树,然而对于梯度提升模型来说,一般拥有数百棵/种回归树，
+将每一棵树都可视化来解释整个模型是很困难的。
+幸运的是，有很多关于总结和解释梯度提升模型的技术。
 
 特征重要性
 ..................
 
-Often features do not contribute equally to predict the target
-response; in many situations the majority of the features are in fact
-irrelevant.
-When interpreting a model, the first question usually is: what are
-those important features and how do they contributing in predicting
-the target response?
+通常，各个特征分量对目标响应的预测所做的贡献是不一样的。在很多情形中，大多数特征分量之间是不相关的。
+当我们要解释一个模型的时候, 遇到的第一个问题通常是：最重要的特征是哪些？它们对目标响应的预测做了怎样的贡献？
 
-Individual decision trees intrinsically perform feature selection by selecting
-appropriate split points. This information can be used to measure the
-importance of each feature; the basic idea is: the more often a
-feature is used in the split points of a tree the more important that
-feature is. This notion of importance can be extended to decision tree
-ensembles by simply averaging the feature importance of each tree (see
-:ref:`random_forest_feature_importance` for more details).
+单个决策树本质上就是通过选择适当的分割点来进行特征选择的一种模型。这些信息可以用来度量每个特征的重要性，
+其基本的思想是：如果一个特征在树的分割节点中用的越频繁，则这个特征的重要性就越高。 这种特征重要性的概念可以
+通过简单的平均一下每棵树上的特征重要性扩展到决策树集合，(请看 :ref:`random_forest_feature_importance` 获得更多详情)。
 
-The feature importance scores of a fit gradient boosting model can be
-accessed via the ``feature_importances_`` property::
+一个经过拟合得的gradient boosting model的特征重要性得分可以通过参数 ``feature_importances_`` 获得::
 
     >>> from sklearn.datasets import make_hastie_10_2
     >>> from sklearn.ensemble import GradientBoostingClassifier
@@ -649,7 +628,7 @@ accessed via the ``feature_importances_`` property::
     >>> clf.feature_importances_  # doctest: +ELLIPSIS
     array([0.10..., 0.10..., 0.11..., ...
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_regression.py`
 
@@ -660,45 +639,29 @@ accessed via the ``feature_importances_`` property::
 部分依赖性
 ..................
 
-Partial dependence plots (PDP) show the dependence between the target response
-and a set of 'target' features, marginalizing over the
-values of all other features (the 'complement' features).
-Intuitively, we can interpret the partial dependence as the expected
-target response [1]_ as a function of the 'target' features [2]_.
+部分依赖图（Partial dependence plots (PDP)）展示了目标响应和一系列目标特征的依赖关系，
+同时边缘化了其他所有特征的取值（候选补充特征）。 
+直觉上，我们可以将 部分依赖 解释为作为目标特征函数 [2]_ 的预期目标响应 [1]_  。
 
-Due to the limits of human perception the size of the target feature
-set must be small (usually, one or two) thus the target features are
-usually chosen among the most important features.
+由于人类感知能力的限制，目标特征的设置必须小一点(通常是1到2)，因此目标特征通常在最重要的特征中选择。
 
-The Figure below shows four one-way and one two-way partial dependence plots
-for the California housing dataset:
+下图展示了加州住房数据集的四个单向和一个双向c部分依赖图(four one-way PDP 和 one two-way PDP):
 
 .. figure:: ../auto_examples/ensemble/images/sphx_glr_plot_partial_dependence_001.png
    :target: ../auto_examples/ensemble/plot_partial_dependence.html
    :align: center
    :scale: 70
 
-One-way PDPs tell us about the interaction between the target
-response and the target feature (e.g. linear, non-linear).
-The upper left plot in the above Figure shows the effect of the
-median income in a district on the median house price; we can
-clearly see a linear relationship among them.
+单向PDPs (One-way PDPs) 告诉我们目标响应和目标特征的相互影响(例如：线性或者非线性)。
+上面的左上图展示了一个地区的中等收入对中等房价的影响。我们可以清楚的看到两者之间是线性相关的。
 
-PDPs with two target features show the
-interactions among the two features. For example, the two-variable PDP in the
-above Figure shows the dependence of median house price on joint
-values of house age and avg. occupants per household. We can clearly
-see an interaction between the two features:
-For an avg. occupancy greater than two, the house price is nearly independent
-of the house age, whereas for values less than two there is a strong dependence
-on age.
+具有两个目标特征的 PDPs 显示这两个特征之间的相互影响。例如：上图中两个变量的 PDP 展示了房价中位数与房屋年龄和
+每户平均入住人数之间的依赖关系。我们能清楚的看到这两个特征之间的影响：对于每户入住均值而言,当其值大于 2 时，
+房价与房屋年龄几乎是相对独立的，而其值小于 2 的时，房价对房屋年龄的依赖性就会很强。
 
-The module :mod:`partial_dependence` provides a convenience function
-:func:`~sklearn.ensemble.partial_dependence.plot_partial_dependence`
-to create one-way and two-way partial dependence plots. In the below example
-we show how to create a grid of partial dependence plots: two one-way
-PDPs for the features ``0`` and ``1`` and a two-way PDP between the two
-features::
+模块 :mod:`partial_dependence` 提供了一个方便的函数 :func:`~sklearn.ensemble.partial_dependence.plot_partial_dependence`
+创建 one-way and two-way partial dependence plots。 在下面的例子中，我们展示了如何创建一个PDPs网格 : 
+two one-way PDPs for the features ``0`` and ``1`` 以及 a two-way PDP between the two features::
 
     >>> from sklearn.datasets import make_hastie_10_2
     >>> from sklearn.ensemble import GradientBoostingClassifier
@@ -710,8 +673,7 @@ features::
     >>> features = [0, 1, (0, 1)]
     >>> fig, axs = plot_partial_dependence(clf, X, features) #doctest: +SKIP
 
-For multi-class models, you need to set the class label for which the
-PDPs should be created via the ``label`` argument::
+对于多类别的模型，你需要通过 ``label`` 参数设置类别标签来创建 PDPs::
 
     >>> from sklearn.datasets import load_iris
     >>> iris = load_iris()
@@ -720,9 +682,7 @@ PDPs should be created via the ``label`` argument::
     >>> features = [3, 2, (3, 2)]
     >>> fig, axs = plot_partial_dependence(mc_clf, X, features, label=0) #doctest: +SKIP
 
-If you need the raw values of the partial dependence function rather
-than the plots you can use the
-:func:`~sklearn.ensemble.partial_dependence.partial_dependence` function::
+如果你需要部分依赖函数的原始值而不是图，你可以调用 :func:`~sklearn.ensemble.partial_dependence.partial_dependence` 函数 ::
 
     >>> from sklearn.ensemble.partial_dependence import partial_dependence
 
@@ -732,25 +692,15 @@ than the plots you can use the
     >>> axes  # doctest: +ELLIPSIS
     [array([-1.62497054, -1.59201391, ...
 
-The function requires either the argument ``grid`` which specifies the
-values of the target features on which the partial dependence function
-should be evaluated or the argument ``X`` which is a convenience mode
-for automatically creating ``grid`` from the training data. If ``X``
-is given, the ``axes`` value returned by the function gives the axis
-for each target feature.
+该函数需要 通过 ``grid`` 参数指定应该被评估的部分依赖函数的目标特征值 或 可以
+十分便利地通过设置 ``X`` 参数从而在训练数据中自动创建 ``grid`` 。
+如果 ``X`` 被给出，函数返回的 ``axes`` 为每个目标特征提供轴(axis)。
 
-For each value of the 'target' features in the ``grid`` the partial
-dependence function need to marginalize the predictions of a tree over
-all possible values of the 'complement' features. In decision trees
-this function can be evaluated efficiently without reference to the
-training data. For each grid point a weighted tree traversal is
-performed: if a split node involves a 'target' feature, the
-corresponding left or right branch is followed, otherwise both
-branches are followed, each branch is weighted by the fraction of
-training samples that entered that branch. Finally, the partial
-dependence is given by a weighted average of all visited leaves. For
-tree ensembles the results of each individual tree are again
-averaged.
+对于 ``grid`` 中的每一个 ‘目标’ 特征值，部分依赖函数需要边缘化一棵树中所有候选特征('complement' features)的可能值的预测。 
+在决策树中，这个函数可以在不参考训练数据的情况下被高效的评估，对于每一网格点执行加权遍历: 
+如果切分点包含 ‘目标’ 特征，遍历其相关的左分支或相关的右分支,否则就遍历两个分支。
+每一个分支将被通过进入该分支的训练样本的占比加权， 最后，部分依赖通过所有访问的叶节点的权重的平均值给出。
+组合树（tree ensembles）的整体结果，需要对每棵树的结果再次平均得到。
 
 .. rubric:: Footnotes
 
@@ -761,12 +711,12 @@ averaged.
    accounting for the initial model; partial dependence plots
    do not include the ``init`` model.
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_ensemble_plot_partial_dependence.py`
 
 
-.. topic:: References
+.. topic:: 参考文献
 
  .. [F2001] J. Friedman, "Greedy Function Approximation: A Gradient Boosting Machine",
    The Annals of Statistics, Vol. 29, No. 5, 2001.
