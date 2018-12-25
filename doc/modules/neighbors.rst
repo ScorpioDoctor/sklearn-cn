@@ -262,53 +262,31 @@ ball tree 将数据递归地划分到由质心 :math:`C` 和 半径 :math:`r` �
     代价近似是 :math:`O[D\log(N)]`, 而 KD tree 的查询时间也非常有效率。对于较大的 :math:`D` ，代价几乎增加到 :math:`O[DN]`，
     由于树结构引起的过载(overhead)导致查询比 brute force 还要慢。
 
-  For small data sets (:math:`N` less than 30 or so), :math:`\log(N)` is
-  comparable to :math:`N`, and brute force algorithms can be more efficient
-  than a tree-based approach.  Both :class:`KDTree` and :class:`BallTree`
-  address this through providing a *leaf size* parameter: this controls the
-  number of samples at which a query switches to brute-force.  This allows both
-  algorithms to approach the efficiency of a brute-force computation for small
-  :math:`N`.
+  对比较小的数据集 (:math:`N` <= 30), :math:`\log(N)` 与 :math:`N`是具有可比性的，并且暴力搜索算法会比基于树的搜索算法更有效率。
+  :class:`KDTree` 类和 :class:`BallTree` 类都强调了这一点：通过提供一个参数 *leaf size* 来控制样本的数量，
+  一旦小于这个数量则直接使用暴力搜索进行查询。这样的做法使得这两个算法类对于较小的 :math:`N` 能够达到接近暴力搜索算法的效率。
 
-* data structure: *intrinsic dimensionality* of the data and/or *sparsity*
-  of the data. Intrinsic dimensionality refers to the dimension
-  :math:`d \le D` of a manifold on which the data lies, which can be linearly
-  or non-linearly embedded in the parameter space. Sparsity refers to the
-  degree to which the data fills the parameter space (this is to be
-  distinguished from the concept as used in "sparse" matrices.  The data
-  matrix may have no zero entries, but the **structure** can still be
-  "sparse" in this sense).
+* 数据的结构: 数据的内在纬度(*intrinsic dimensionality*) 和/或 数据的稀疏性(*sparsity*)。
+  数据的内在纬度(Intrinsic dimensionality)指的是数据所在的流形(manifold)的纬度 :math:`d \le D`, 其中 数据的流形可以是线性或非线性的嵌入到参数空间里的。
+  数据的稀疏性是指数据填充参数空间的度(这里数据稀疏性的概念区别于稀疏矩阵的稀疏概念，数据矩阵有可能一个0都没有，但是该矩阵的**结构**可能仍然是稀疏的。)
 
-  * *Brute force* query time is unchanged by data structure.
-  * *Ball tree* and *KD tree* query times can be greatly influenced
-    by data structure.  In general, sparser data with a smaller intrinsic
-    dimensionality leads to faster query times.  Because the KD tree
-    internal representation is aligned with the parameter axes, it will not
-    generally show as much improvement as ball tree for arbitrarily
-    structured data.
+  * *Brute force* 的查询时间与数据的结构无关。
+  * *Ball tree* 和 *KD tree* 的查询时间可能会受数据的结构的很大影响。通常情况下，具有越小的内在纬度的越稀疏的数据会带来越快的查询时间。
+    因为 KD tree 的内部表示是对齐到参数坐标系轴上的，所以它不会在任意结构化的数据上与ball tree有同样的效率提升。
 
-  Datasets used in machine learning tend to be very structured, and are
-  very well-suited for tree-based queries.
+  机器学习中用到的数据集都是倾向于非常结构化的, 并且非常适合于基于树的查询。
 
-* number of neighbors :math:`k` requested for a query point.
+* 一个查询点需要的邻居的数量 :math:`k`
 
-  * *Brute force* query time is largely unaffected by the value of :math:`k`
-  * *Ball tree* and *KD tree* query time will become slower as :math:`k`
-    increases.  This is due to two effects: first, a larger :math:`k` leads
-    to the necessity to search a larger portion of the parameter space.
-    Second, using :math:`k > 1` requires internal queueing of results
-    as the tree is traversed.
+  * *Brute force* 的查询时间在很大程度上不受 :math:`k` 值的影响。
+  * *Ball tree* 和 *KD tree* 的查询时间将会随着 :math:`k` 的增加而越来越小。
+    这主要基于两方面的影响: 首先, 一个较大的 :math:`k` 值会导致 搜索参数空间的一个较大的部分的必要性；第二，使用 :math:`k > 1` 
+    需要在遍历树时对结果进行内部排队。
 
-  As :math:`k` becomes large compared to :math:`N`, the ability to prune
-  branches in a tree-based query is reduced.  In this situation, Brute force
-  queries can be more efficient.
+  随着 :math:`k` 相较于 :math:`N` 越来越大, 基于树的查询进行剪枝的能力就会越来越小。在这种情况下，暴力搜索查询会更有效率。
 
-* number of query points.  Both the ball tree and the KD Tree
-  require a construction phase.  The cost of this construction becomes
-  negligible when amortized over many queries.  If only a small number of
-  queries will be performed, however, the construction can make up
-  a significant fraction of the total cost.  If very few query points
-  will be required, brute force is better than a tree-based method.
+* 查询点的数量。 ball tree 和 KD Tree 都需要一个构建阶段. 在许多查询中分摊时，这种结构的成本可以忽略不计。 如果只执行少量的查询, 
+  可是构建成本却占总成本的很大一部分. 如果仅需查询很少的点, 暴力方法会比基于树的方法更好.
 
 Currently, ``algorithm = 'auto'`` selects ``'kd_tree'`` if :math:`k < N/2`
 and the ``'effective_metric_'`` is in the ``'VALID_METRICS'`` list of
@@ -324,48 +302,35 @@ is close to its default value of ``30``.
 ``leaf_size`` 的效果
 -----------------------
 
-As noted above, for small sample sizes a brute force search can be more
-efficient than a tree-based query.  This fact is accounted for in the ball
-tree and KD tree by internally switching to brute force searches within
-leaf nodes.  The level of this switch can be specified with the parameter
-``leaf_size``.  This parameter choice has many effects:
+如上所述, 对于小样本暴力搜索是比基于数的搜索更有效的方法. 这一事实在 ball 树和 
+KD 树中被解释为在叶节点内部切换到蛮力搜索. 该开关的级别可以使用参数 ``leaf_size`` 来指定. 
+这个参数选择有很多的效果:
 
-**construction time**
+** 构建时间(construction time) **
+  更大的 ``leaf_size`` 会导致更快的树构建时间, 因为需要创建的节点更少。
   A larger ``leaf_size`` leads to a faster tree construction time, because
   fewer nodes need to be created
 
-**query time**
-  Both a large or small ``leaf_size`` can lead to suboptimal query cost.
-  For ``leaf_size`` approaching 1, the overhead involved in traversing
-  nodes can significantly slow query times.  For ``leaf_size`` approaching
-  the size of the training set, queries become essentially brute force.
-  A good compromise between these is ``leaf_size = 30``, the default value
-  of the parameter.
+** 查询时间(query time)**
+  一个或大或小的 ``leaf_size`` 可能会导致次优查询成本. 当 ``leaf_size`` 接近 1 时, 遍历节点所涉及的开销大大减慢了查询时间. 
+  当 ``leaf_size`` 接近训练集的大小，查询变得本质上是暴力的. 这些之间的一个很好的妥协是 ``leaf_size = 30``, 这是该参数的默认值。
 
-**memory**
-  As ``leaf_size`` increases, the memory required to store a tree structure
-  decreases.  This is especially important in the case of ball tree, which
-  stores a :math:`D`-dimensional centroid for each node.  The required
-  storage space for :class:`BallTree` is approximately ``1 / leaf_size`` times
-  the size of the training set.
+** 内存(memory) **
+  随着 ``leaf_size`` 的增加，存储树结构所需的内存减少。 对于存储每个节点的:math:`D`维质心的 ball tree，这点至关重要。 
+  针对 :class:`BallTree` 所需的存储空间近似于 ``1 / leaf_size`` 乘以训练集的大小。
 
-``leaf_size`` is not referenced for brute force queries.
+``leaf_size`` 在 brute force 查询中是没有用到的。
 
 .. _nearest_centroid_classifier:
 
 最近质心分类器
 ===========================
 
-The :class:`NearestCentroid` classifier is a simple algorithm that represents
-each class by the centroid of its members. In effect, this makes it
-similar to the label updating phase of the :class:`sklearn.KMeans` algorithm.
-It also has no parameters to choose, making it a good baseline classifier. It
-does, however, suffer on non-convex classes, as well as when classes have
-drastically different variances, as equal variance in all dimensions is
-assumed. See Linear Discriminant Analysis (:class:`sklearn.discriminant_analysis.LinearDiscriminantAnalysis`)
-and Quadratic Discriminant Analysis (:class:`sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis`)
-for more complex methods that do not make this assumption. Usage of the default
-:class:`NearestCentroid` is simple:
+该 :class:`NearestCentroid` 分类器是一个简单的算法, 通过其成员的质心来表示每个类。 
+实际上, 这使得它类似于 :class:`sklearn.KMeans` 算法的标签更新阶段. 它也没有参数选择, 使其成为良好的基准分类器. 
+然而，在非凸类上，以及当类具有截然不同的方差时，它都会受到影响。所以这个分类器假设所有维度的方差都是相等的。 
+对于没有做出这个假设的更复杂的方法, 请参阅线性判别分析 (:class:`sklearn.discriminant_analysis.LinearDiscriminantAnalysis`) 
+和二次判别分析 (:class:`sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis`). 默认的 :class:`NearestCentroid` 用法示例如下:
 
     >>> from sklearn.neighbors.nearest_centroid import NearestCentroid
     >>> import numpy as np
@@ -381,16 +346,12 @@ for more complex methods that do not make this assumption. Usage of the default
 Nearest Shrunken Centroid
 -------------------------
 
-The :class:`NearestCentroid` classifier has a ``shrink_threshold`` parameter,
-which implements the nearest shrunken centroid classifier. In effect, the value
-of each feature for each centroid is divided by the within-class variance of
-that feature. The feature values are then reduced by ``shrink_threshold``. Most
-notably, if a particular feature value crosses zero, it is set
-to zero. In effect, this removes the feature from affecting the classification.
-This is useful, for example, for removing noisy features.
+该 :class:`NearestCentroid` 分类器有一个 ``shrink_threshold`` 参数, 它实现了 nearest shrunken centroid 分类器. 
+实际上, 每个质心的每个特征的值除以该特征的类中的方差. 然后通过 ``shrink_threshold`` 来减小特征值. 
+最值得注意的是, 如果特定特征值过0, 则将其设置为0. 实际上，这个方法移除了影响分类器的特征。 
+这很有用, 例如, 去除噪声特征.
 
-In the example below, using a small shrink threshold increases the accuracy of
-the model from 0.81 to 0.82.
+在以下例子中, 使用一个较小的 shrink 阀值将模型的准确度从 0.81 提高到 0.82。
 
 .. |nearest_centroid_1| image:: ../auto_examples/neighbors/images/sphx_glr_plot_nearest_centroid_001.png
    :target: ../auto_examples/neighbors/plot_nearest_centroid.html
@@ -402,7 +363,7 @@ the model from 0.81 to 0.82.
 
 .. centered:: |nearest_centroid_1| |nearest_centroid_2|
 
-.. topic:: Examples:
+.. topic:: 案例:
 
   * :ref:`sphx_glr_auto_examples_neighbors_plot_nearest_centroid.py`: an example of
     classification using nearest centroid with different shrink thresholds.
