@@ -198,15 +198,12 @@ L-BFGS 是一个逼近Hessian matrix的求解器，Hessian matrix是一个函数
 数学表达式
 ========================
 
-Given a set of training examples :math:`(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)`
-where :math:`x_i \in \mathbf{R}^n` and :math:`y_i \in \{0, 1\}`, a one hidden
-layer one hidden neuron MLP learns the function :math:`f(x) = W_2 g(W_1^T x + b_1) + b_2`
-where :math:`W_1 \in \mathbf{R}^m` and :math:`W_2, b_1, b_2 \in \mathbf{R}` are
-model parameters. :math:`W_1, W_2` represent the weights of the input layer and
-hidden layer, respectively; and :math:`b_1, b_2` represent the bias added to
-the hidden layer and the output layer, respectively.
-:math:`g(\cdot) : R \rightarrow R` is the activation function, set by default as
-the hyperbolic tan. It is given as,
+给定一个训练样本集合 :math:`(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)`
+其中 :math:`x_i \in \mathbf{R}^n` 和 :math:`y_i \in \{0, 1\}`, 具有一个隐藏层一个隐藏神经元的MLP
+学习这样一个函数 :math:`f(x) = W_2 g(W_1^T x + b_1) + b_2`
+其中 :math:`W_1 \in \mathbf{R}^m` 和 :math:`W_2, b_1, b_2 \in \mathbf{R}` 是
+模型参数。 :math:`W_1, W_2` 分别表示输入层和隐藏层的权重； :math:`b_1, b_2` 分别表示添加到隐藏层和输出层的偏置。
+:math:`g(\cdot) : R \rightarrow R` 是激活函数, 默认设为 双曲正切函数(hyperbolic tan)，其表达式如下：
 
 .. math::
       g(z)= \frac{e^z-e^{-z}}{e^z+e^{-z}}
