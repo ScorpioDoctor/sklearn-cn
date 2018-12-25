@@ -6,7 +6,7 @@
 
 .. currentmodule:: sklearn.isotonic
 
-类:class:`IsotonicRegression` 在数据上拟合一个非递减函数(non-decreasing function)。
+类 :class:`IsotonicRegression` 在数据上拟合一个非递减函数(non-decreasing function)。
 它求解下面的问题:
 
   minimize :math:`\sum_i w_i (y_i - \hat{y}_i)^2`
