@@ -208,60 +208,48 @@ L-BFGS 是一个逼近Hessian matrix的求解器，Hessian matrix是一个函数
 .. math::
       g(z)= \frac{e^z-e^{-z}}{e^z+e^{-z}}
 
-For binary classification, :math:`f(x)` passes through the logistic function
-:math:`g(z)=1/(1+e^{-z})` to obtain output values between zero and one. A
-threshold, set to 0.5, would assign samples of outputs larger or equal 0.5
-to the positive class, and the rest to the negative class.
+对于二分类, :math:`f(x)` 被传递到 logistic 函数 :math:`g(z)=1/(1+e^{-z})` 里面去
+以获得介于0和1之间的输出值。如果某个样本对应的网络输出值大于等于 0.5，那么这个样本就被判断为正样本，反之则为负样本。
 
-If there are more than two classes, :math:`f(x)` itself would be a vector of
-size (n_classes,). Instead of passing through logistic function, it passes
-through the softmax function, which is written as,
+如果类的个数不止两个, 该 :math:`f(x)` 函数自身将是一个size为 (n_classes,) 的向量。
+这时候我们不会把它传递到logistic函数中去了，而是传递到软最大化函数(softmax)中去，表达式如下：
 
 .. math::
       \text{softmax}(z)_i = \frac{\exp(z_i)}{\sum_{l=1}^k\exp(z_l)}
 
-where :math:`z_i` represents the :math:`i` th element of the input to softmax,
-which corresponds to class :math:`i`, and :math:`K` is the number of classes.
-The result is a vector containing the probabilities that sample :math:`x`
-belong to each class. The output is the class with the highest probability.
+其中 :math:`z_i` 是输入到softmax的数据中的第 :math:`i` 个元素, 
+与第 :math:`i` 个类相对应，:math:`K` 是类的总数量。
+网络输出的结果是一个向量，包含了样本 :math:`x` 属于每个类的概率。网络的最终预测结果是拥有最高类概率的那个类。
 
-In regression, the output remains as :math:`f(x)`; therefore, output activation
-function is just the identity function.
+在回归问题中，输出任然是 :math:`f(x)`; 因此, 输出激活函数只是一个 identity function。
 
-MLP uses different loss functions depending on the problem type. The loss
-function for classification is Cross-Entropy, which in binary case is given as,
+MLP 根据问题的类型选择不同的损失函数。 用于分类的损失函数是交叉熵(Cross-Entropy)损失，在二元分类的情况下由下式给出：
 
 .. math::
 
     Loss(\hat{y},y,W) = -y \ln {\hat{y}} - (1-y) \ln{(1-\hat{y})} + \alpha ||W||_2^2
 
-where :math:`\alpha ||W||_2^2` is an L2-regularization term (aka penalty)
-that penalizes complex models; and :math:`\alpha > 0` is a non-negative
-hyperparameter that controls the magnitude of the penalty.
+其中 :math:`\alpha ||W||_2^2` 是一个 L2-regularization 项 (aka penalty) 用来惩罚模型复杂度；
+:math:`\alpha > 0` 是一个非负超参数用来控制惩罚量。
 
-For regression, MLP uses the Square Error loss function; written as,
+对于回归问题, MLP 使用平方误差(Square Error)损失函数; 如下所示：
 
 .. math::
 
     Loss(\hat{y},y,W) = \frac{1}{2}||\hat{y} - y ||_2^2 + \frac{\alpha}{2} ||W||_2^2
 
 
-Starting from initial random weights, multi-layer perceptron (MLP) minimizes
-the loss function by repeatedly updating these weights. After computing the
-loss, a backward pass propagates it from the output layer to the previous
-layers, providing each weight parameter with an update value meant to decrease
-the loss.
+从一个初始的随机权重开始，多层感知器(MLP)通过不断的更新这些权重来最小化损失函数。
+当损失被计算出来后，反向传递将它从输出层传播到前一层，为每一个权重参数提供一个更新值使得损失下降。
 
-In gradient descent, the gradient :math:`\nabla Loss_{W}` of the loss with respect
-to the weights is computed and deducted from :math:`W`.
-More formally, this is expressed as,
+在梯度下降算法中，损失相对于权重的梯度 :math:`\nabla Loss_{W}` 被计算出来然后再从梯度值 :math:`W` 中减去。 
+这个过程的正式的数学表达式如下：
 
 .. math::
     W^{i+1} = W^i - \epsilon \nabla {Loss}_{W}^{i}
 
 
-where :math:`i` is the iteration step, and :math:`\epsilon` is the learning rate
-with a value larger than 0.
+其中 :math:`i` 是迭代步数,  :math:`\epsilon` 是学习率，是一个大于0的数。
 
 当达到预设的最大迭代次数时，该算法停止；或 当损失的改善低于某个较小的数字时也会停止。
 
