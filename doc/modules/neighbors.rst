@@ -8,39 +8,24 @@
 
 .. currentmodule:: sklearn.neighbors
 
-:mod:`sklearn.neighbors` provides functionality for unsupervised and
-supervised neighbors-based learning methods.  Unsupervised nearest neighbors
-is the foundation of many other learning methods,
-notably manifold learning and spectral clustering.  Supervised neighbors-based
-learning comes in two flavors: `classification`_ for data with
-discrete labels, and `regression`_ for data with continuous labels.
+:mod:`sklearn.neighbors` 模块提供了基于邻居的(neighbors-based)的无监督学习和监督学习的功能。 
+无监督的最近邻是许多其它学习方法的基础，尤其是 流行学习(manifold learning) 和 谱聚类(spectral clustering)。 
+基于邻居的监督学习分为两种： 分类( `classification`_ ):针对的是具有离散标签的数据，回归(`regression`_):针对的是具有连续标签的数据。
 
-The principle behind nearest neighbor methods is to find a predefined number
-of training samples closest in distance to the new point, and
-predict the label from these.  The number of samples can be a user-defined
-constant (k-nearest neighbor learning), or vary based
-on the local density of points (radius-based neighbor learning).
-The distance can, in general, be any metric measure: standard Euclidean
-distance is the most common choice.
-Neighbors-based methods are known as *non-generalizing* machine
-learning methods, since they simply "remember" all of its training data
-(possibly transformed into a fast indexing structure such as a
-:ref:`Ball Tree <ball_tree>` or :ref:`KD Tree <kd_tree>`).
+最近邻方法背后的原理是从训练样本中找到与新样本点在距离上最近的预定数量的几个点，然后从这几个已知标签的样本点中预测新样本的标签。 
+这些点的数量可以是用户自定义的常量（K-最近邻学习）， 也可以根据不同的点的局部密度（基于半径的最近邻学习）。
+距离通常可以通过任何测度(metric)来衡量： 标准欧式距离(standard Euclidean distance) 是最常见的选择。
+Neighbors-based方法被称为 *non-generalizing* 的机器学习方法， 
+因为它们只是简单地”记住”了其所有的训练数据（可能转换为一个快速索引结构，如 :ref:`Ball Tree <ball_tree>` 或 :ref:`KD Tree <kd_tree>` ）。
 
-Despite its simplicity, nearest neighbors has been successful in a
-large number of classification and regression problems, including
-handwritten digits and satellite image scenes. Being a non-parametric method,
-it is often successful in classification situations where the decision
-boundary is very irregular.
+尽管它简单，但最近邻算法已经成功地适用于很多的分类和回归问题，例如手写数字或卫星图像的场景。 
+作为一个 非参数化(non-parametric)方法，它经常成功地应用于决策边界非常不规则的分类情景下。
 
-The classes in :mod:`sklearn.neighbors` can handle either NumPy arrays or
-`scipy.sparse` matrices as input.  For dense matrices, a large number of
-possible distance metrics are supported.  For sparse matrices, arbitrary
-Minkowski metrics are supported for searches.
+:mod:`sklearn.neighbors` 模块可以处理 Numpy 数组或 `scipy.sparse` 矩阵作为其输入。 
+对于稠密矩阵，大多数可能的距离测度都是支持的。对于稀疏矩阵，支持任意的 Minkowski测度 用于搜索。
 
-There are many learning routines which rely on nearest neighbors at their
-core.  One example is :ref:`kernel density estimation <kernel_density>`,
-discussed in the :ref:`density estimation <density_estimation>` section.
+许多学习方法都依赖最近邻作为其核心。 一个例子是 核密度估计(:ref:`kernel density estimation <kernel_density>`) , 
+在 密度估计( :ref:`density estimation <density_estimation>` ) 章节中有讨论。
 
 
 .. _unsupervised_neighbors:
@@ -48,29 +33,18 @@ discussed in the :ref:`density estimation <density_estimation>` section.
 无监督最近邻
 ==============================
 
-:class:`NearestNeighbors` implements unsupervised nearest neighbors learning.
-It acts as a uniform interface to three different nearest neighbors
-algorithms: :class:`BallTree`, :class:`KDTree`, and a
-brute-force algorithm based on routines in :mod:`sklearn.metrics.pairwise`.
-The choice of neighbors search algorithm is controlled through the keyword
-``'algorithm'``, which must be one of
-``['auto', 'ball_tree', 'kd_tree', 'brute']``.  When the default value
-``'auto'`` is passed, the algorithm attempts to determine the best approach
-from the training data.  For a discussion of the strengths and weaknesses
-of each option, see `Nearest Neighbor Algorithms`_.
+:class:`NearestNeighbors` 类实现了 无监督的最近邻学习。 它为三种不同的最近邻算法提供统一的接口：:class:`BallTree` , :class:`KDTree`, 
+还有基于 :mod:`sklearn.metrics.pairwise` 模块的 暴力搜索算法(brute-force search)。
+近邻搜索算法的选择可通过关键字参数 ``'algorithm'`` 来控制， 取值必须是 ``['auto', 'ball_tree', 'kd_tree', 'brute']`` 其中的一个。
+当默认值设置为 ``'auto'`` 时，算法会尝试从训练数据中确定最佳方法。关于上述每个选项的优缺点的讨论，请看 `Nearest Neighbor Algorithms`_.。
 
     .. warning::
 
-        Regarding the Nearest Neighbors algorithms, if two
-        neighbors :math:`k+1` and :math:`k` have identical distances
-        but different labels, the result will depend on the ordering of the
-        training data.
+        关于最近邻算法，如果邻居 :math:`k+1` 和邻居 :math:`k` 具有相同的距离，但具有不同的标签， 结果将取决于训练数据的顺序。
 
 寻找最近的邻居
 -----------------------------
-For the simple task of finding the nearest neighbors between two sets of
-data, the unsupervised algorithms within :mod:`sklearn.neighbors` can be
-used:
+对于 找到两组数据集中最近邻点 的简单任务, 可以使用 :mod:`sklearn.neighbors` 模块中的无监督算法:
 
     >>> from sklearn.neighbors import NearestNeighbors
     >>> import numpy as np
@@ -92,11 +66,9 @@ used:
            [0.        , 1.        ],
            [0.        , 1.41421356]])
 
-Because the query set matches the training set, the nearest neighbor of each
-point is the point itself, at a distance of zero.
+因为查询集(query set)匹配训练集(training set)，每个点的最近邻点是其自身，距离为0。
 
-It is also possible to efficiently produce a sparse graph showing the
-connections between neighboring points:
+还可以有效地生成一个稀疏图(sparse graph)来标识相连点之间的连接情况：
 
     >>> nbrs.kneighbors_graph(X).toarray()
     array([[1., 1., 0., 0., 0., 0.],
@@ -106,20 +78,16 @@ connections between neighboring points:
            [0., 0., 0., 1., 1., 0.],
            [0., 0., 0., 0., 1., 1.]])
 
-The dataset is structured such that points nearby in index order are nearby
-in parameter space, leading to an approximately block-diagonal matrix of
-K-nearest neighbors.  Such a sparse graph is useful in a variety of
-circumstances which make use of spatial relationships between points for
-unsupervised learning: in particular, see :class:`sklearn.manifold.Isomap`,
-:class:`sklearn.manifold.LocallyLinearEmbedding`, and
-:class:`sklearn.cluster.SpectralClustering`.
+由于数据集是结构化的，因此按索引顺序的相邻点就在参数空间也是相邻点，从而生成了近似 K-近邻 的块对角矩阵(block-diagonal matrix)。 
+这种稀疏图在各种利用样本点之间的空间关系进行无监督学习的情况下都很有用：特别地请看 :class:`sklearn.manifold.Isomap`,
+:class:`sklearn.manifold.LocallyLinearEmbedding`, 和 :class:`sklearn.cluster.SpectralClustering`。
+
 
 KDTree类 和 BallTree类
 ---------------------------
-Alternatively, one can use the :class:`KDTree` or :class:`BallTree` classes
-directly to find nearest neighbors.  This is the functionality wrapped by
-the :class:`NearestNeighbors` class used above.  The Ball Tree and KD Tree
-have the same interface; we'll show an example of using the KD Tree here:
+另外，我们可以直接使用 :class:`KDTree` 或 :class:`BallTree` 来找最近邻。 
+这是上面提到过的 :class:`NearestNeighbors` 类 所封装的功能。 
+KDTree 和 BallTree 具有相同的接口； 我们将在这里展示使用 KDTree 的例子::
 
     >>> from sklearn.neighbors import KDTree
     >>> import numpy as np
@@ -133,53 +101,34 @@ have the same interface; we'll show an example of using the KD Tree here:
            [4, 3],
            [5, 4]]...)
 
-Refer to the :class:`KDTree` and :class:`BallTree` class documentation
-for more information on the options available for nearest neighbors searches,
-including specification of query strategies, distance metrics, etc. For a list 
-of available metrics, see the documentation of the :class:`DistanceMetric` 
-class.
+对于 最近邻搜索 中参数选项的更多信息，包括各种距离度量的说明和策略的说明等，请参阅 :class:`KDTree` 和 :class:`BallTree` 类文档。 
+关于可用测度(metrics)的列表，请参阅 :class:`DistanceMetric`  类。
+
 
 .. _classification:
 
 最近邻分类器
 ================================
 
-Neighbors-based classification is a type of *instance-based learning* or
-*non-generalizing learning*: it does not attempt to construct a general
-internal model, but simply stores instances of the training data.
-Classification is computed from a simple majority vote of the nearest
-neighbors of each point: a query point is assigned the data class which
-has the most representatives within the nearest neighbors of the point.
+基于邻居的分类是 基于实例的学习(*instance-based learning*) 或 非概括性学习(*non-generalizing learning*): 
+它并不试图构建一个一般的内部模型，而只是存储训练数据的实例。
+分类是根据每个点的最近邻居的简单多数票计算的：一个查询点被分配给数据类，该类在该点最近的邻居中有最多的代表。
 
-scikit-learn implements two different nearest neighbors classifiers:
-:class:`KNeighborsClassifier` implements learning based on the :math:`k`
-nearest neighbors of each query point, where :math:`k` is an integer value
-specified by the user.  :class:`RadiusNeighborsClassifier` implements learning
-based on the number of neighbors within a fixed radius :math:`r` of each
-training point, where :math:`r` is a floating-point value specified by
-the user.
+scikit-learn 实现了两个不同的最近邻分类器：:class:`KNeighborsClassifier` 类实现了 基于每个查询点的k个最近邻进行学习的方法，
+其中 :math:`k` 是用户指定的整数值。 :class:`RadiusNeighborsClassifier` 类实现了 基于固定半径内的邻居进行学习的方法，其中
+:math:`r` 是用户指定的浮点值。
 
-The :math:`k`-neighbors classification in :class:`KNeighborsClassifier`
-is the most commonly used technique. The optimal choice of the value :math:`k` 
-is highly data-dependent: in general a larger :math:`k` suppresses the effects 
-of noise, but makes the classification boundaries less distinct.
+:class:`KNeighborsClassifier` 类中的 :math:`k`-neighbors classification  是最常用的技术。
+:math:`k` 值的最优选择是高度数据依赖的：一般来说  :math:`k` 值越大就越能够压制噪声，但是会使得分类边界变得越不清晰。
 
-In cases where the data is not uniformly sampled, radius-based neighbors
-classification in :class:`RadiusNeighborsClassifier` can be a better choice.
-The user specifies a fixed radius :math:`r`, such that points in sparser
-neighborhoods use fewer nearest neighbors for the classification.  For
-high-dimensional parameter spaces, this method becomes less effective due
-to the so-called "curse of dimensionality".
+如果数据是不均匀采样的，那么 :class:`RadiusNeighborsClassifier` 类中的基于半径的近邻分类(radius-based neighbors classification)可能是更好的选择。
 
-The basic nearest neighbors classification uses uniform weights: that is, the
-value assigned to a query point is computed from a simple majority vote of
-the nearest neighbors.  Under some circumstances, it is better to weight the
-neighbors such that nearer neighbors contribute more to the fit.  This can
-be accomplished through the ``weights`` keyword.  The default value,
-``weights = 'uniform'``, assigns uniform weights to each neighbor.
-``weights = 'distance'`` assigns weights proportional to the inverse of the
-distance from the query point.  Alternatively, a user-defined function of the
-distance can be supplied to compute the weights.
+用户指定一个固定的半径 :math:`r` , 以便在越稀疏的邻域内的点可以使用越少的最近邻点进行分类。对于高维参数空间，这个方法就会因为维数灾难而变得越来越没有效率。
+
+基本的最近邻分类使用均匀的权重：分配给查询点的标签值是从其最近邻的简单多数投票中计算出来的。 
+在某些环境下，最好对邻居进行加权，使得离得越近的点对最终的预测做出越大的贡献。这可以通过 ``weights`` 关键字来实现。
+该参数的默认值 ``weights = 'uniform'`` 给每个邻居分配均匀的权重。而 ``weights = 'distance'`` 给每个邻居分配的权重是每个邻居点到查询点的距离的倒数。
+除此之外，用户还可以传递自定义的距离函数来计算权重：
 
 .. |classification_1| image:: ../auto_examples/neighbors/images/sphx_glr_plot_classification_001.png
    :target: ../auto_examples/neighbors/plot_classification.html
@@ -191,7 +140,7 @@ distance can be supplied to compute the weights.
 
 .. centered:: |classification_1| |classification_2|
 
-.. topic:: Examples:
+.. topic:: 案例:
 
   * :ref:`sphx_glr_auto_examples_neighbors_plot_classification.py`: an example of
     classification using nearest neighbors.
@@ -201,38 +150,24 @@ distance can be supplied to compute the weights.
 最近邻回归器
 ============================
 
-Neighbors-based regression can be used in cases where the data labels are
-continuous rather than discrete variables.  The label assigned to a query
-point is computed based on the mean of the labels of its nearest neighbors.
+最近邻回归是用在数据标签为连续变量而不是离散变量的情况下。分配给查询点的标签是由它的最近邻标签的均值计算而来的。
 
-scikit-learn implements two different neighbors regressors:
-:class:`KNeighborsRegressor` implements learning based on the :math:`k`
-nearest neighbors of each query point, where :math:`k` is an integer
-value specified by the user.  :class:`RadiusNeighborsRegressor` implements
-learning based on the neighbors within a fixed radius :math:`r` of the
-query point, where :math:`r` is a floating-point value specified by the
-user.
+scikit-learn 实现了两个不同的最近邻回归器：:class:`KNeighborsRegressor` 类实现了 基于每个查询点的k个最近邻进行学习的方法，
+其中 :math:`k` 是用户指定的整数值。 :class:`RadiusNeighborsRegressor` 类实现了 基于固定半径内的邻居进行学习的方法，其中
+:math:`r` 是用户指定的浮点值。
 
-The basic nearest neighbors regression uses uniform weights: that is,
-each point in the local neighborhood contributes uniformly to the
-classification of a query point.  Under some circumstances, it can be
-advantageous to weight points such that nearby points contribute more
-to the regression than faraway points.  This can be accomplished through
-the ``weights`` keyword.  The default value, ``weights = 'uniform'``,
-assigns equal weights to all points.  ``weights = 'distance'`` assigns
-weights proportional to the inverse of the distance from the query point.
-Alternatively, a user-defined function of the distance can be supplied,
-which will be used to compute the weights.
+基本的最近邻回归使用均匀的权重：分配给查询点的标签值是从其最近邻的简单多数投票中计算出来的。 
+在某些环境下，最好对邻居进行加权，使得离得越近的点对最终的预测做出越大的贡献。这可以通过 ``weights`` 关键字来实现。
+该参数的默认值 ``weights = 'uniform'`` 给每个邻居分配均匀的权重。而 ``weights = 'distance'`` 给每个邻居分配的权重是每个邻居点到查询点的距离的倒数。
+除此之外，用户还可以传递自定义的距离函数来计算权重：
 
 .. figure:: ../auto_examples/neighbors/images/sphx_glr_plot_regression_001.png
    :target: ../auto_examples/neighbors/plot_regression.html
    :align: center
    :scale: 75
 
-The use of multi-output nearest neighbors for regression is demonstrated in
-:ref:`sphx_glr_auto_examples_plot_multioutput_face_completion.py`. In this example, the inputs
-X are the pixels of the upper half of faces and the outputs Y are the pixels of
-the lower half of those faces.
+多输出最近邻回归的使用案例可以看 :ref:`sphx_glr_auto_examples_plot_multioutput_face_completion.py`。 在这个案例中，输入 X 是一些人脸的上半部分，
+输出 Y 是那些人脸的下半部分。
 
 .. figure:: ../auto_examples/images/sphx_glr_plot_multioutput_face_completion_001.png
    :target: ../auto_examples/plot_multioutput_face_completion.html
@@ -240,7 +175,7 @@ the lower half of those faces.
    :align: center
 
 
-.. topic:: Examples:
+.. topic:: 案例:
 
   * :ref:`sphx_glr_auto_examples_neighbors_plot_regression.py`: an example of regression
     using nearest neighbors.
@@ -257,54 +192,32 @@ the lower half of those faces.
 Brute Force
 -----------
 
-Fast computation of nearest neighbors is an active area of research in
-machine learning. The most naive neighbor search implementation involves
-the brute-force computation of distances between all pairs of points in the
-dataset: for :math:`N` samples in :math:`D` dimensions, this approach scales
-as :math:`O[D N^2]`.  Efficient brute-force neighbors searches can be very
-competitive for small data samples.
-However, as the number of samples :math:`N` grows, the brute-force
-approach quickly becomes infeasible.  In the classes within
-:mod:`sklearn.neighbors`, brute-force neighbors searches are specified
-using the keyword ``algorithm = 'brute'``, and are computed using the
-routines available in :mod:`sklearn.metrics.pairwise`.
+最近邻的快速计算是机器学习中一个活跃的研究领域。最简单的近邻搜索的实现涉及数据集中所有成对点之间距离的暴力计算(Brute Force computation)：
+对于 :math:`D` 维空间中的 :math:`N` 个样本来说, 这个方法的复杂度是 :math:`O[D N^2]` 。 
+对于少量的数据样本，高效的暴力近邻搜索是非常有竞争力的。 然而，随着样本数 :math:`N` 的增长，暴力方法很快变得不切实际了。
+在 :mod:`sklearn.neighbors` 模块中， 暴力近邻搜索通过关键字参数 ``algorithm = 'brute'`` 来指定，并通过
+:mod:`sklearn.metrics.pairwise` 中的例程(routines)来进行计算。
 
 .. _kd_tree:
 
 K-D Tree
 --------
 
-To address the computational inefficiencies of the brute-force approach, a
-variety of tree-based data structures have been invented.  In general, these
-structures attempt to reduce the required number of distance calculations
-by efficiently encoding aggregate distance information for the sample.
-The basic idea is that if point :math:`A` is very distant from point
-:math:`B`, and point :math:`B` is very close to point :math:`C`,
-then we know that points :math:`A` and :math:`C`
-are very distant, *without having to explicitly calculate their distance*.
-In this way, the computational cost of a nearest neighbors search can be
-reduced to :math:`O[D N \log(N)]` or better. This is a significant
-improvement over brute-force for large :math:`N`.
+为了解决效率低下的暴力计算方法，已经发明了大量的基于树的数据结构。总的来说， 
+这些数据结构试图通过有效地编码样本的 聚合距离信息(aggregate distance information) 来减少所需的距离计算量。 
+基本思想是，若 :math:`A` 点距离 :math:`B` 点非常远，:math:`B` 点距离 :math:`C` 点非常近， 可知 :math:`A` 点与 :math:`C` 点很遥远，
+不需要明确计算它们的距离。 通过这样的方式，近邻搜索的计算成本可以降低为 :math:`O[D N \log(N)]` 或更低。 
+这是对于暴力搜索在大样本数 :math:`N` 中表现的显著改善。
 
-An early approach to taking advantage of this aggregate information was
-the *KD tree* data structure (short for *K-dimensional tree*), which
-generalizes two-dimensional *Quad-trees* and 3-dimensional *Oct-trees*
-to an arbitrary number of dimensions.  The KD tree is a binary tree
-structure which recursively partitions the parameter space along the data
-axes, dividing it into nested orthotropic regions into which data points
-are filed.  The construction of a KD tree is very fast: because partitioning
-is performed only along the data axes, no :math:`D`-dimensional distances
-need to be computed. Once constructed, the nearest neighbor of a query
-point can be determined with only :math:`O[\log(N)]` distance computations.
-Though the KD tree approach is very fast for low-dimensional (:math:`D < 20`)
-neighbors searches, it becomes inefficient as :math:`D` grows very large:
-this is one manifestation of the so-called "curse of dimensionality".
-In scikit-learn, KD tree neighbors searches are specified using the
-keyword ``algorithm = 'kd_tree'``, and are computed using the class
-:class:`KDTree`.
+利用这种聚合信息的早期方法是 *KD tree* 数据结构（* K-dimensional tree * 的简写）, 
+它将二维 *Quad-trees* 和三维 *Oct-trees* 推广到任意数量的维度. KD 树是一个二叉树结构，
+它沿着数据轴递归地划分参数空间，将其划分为嵌入数据点的嵌套的各向异性区域。 
+KD 树的构造非常快：因为只需沿数据轴执行分区, 无需计算 D-dimensional 距离。 
+一旦构建完成, 查询点的最近邻距离计算复杂度仅为 :math:`O[\log(N)]` 。 虽然 KD 树的方法对于低维度 (:math:`D < 20`) 近邻搜索非常快, 
+当 D 增长到很大时, 效率变低: 这就是所谓的 “维度灾难” 的一种体现。 在 scikit-learn 中, KD 树近邻搜索可以使用关键字 ``algorithm = 'kd_tree'`` 来指定, 
+并且使用类 :class:`KDTree` 来计算。
 
-
-.. topic:: References:
+.. topic:: 参考文献:
 
    * `"Multidimensional binary search trees used for associative searching"
      <http://dl.acm.org/citation.cfm?doid=361002.361007>`_,
@@ -316,33 +229,21 @@ keyword ``algorithm = 'kd_tree'``, and are computed using the class
 Ball Tree
 ---------
 
-To address the inefficiencies of KD Trees in higher dimensions, the *ball tree*
-data structure was developed.  Where KD trees partition data along
-Cartesian axes, ball trees partition data in a series of nesting
-hyper-spheres.  This makes tree construction more costly than that of the
-KD tree, but results in a data structure which can be very efficient on 
-highly structured data, even in very high dimensions.
+为了解决 KD 树在高维上效率低下的问题, *ball tree* 数据结构就被发明了。 其中 KD 树沿迪卡尔轴（即坐标轴）分割数据, 而
+ball 树在沿着一系列的 nesting hyper-spheres 来分割数据。 通过这种方法构建的树要比 KD 树消耗更多的时间, 
+但是这种数据结构对于高结构化的数据是非常有效的, 即使在高维度上也是一样。
 
-A ball tree recursively divides the data into
-nodes defined by a centroid :math:`C` and radius :math:`r`, such that each
-point in the node lies within the hyper-sphere defined by :math:`r` and
-:math:`C`. The number of candidate points for a neighbor search
-is reduced through use of the *triangle inequality*:
+ball tree 将数据递归地划分到由质心 :math:`C` 和 半径 :math:`r` 定义的节点上，以使得 节点内的每个点都位于由 质心 :math:`C` 和 半径 :math:`r`定义的
+超球面(hyper-sphere)内。通过使用 三角不等式(*triangle inequality*) 减少近邻搜索的候选点数:
 
 .. math::   |x+y| \leq |x| + |y|
 
-With this setup, a single distance calculation between a test point and
-the centroid is sufficient to determine a lower and upper bound on the
-distance to all points within the node.
-Because of the spherical geometry of the ball tree nodes, it can out-perform
-a *KD-tree* in high dimensions, though the actual performance is highly
-dependent on the structure of the training data.
-In scikit-learn, ball-tree-based
-neighbors searches are specified using the keyword ``algorithm = 'ball_tree'``,
-and are computed using the class :class:`sklearn.neighbors.BallTree`.
-Alternatively, the user can work with the :class:`BallTree` class directly.
+通过这种设置, 测试点和质心之间的单一距离计算足以确定测试点到节点内所有点的距离的下限和上限。
+由于 ball tree 节点的球形几何(spherical geometry), 它在高维度上的性能超出 *KD-tree* , 尽管实际的性能高度依赖于训练数据的结构。
+在 scikit-learn 中, 基于 ball tree 的近邻搜索可以使用关键字 ``algorithm = 'ball_tree'`` 来指定, 并且使用类 :class:`sklearn.neighbors.BallTree`
+来计算, 或者, 用户可以直接使用 :class:`BallTree` 类。
 
-.. topic:: References:
+.. topic:: 参考文献:
 
    * `"Five balltree construction algorithms"
      <http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.91.8209>`_,
@@ -351,21 +252,15 @@ Alternatively, the user can work with the :class:`BallTree` class directly.
 
 最近邻算法的选择
 -------------------------------------
-The optimal algorithm for a given dataset is a complicated choice, and
-depends on a number of factors:
+对一个给定的数据集,选择一个合适的最近邻算法是很复杂的，其依赖于很多个因素：
 
-* number of samples :math:`N` (i.e. ``n_samples``) and dimensionality
-  :math:`D` (i.e. ``n_features``).
+* 样本数量 :math:`N` (i.e. ``n_samples``) 和 特征维数 :math:`D` (i.e. ``n_features``).
 
-  * *Brute force* query time grows as :math:`O[D N]`
-  * *Ball tree* query time grows as approximately :math:`O[D \log(N)]`
-  * *KD tree* query time changes with :math:`D` in a way that is difficult
-    to precisely characterise.  For small :math:`D` (less than 20 or so)
-    the cost is approximately :math:`O[D\log(N)]`, and the KD tree
-    query can be very efficient.
-    For larger :math:`D`, the cost increases to nearly :math:`O[DN]`, and
-    the overhead due to the tree
-    structure can lead to queries which are slower than brute force.
+  * *Brute force* 的查询时间增长复杂度是 :math:`O[D N]`
+  * *Ball tree* 的查询时间增长复杂度是 :math:`O[D \log(N)]`
+  * *KD tree* 的查询时间随着 :math:`D` 变化，所以很难准确的量化。对于一个小的 :math:`D` (<=20)
+    代价近似是 :math:`O[D\log(N)]`, 而 KD tree 的查询时间也非常有效率。对于较大的 :math:`D` ，代价几乎增加到 :math:`O[DN]`，
+    由于树结构引起的过载(overhead)导致查询比 brute force 还要慢。
 
   For small data sets (:math:`N` less than 30 or so), :math:`\log(N)` is
   comparable to :math:`N`, and brute force algorithms can be more efficient
@@ -426,8 +321,9 @@ This choice is based on the assumption that the number of query points is at
 least the same order as the number of training points, and that ``leaf_size``
 is close to its default value of ``30``.
 
-``leaf_size``的效果
+``leaf_size`` 的效果
 -----------------------
+
 As noted above, for small sample sizes a brute force search can be more
 efficient than a tree-based query.  This fact is accounted for in the ball
 tree and KD tree by internally switching to brute force searches within
