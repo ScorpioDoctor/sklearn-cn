@@ -675,7 +675,7 @@ N-grams 来救场！不去构建一个简单的unigrams集合 (n=1)，而是使�
 使用 HashingVectorizer 执行核外scaling 
 ------------------------------------------------------
 
-使用 :class:`HashingVectorizer` 的一个有趣的开发是执行外核 `out-of-core`_ 缩放的能力。 
+使用 :class:`HashingVectorizer` 的一个有趣的开发是执行核外 `out-of-core`_ 缩放的能力。 
 这意味着我们可以从无法放入电脑主内存的数据中进行学习。
 
 .. _out-of-core: https://en.wikipedia.org/wiki/Out-of-core_algorithm
@@ -771,9 +771,10 @@ N-grams 来救场！不去构建一个简单的unigrams集合 (n=1)，而是使�
 图像块提取
 ----------------
 
-:func:`extract_patches_2d` 函数从存储为二维数组的图像或沿着第三轴的颜色信息三维提取图像块程序。 
-要从其所有补丁重建图像，请使用 :func:`reconstruct_from_patches_2d` 。
-例如让我们使用3个彩色通道（例如 RGB 格式）生成一个 4x4 像素的图像::
+
+:func:`extract_patches_2d` 函数从存储为二维数组的灰度图像或三维数组的彩色图像中提取图像块(patches)。
+彩色图像的颜色信息在第三个纬度存放。如果要从所有的图像块(patches)中重建图像，请使用函数 :func:`reconstruct_from_patches_2d` 。
+比如我们生成一个 4x4 像素的RGB格式三通道图像::
 
     >>> import numpy as np
     >>> from sklearn.feature_extraction import image
@@ -802,13 +803,13 @@ N-grams 来救场！不去构建一个简单的unigrams集合 (n=1)，而是使�
     array([[15, 18],
            [27, 30]])
 
-现在让我们尝试通过在重叠区域进行平均来从补丁重建原始图像::
+现在让我们尝试通过在重叠区域进行平均来从图像块重建原始图像::
 
     >>> reconstructed = image.reconstruct_from_patches_2d(patches, (4, 4, 3))
     >>> np.testing.assert_array_equal(one_image, reconstructed)
 
-:class:`PatchExtractor` 类的工作方式与 :func:`extract_patches_2d` 函数相同, 只是它支持多种图像作为输入。
-它被实现为一个估计器，因此它可以在 pipelines 中使用。请看::
+:class:`PatchExtractor` 类的工作方式与 :func:`extract_patches_2d` 函数相同, 只是它支持多幅图像作为输入。
+它被实现为一个estimator，因此它可以在 pipelines 中使用。请看::
 
     >>> five_images = np.arange(5 * 4 * 4 * 3).reshape(5, 4, 4, 3)
     >>> patches = image.PatchExtractor((2, 2)).transform(five_images)
@@ -818,17 +819,18 @@ N-grams 来救场！不去构建一个简单的unigrams集合 (n=1)，而是使�
 图像的连接图
 -------------------------------
 
-scikit-learn 中的几个估计可以使用特征或样本之间的连接信息。 例如，Ward clustering (:ref:`hierarchical_clustering`) 
-可以聚集在一起，只有图像的相邻像素，从而形成连续的斑块:
+scikit-learn 中的好几个estimators可以使用特征或样本之间的连接信息(connectivity information)。 
+例如，Ward clustering (:ref:`hierarchical_clustering`) 可以只把相邻像素(neighboring pixels)聚集在一起，从而形成连续的斑块:
 
 .. figure:: ../auto_examples/cluster/images/sphx_glr_plot_coin_ward_segmentation_001.png
    :target: ../auto_examples/cluster/plot_coin_ward_segmentation.html
    :align: center
    :scale: 40
 
-For this purpose, the estimators use a 'connectivity' matrix, giving which samples are connected.
+出于这个目的, 这些estimators使用一个连接性矩阵('connectivity' matrix), 给出哪些样本是连接着的。
 
-该函数 :func:`img_to_graph` 从2D或3D图像返回这样一个矩阵。类似地，:func:`grid_to_graph` 为给定这些图像的形状的图像构建连接矩阵。
+函数 :func:`img_to_graph` 从2D或3D图像返回这样一个矩阵('connectivity' matrix)。
+类似地，函数 :func:`grid_to_graph` 为给定shape的图像构建连接矩阵。
 
 这些矩阵可用于在使用连接信息的估计器中强加连接，如 (:ref:`hierarchical_clustering`)，而且还要构建预计算的内核或相似矩阵。
 
