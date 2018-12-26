@@ -52,13 +52,7 @@ scikit-learn 估计器使用的 NumPy/SciPy 表示形式。
 通常通过提取围绕特定兴趣词的特征窗口来工作。
 
 例如，假设我们具有提取我们想要用作训练序列分类器（例如：块）的互补标签的部分语音（PoS）标签的一个算法。
-以下 dict 可以是在 “坐在垫子上的猫” 的句子，围绕 “sat” 一词提取的这样一个特征窗口:
-
-For example, suppose that we have a first algorithm that extracts Part of
-Speech (PoS) tags that we want to use as complementary tags for training
-a sequence classifier (e.g. a chunker). The following dict could be
-such a window of features extracted around the word 'sat' in the sentence
-'The cat sat on the mat.'::
+以下 dict 可以是在 “The cat sat on the mat.” 的句子，围绕 “sat” 一词提取的这样一个特征窗口::
 
   >>> pos_window = [
   ...     {
@@ -349,45 +343,35 @@ Tf–idf term weighting
 
 为了重新计算特征权重，并将其转化为适合分类器使用的浮点值，因此使用 tf-idf 变换(tf–idf transform)是非常常见的。
 
-Tf means **term-frequency** while tf–idf means term-frequency times
-**inverse document-frequency**:
+Tf 表示 **term-frequency** 而 tf–idf 表示 term-frequency 乘以 **inverse document-frequency**:
 :math:`\text{tf-idf(t,d)}=\text{tf(t,d)} \times \text{idf(t)}`.
 
-Using the ``TfidfTransformer``'s default settings,
-``TfidfTransformer(norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False)``
-the term frequency, the number of times a term occurs in a given document,
-is multiplied with idf component, which is computed as
+使用 ``TfidfTransformer`` 的默认设置, ``TfidfTransformer(norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False)``
+term 的频率( the term frequency), 一个term出现在给定文档的次数，被乘以 idf component, 计算如下：
 
 :math:`\text{idf}(t) = log{\frac{1 + n_d}{1+\text{df}(d,t)}} + 1`,
 
-where :math:`n_d` is the total number of documents, and :math:`\text{df}(d,t)`
-is the number of documents that contain term :math:`t`. The resulting tf-idf
-vectors are then normalized by the Euclidean norm:
+其中 :math:`n_d` 是文档的总数量，:math:`\text{df}(d,t)` 包含某个 term :math:`t` 的文档的数量。然后计算出的 tf-idf
+vectors 用欧式范数归一化，如下所示：
 
 :math:`v_{norm} = \frac{v}{||v||_2} = \frac{v}{\sqrt{v{_1}^2 +
 v{_2}^2 + \dots + v{_n}^2}}`.
 
-This was originally a term weighting scheme developed for information retrieval
-(as a ranking function for search engines results) that has also found good
-use in document classification and clustering.
+上面所介绍的就是用于信息检索领域的原始的 term加权机制。该 term加权机制 在文档分类和聚类中的表现也比较好。
 
-The following sections contain further explanations and examples that
-illustrate how the tf-idfs are computed exactly and how the tf-idfs
-computed in scikit-learn's :class:`TfidfTransformer`
-and :class:`TfidfVectorizer` differ slightly from the standard textbook
-notation that defines the idf as
+接下来的小节包含了对 tf-idfs 的进一步解释以及实验案例来说明 tf-idfs 是如何准确计算出来的，以及 scikit-learn 的类 
+:class:`TfidfTransformer` 是如何计算 tf-idfs 的。还有 :class:`TfidfVectorizer` 类与标准的 idf 的定义的细微差别。
+标准的 idf 的定义 如下所示：
 
 :math:`\text{idf}(t) = log{\frac{n_d}{1+\text{df}(d,t)}}.`
 
 
-In the :class:`TfidfTransformer` and :class:`TfidfVectorizer`
-with ``smooth_idf=False``, the
-"1" count is added to the idf instead of the idf's denominator:
+在 :class:`TfidfTransformer` 类和 :class:`TfidfVectorizer` 类中，如果设置了 ``smooth_idf=False`` ,那么
+数量 "1" 就被加到 idf 上而不是 idf 的分母上:
 
 :math:`\text{idf}(t) = log{\frac{n_d}{\text{df}(d,t)}} + 1`
 
-This normalization is implemented by the :class:`TfidfTransformer`
-class::
+归一化是被 :class:`TfidfTransformer` 类实现的 ::
 
   >>> from sklearn.feature_extraction.text import TfidfTransformer
   >>> transformer = TfidfTransformer(smooth_idf=False)
@@ -395,13 +379,10 @@ class::
   TfidfTransformer(norm=...'l2', smooth_idf=False, sublinear_tf=False,
                    use_idf=True)
 
-Again please see the :ref:`reference documentation
-<text_feature_extraction_ref>` for the details on all the parameters.
+请再次查看 :ref:`参考文档 <text_feature_extraction_ref>` 来获得所有参数的细节信息。
 
-Let's take an example with the following counts. The first term is present
-100% of the time hence not very interesting. The two other features only
-in less than 50% of the time hence probably more representative of the
-content of the documents::
+让我们以下面的数量来举个栗子。 第一个 term 出现次数 100%，因此可能不是很感兴趣。另外两个特征出现的次数仅仅比50%小点儿，
+因此有可能是更加能够代表文档内容的表示::
 
   >>> counts = [[3, 0, 1],
   ...           [2, 0, 0],
@@ -423,13 +404,12 @@ content of the documents::
          [0.47330339, 0.88089948, 0.        ],
          [0.58149261, 0.        , 0.81355169]])
 
-Each row is normalized to have unit Euclidean norm:
+每一行都被归一化到单位欧式范数:
 
 :math:`v_{norm} = \frac{v}{||v||_2} = \frac{v}{\sqrt{v{_1}^2 +
 v{_2}^2 + \dots + v{_n}^2}}`
 
-For example, we can compute the tf-idf of the first term in the first
-document in the `counts` array as follows:
+比如, 我们可以计算在 `counts` 数组中的第一个文档中第一个 term 的 tf-idf :
 
 :math:`n_{d} = 6`
 
@@ -440,36 +420,32 @@ log \frac{n_d}{\text{df}(d, t)} + 1 = log(1)+1 = 1`
 
 :math:`\text{tf-idf}_{\text{term1}} = \text{tf} \times \text{idf} = 3 \times 1 = 3`
 
-Now, if we repeat this computation for the remaining 2 terms in the document,
-we get
+现在, 如果我们重复上述计算过程去计算文档中剩余的 2 个 terms, 我们可以得到：
 
 :math:`\text{tf-idf}_{\text{term2}} = 0 \times (log(6/1)+1) = 0`
 
 :math:`\text{tf-idf}_{\text{term3}} = 1 \times (log(6/2)+1) \approx 2.0986`
 
-and the vector of raw tf-idfs:
+原始 tf-idfs 的向量:
 
 :math:`\text{tf-idf}_{\text{raw}} = [3, 0, 2.0986].`
 
 
-Then, applying the Euclidean (L2) norm, we obtain the following tf-idfs
-for document 1:
+然后, 应用 Euclidean (L2) norm, 我们可以在文档1 上得到以下 tf-idfs :
 
 :math:`\frac{[3, 0, 2.0986]}{\sqrt{\big(3^2 + 0^2 + 2.0986^2\big)}}
 = [ 0.819,  0,  0.573].`
 
-Furthermore, the default parameter ``smooth_idf=True`` adds "1" to the numerator
-and  denominator as if an extra document was seen containing every term in the
-collection exactly once, which prevents zero divisions:
+更进一步, 默认参数 ``smooth_idf=True`` 会添加 "1" 到分子和分母上，就好像又看到了另一篇文档而这篇文档恰好包含了所有的term仅仅一次，这么做就可以避免
+除零的异常发生了:
 
 :math:`\text{idf}(t) = log{\frac{1 + n_d}{1+\text{df}(d,t)}} + 1`
 
-Using this modification, the tf-idf of the third term in document 1 changes to
-1.8473:
+使用这个修改版本, 文档1 中 第三个 term 的 tf-idf 变为 1.8473:
 
 :math:`\text{tf-idf}_{\text{term3}} = 1 \times log(7/3)+1 \approx 1.8473`
 
-And the L2-normalized tf-idf changes to
+并且 L2-normalized tf-idf 变为
 
 :math:`\frac{[3, 0, 1.8473]}{\sqrt{\big(3^2 + 0^2 + 1.8473^2\big)}}
 = [0.8515, 0, 0.5243]`::
@@ -483,9 +459,7 @@ And the L2-normalized tf-idf changes to
          [0.55422893, 0.83236428, 0.        ],
          [0.63035731, 0.        , 0.77630514]])
 
-The weights of each
-feature computed by the ``fit`` method call are stored in a model
-attribute::
+``fit`` 方法计算出的每个feature的权重被保存在模型属性 ``idf_`` ::
 
   >>> transformer.idf_                       # doctest: +ELLIPSIS
   array([1. ..., 2.25..., 1.84...])
@@ -493,9 +467,8 @@ attribute::
 
 
 
-As tf–idf is very often used for text features, there is also another
-class called :class:`TfidfVectorizer` that combines all the options of
-:class:`CountVectorizer` and :class:`TfidfTransformer` in a single model::
+由于 tf–idf 在文本特征提取中被经常使用，我们还提供了另一个类 :class:`TfidfVectorizer` 来组合 :class:`CountVectorizer` 和 :class:`TfidfTransformer`
+的所有的选项到一个单一模型中去 ::
 
   >>> from sklearn.feature_extraction.text import TfidfVectorizer
   >>> vectorizer = TfidfVectorizer()
@@ -504,83 +477,51 @@ class called :class:`TfidfVectorizer` that combines all the options of
   <4x9 sparse matrix of type '<... 'numpy.float64'>'
       with 19 stored elements in Compressed Sparse ... format>
 
-While the tf–idf normalization is often very useful, there might
-be cases where the binary occurrence markers might offer better
-features. This can be achieved by using the ``binary`` parameter
-of :class:`CountVectorizer`. In particular, some estimators such as
-:ref:`bernoulli_naive_bayes` explicitly model discrete boolean random
-variables. Also, very short texts are likely to have noisy tf–idf values
-while the binary occurrence info is more stable.
+虽然 tf-idf normalization 通常非常有用，但是可能有一种情况是二元出现标记( binary occurrence markers)会提供更好的特征。 
+这可以使用类 :class:`CountVectorizer` 的 ``binary`` 参数来实现。 特别地，一些估计器，诸如 :ref:`bernoulli_naive_bayes`
+显式的使用离散的布尔随机变量。 而且，非常短的文本很可能影响 tf-idf 值，而 二进制出现信息(binary occurrence info) 更稳定。
 
-As usual the best way to adjust the feature extraction parameters
-is to use a cross-validated grid search, for instance by pipelining the
-feature extractor with a classifier:
+通常情况下，调整特征提取参数的最佳方法是使用基于网格搜索的交叉验证，例如通过将特征提取器与分类器进行流水线化:
 
  * :ref:`sphx_glr_auto_examples_model_selection_grid_search_text_feature_extraction.py`
 
 
 解码文本文件
 -------------------
-Text is made of characters, but files are made of bytes. These bytes represent
-characters according to some *encoding*. To work with text files in Python,
-their bytes must be *decoded* to a character set called Unicode.
-Common encodings are ASCII, Latin-1 (Western Europe), KOI8-R (Russian)
-and the universal encodings UTF-8 and UTF-16. Many others exist.
+文本由字符组成，但文件由字节组成。字节转化成字符依照一定的编码(encoding)方式。 
+为了在Python中的使用文本文档，这些字节必须被 解码 为 Unicode 的字符集。 
+常用的编码方式有 ASCII，Latin-1（西欧），KOI8-R（俄语）和通用编码 UTF-8 和 UTF-16。
+还有许多其他的编码存在
 
 .. note::
-    An encoding can also be called a 'character set',
-    but this term is less accurate: several encodings can exist
-    for a single character set.
+    编码也可以称为 ‘字符集’, 但是这个术语不太准确: 单个字符集可能存在多个编码。
 
-The text feature extractors in scikit-learn know how to decode text files,
-but only if you tell them what encoding the files are in.
-The :class:`CountVectorizer` takes an ``encoding`` parameter for this purpose.
-For modern text files, the correct encoding is probably UTF-8,
-which is therefore the default (``encoding="utf-8"``).
+scikit-learn 中的文本提取器知道如何解码文本文件， 但只有当您告诉他们文件的编码的情况下才行， 
+:class:`CountVectorizer` 才需要一个 ``encoding`` 参数。 
+对于现代文本文件，正确的编码可能是 UTF-8，因此它也是默认解码方式 (``encoding="utf-8"``)。
 
-If the text you are loading is not actually encoded with UTF-8, however,
-you will get a ``UnicodeDecodeError``.
-The vectorizers can be told to be silent about decoding errors
-by setting the ``decode_error`` parameter to either ``"ignore"``
-or ``"replace"``. See the documentation for the Python function
-``bytes.decode`` for more details
-(type ``help(bytes.decode)`` at the Python prompt).
+如果正在加载的文本不是使用UTF-8进行编码，则会得到 ``UnicodeDecodeError``. 
+矢量化的方式可以通过设定 ``decode_error`` 参数设置为 ``"ignore"`` 或 ``"replace"`` 来避免抛出解码错误。 
+有关详细信息，请参阅Python函数 ``bytes.decode`` 的文档（在Python提示符下键入 ``help(bytes.decode)`` ）。
 
-If you are having trouble decoding text, here are some things to try:
+如果您在解码文本时遇到问题，请尝试以下操作::
 
-- Find out what the actual encoding of the text is. The file might come
-  with a header or README that tells you the encoding, or there might be some
-  standard encoding you can assume based on where the text comes from.
+- 了解文本的实际编码方式。该文件可能带有标题或 README，告诉您编码，或者可能有一些标准编码，您可以根据文本的来源来推断编码方式。
 
-- You may be able to find out what kind of encoding it is in general
-  using the UNIX command ``file``. The Python ``chardet`` module comes with
-  a script called ``chardetect.py`` that will guess the specific encoding,
-  though you cannot rely on its guess being correct.
+- 您可能可以使用 UNIX 命令 ``file`` 找出它一般使用什么样的编码。 Python ``chardet`` 模块附带一个名为 ``chardetect.py`` 的脚本，
+  它会猜测具体的编码，尽管你不能依靠它的猜测是正确的。
 
-- You could try UTF-8 and disregard the errors. You can decode byte
-  strings with ``bytes.decode(errors='replace')`` to replace all
-  decoding errors with a meaningless character, or set
-  ``decode_error='replace'`` in the vectorizer. This may damage the
-  usefulness of your features.
+- 你可以尝试 UTF-8 并忽略错误。您可以使用 ``bytes.decode(errors='replace')`` 对字节字符串进行解码，
+  用无意义字符替换所有解码错误，或在向量化器中设置 ``decode_error='replace'``. 这可能会损坏您的功能的有用性。
 
-- Real text may come from a variety of sources that may have used different
-  encodings, or even be sloppily decoded in a different encoding than the
-  one it was encoded with. This is common in text retrieved from the Web.
-  The Python package `ftfy`_ can automatically sort out some classes of
-  decoding errors, so you could try decoding the unknown text as ``latin-1``
-  and then using ``ftfy`` to fix errors.
+- 真实文本可能来自各种使用不同编码的来源，或者甚至以与编码的编码不同的编码进行粗略解码。这在从 Web 检索的文本中是常见的。
+  Python 包 ``ftfy`` 可以自动排序一些解码错误类，所以您可以尝试将未知文本解码为 ``latin-1`` ，然后使用 ``ftfy`` 修复错误。
 
-- If the text is in a mish-mash of encodings that is simply too hard to sort
-  out (which is the case for the 20 Newsgroups dataset), you can fall back on
-  a simple single-byte encoding such as ``latin-1``. Some text may display
-  incorrectly, but at least the same sequence of bytes will always represent
-  the same feature.
+- 如果文本的编码的混合，那么它很难整理分类（20个新闻组数据集的情况），您可以把它们回到简单的单字节编码，如 ``latin-1`` 。
+  某些文本可能显示不正确，但至少相同的字节序列将始终代表相同的功能。.
 
-For example, the following snippet uses ``chardet``
-(not shipped with scikit-learn, must be installed separately)
-to figure out the encoding of three texts.
-It then vectorizes the texts and prints the learned vocabulary.
-The output is not shown here.
+例如，以下代码段使用 ``chardet`` （没有附带在scikit-learn中，必须单独安装）来计算出编码方式。
+然后，它将文本向量化并打印学习的词汇（特征）。输出在下方给出。
 
   >>> import chardet    # doctest: +SKIP
   >>> text1 = b"Sei mir gegr\xc3\xbc\xc3\x9ft mein Sauerkraut"
@@ -591,10 +532,9 @@ The output is not shown here.
   >>> v = CountVectorizer().fit(decoded).vocabulary_    # doctest: +SKIP
   >>> for term in v: print(v)                           # doctest: +SKIP
 
-(Depending on the version of ``chardet``, it might get the first one wrong.)
+(根据 ``chardet`` 的版本，可能会返回第一个值错误的结果。)
 
-For an introduction to Unicode and character encodings in general,
-see Joel Spolsky's `Absolute Minimum Every Software Developer Must Know
+有关 Unicode 和字符编码的一般介绍，请参阅 Joel Spolsky's `Absolute Minimum Every Software Developer Must Know
 About Unicode <http://www.joelonsoftware.com/articles/Unicode.html>`_.
 
 .. _`ftfy`: https://github.com/LuminosoInsight/python-ftfy
@@ -603,23 +543,17 @@ About Unicode <http://www.joelonsoftware.com/articles/Unicode.html>`_.
 应用和案例
 -------------------------
 
-The bag of words representation is quite simplistic but surprisingly
-useful in practice.
+词汇表达方式相当简单，但在实践中却非常有用。
 
-In particular in a **supervised setting** it can be successfully combined
-with fast and scalable linear models to train **document classifiers**,
-for instance:
+特别是在 **supervised setting** 中，它能够把快速和可扩展的线性模型组合来训练 **document classifiers** , 例如:
 
  * :ref:`sphx_glr_auto_examples_text_plot_document_classification_20newsgroups.py`
 
-In an **unsupervised setting** it can be used to group similar documents
-together by applying clustering algorithms such as :ref:`k_means`:
+在 **unsupervised setting** 中，可以通过应用诸如 :ref:`k_means` 的聚类算法来将相似文档分组在一起：
 
   * :ref:`sphx_glr_auto_examples_text_plot_document_clustering.py`
 
-Finally it is possible to discover the main topics of a corpus by
-relaxing the hard assignment constraint of clustering, for instance by
-using :ref:`NMF`:
+最后，通过松弛聚类的约束条件，可以通过使用非负矩阵分解( :ref:`NMF` )来发现语料库的主要主题：
 
   * :ref:`sphx_glr_auto_examples_applications_plot_topics_extraction_with_nmf_lda.py`
 
@@ -627,26 +561,16 @@ using :ref:`NMF`:
 词袋表示法的局限性
 ----------------------------------------------
 
-A collection of unigrams (what bag of words is) cannot capture phrases
-and multi-word expressions, effectively disregarding any word order
-dependence. Additionally, the bag of words model doesn't account for potential
-misspellings or word derivations.
+单个单词(unigrams)的集合无法捕获短语和多字表达，有效地忽略了任何单词顺序依赖。
+另外，这个单词模型不包含潜在的拼写错误或词汇推倒。
 
-N-grams to the rescue! Instead of building a simple collection of
-unigrams (n=1), one might prefer a collection of bigrams (n=2), where
-occurrences of pairs of consecutive words are counted.
+N-grams 来救场！不去构建一个简单的unigrams集合 (n=1)，而是使用bigrams集合 (n=2)，其中计算连续字对。
 
-One might alternatively consider a collection of character n-grams, a
-representation resilient against misspellings and derivations.
+还可以考虑 n-gram 的集合，这是一种对拼写错误和派生有弹性的表示。
 
-For example, let's say we're dealing with a corpus of two documents:
-``['words', 'wprds']``. The second document contains a misspelling
-of the word 'words'.
-A simple bag of words representation would consider these two as
-very distinct documents, differing in both of the two possible features.
-A character 2-gram representation, however, would find the documents
-matching in 4 out of 8 features, which may help the preferred classifier
-decide better::
+例如，假设我们正在处理两个文档的语料库： ``['words', 'wprds']`` . 第二个文件包含 `words` 一词的拼写错误。 
+一个简单的单词表示将把这两个视为非常不同的文档，两个可能的特征都是不同的。 
+然而，一个 2-gram 的表示可以找到匹配的文档中的8个特征中的4个，这可能有助于优选的分类器更好地决定::
 
   >>> ngram_vectorizer = CountVectorizer(analyzer='char_wb', ngram_range=(2, 2))
   >>> counts = ngram_vectorizer.fit_transform(['words', 'wprds'])
@@ -657,10 +581,7 @@ decide better::
   array([[1, 1, 1, 0, 1, 1, 1, 0],
          [1, 1, 0, 1, 1, 1, 0, 1]])
 
-In the above example, ``char_wb`` analyzer is used, which creates n-grams
-only from characters inside word boundaries (padded with space on each
-side). The ``char`` analyzer, alternatively, creates n-grams that
-span across words::
+在上面的例子中，使用 ``char_wb`` 分析器，它只能从字边界内的字符（每侧填充空格）创建 n-gram。 ``char`` 分析器可以创建跨越单词的 n-gram ::
 
   >>> ngram_vectorizer = CountVectorizer(analyzer='char_wb', ngram_range=(5, 5))
   >>> ngram_vectorizer.fit_transform(['jumpy fox'])
@@ -680,23 +601,16 @@ span across words::
   ...     ['jumpy', 'mpy f', 'py fo', 'umpy ', 'y fox'])
   True
 
-The word boundaries-aware variant ``char_wb`` is especially interesting
-for languages that use white-spaces for word separation as it generates
-significantly less noisy features than the raw ``char`` variant in
-that case. For such languages it can increase both the predictive
-accuracy and convergence speed of classifiers trained using such
-features while retaining the robustness with regards to misspellings and
-word derivations.
+对于使用白色空格进行单词分离的语言，对于语言边界感知变体 ``char_wb`` 尤其有趣，
+因为在这种情况下，它会产生比原始 ``char`` 变体显着更少的噪音特征。 
+对于这样的语言，它可以增加使用这些特征训练的分类器的预测精度和收敛速度，
+同时保持关于拼写错误和词导出的稳健性。
 
-While some local positioning information can be preserved by extracting
-n-grams instead of individual words, bag of words and bag of n-grams
-destroy most of the inner structure of the document and hence most of
-the meaning carried by that internal structure.
+虽然可以通过提取 n-gram 而不是单独的单词来保存一些局部定位信息，
+但是包含 n-gram 的单词和袋子可以破坏文档的大部分内部结构，因此破坏了该内部结构的大部分含义。
 
-In order to address the wider task of Natural Language Understanding,
-the local structure of sentences and paragraphs should thus be taken
-into account. Many such models will thus be casted as "Structured output"
-problems which are currently outside of the scope of scikit-learn.
+为了处理自然语言理解的更广泛的任务，因此应考虑到句子和段落的局部结构。因此，许多这样的模型将被称为 “结构化输出” 问题，
+这些问题目前不在 scikit-learn 的范围之内。
 
 
 .. _hashing_vectorizer:
@@ -704,40 +618,25 @@ problems which are currently outside of the scope of scikit-learn.
 用散列技巧矢量化大型语料库
 ------------------------------------------------------
 
-The above vectorization scheme is simple but the fact that it holds an **in-
-memory mapping from the string tokens to the integer feature indices** (the
-``vocabulary_`` attribute) causes several **problems when dealing with large
-datasets**:
+上述向量化方案是简单的，但是它存在 从字符串令牌到整数特征索引的内存映射 （ ``vocabulary_`` 属性），在处理 大型数据集时会引起几个问题 :
 
-- the larger the corpus, the larger the vocabulary will grow and hence the
-  memory use too,
+- 语料库越大，词汇量越大，使用的内存也越大.
 
-- fitting requires the allocation of intermediate data structures
-  of size proportional to that of the original dataset.
+- 拟合（fitting）需要根据原始数据集的大小等比例分配中间数据结构的大小.
 
-- building the word-mapping requires a full pass over the dataset hence it is
-  not possible to fit text classifiers in a strictly online manner.
+- 构建词映射需要完整的传递数据集，因此不可能以严格在线的方式拟合文本分类器. 
 
-- pickling and un-pickling vectorizers with a large ``vocabulary_`` can be very
-  slow (typically much slower than pickling / un-pickling flat data structures
-  such as a NumPy array of the same size),
+- pickling和un-pickling ``vocabulary`` 很大的向量器会非常慢（通常比pickling/un-pickling flat数据结构，比如同等大小的Numpy数组还要慢）.
 
-- it is not easily possible to split the vectorization work into concurrent sub
-  tasks as the ``vocabulary_`` attribute would have to be a shared state with a
-  fine grained synchronization barrier: the mapping from token string to
-  feature index is dependent on ordering of the first occurrence of each token
-  hence would have to be shared, potentially harming the concurrent workers'
-  performance to the point of making them slower than the sequential variant.
+- 将向量化任务分隔成并行的子任务很不容易实现，因为 ``vocabulary_`` 属性要共享状态有一个细颗粒度的同步障碍：
+  从标记字符串中映射特征索引与每个标记的首次出现顺序是独立的，
+  因此应该被共享，在这点上并行worker的性能受到了损害，使他们比串行更慢。
 
-It is possible to overcome those limitations by combining the "hashing trick"
-(:ref:`Feature_hashing`) implemented by the
-:class:`sklearn.feature_extraction.FeatureHasher` class and the text
-preprocessing and tokenization features of the :class:`CountVectorizer`.
+通过组合由 ``sklearn.feature_extraction.FeatureHasher`` 类实现的 “散列技巧” (:ref:`Feature_hashing`) 
+和 :class:`CountVectorizer` 的文本预处理和标记化功能，可以克服这些限制。
 
-This combination is implementing in :class:`HashingVectorizer`,
-a transformer class that is mostly API compatible with :class:`CountVectorizer`.
-:class:`HashingVectorizer` is stateless,
-meaning that you don't have to call ``fit`` on it::
+这种组合是在 :class:`HashingVectorizer` 中实现的，该类是与 :class:`CountVectorizer` 大部分 API 兼容的变换器(transformer)类。 
+:class:`HashingVectorizer` 是无状态的，这意味着您不需要 ``fit`` 它::
 
   >>> from sklearn.feature_extraction.text import HashingVectorizer
   >>> hv = HashingVectorizer(n_features=10)
@@ -746,24 +645,18 @@ meaning that you don't have to call ``fit`` on it::
   <4x10 sparse matrix of type '<... 'numpy.float64'>'
       with 16 stored elements in Compressed Sparse ... format>
 
-You can see that 16 non-zero feature tokens were extracted in the vector
-output: this is less than the 19 non-zeros extracted previously by the
-:class:`CountVectorizer` on the same toy corpus. The discrepancy comes from
-hash function collisions because of the low value of the ``n_features`` parameter.
+你可以看到从向量输出中抽取了16个非0特征标记：与之前由 :class:`CountVectorizer` 在同一个样本语料库抽取的19个非0特征要少。
+差异来自哈希方法的冲突，因为较低的 ``n_features`` 参数的值。
 
-In a real world setting, the ``n_features`` parameter can be left to its
-default value of ``2 ** 20`` (roughly one million possible features). If memory
-or downstream models size is an issue selecting a lower value such as ``2 **
-18`` might help without introducing too many additional collisions on typical
-text classification tasks.
+在真实世界的环境下，``n_features`` 参数可以使用默认值 ``2 ** 20``（将近100万可能的特征）。
+如果内存或者下游模型的大小是一个问题，那么选择一个较小的值比如 ``2 ** 18`` 可能有一些帮助，
+而不需要为典型的文本分类任务引入太多额外的冲突。
 
-Note that the dimensionality does not affect the CPU training time of
-algorithms which operate on CSR matrices (``LinearSVC(dual=True)``,
-``Perceptron``, ``SGDClassifier``, ``PassiveAggressive``) but it does for
-algorithms that work with CSC matrices (``LinearSVC(dual=False)``, ``Lasso()``,
-etc).
+注意 维度并不影响CPU的算法训练时间，训练是在操作CSR矩阵 
+（``LinearSVC(dual=True)``, ``Perceptron``, ``SGDClassifier``, ``PassiveAggressive``），
+但是，它对CSC matrices (``LinearSVC(dual=False)``, ``Lasso()``, etc)算法有效。
 
-Let's try again with the default setting::
+让我们再次尝试使用默认设置::
 
   >>> hv = HashingVectorizer()
   >>> hv.transform(corpus)
@@ -771,46 +664,32 @@ Let's try again with the default setting::
   <4x1048576 sparse matrix of type '<... 'numpy.float64'>'
       with 19 stored elements in Compressed Sparse ... format>
 
-We no longer get the collisions, but this comes at the expense of a much larger
-dimensionality of the output space.
-Of course, other terms than the 19 used here
-might still collide with each other.
+冲突没有再出现，但是，代价是输出空间的维度值非常大。当然，这里使用的19词以外的其他词之前仍会有冲突。
 
-The :class:`HashingVectorizer` also comes with the following limitations:
+:class:`HashingVectorizer` 还具有以下限制 ::
 
-- it is not possible to invert the model (no ``inverse_transform`` method),
-  nor to access the original string representation of the features,
-  because of the one-way nature of the hash function that performs the mapping.
+- 不能反转模型（没有 ``inverse_transform`` 方法）。 因为进行mapping的哈希方法的单向本质，也无法访问原始的字符串表征。
 
-- it does not provide IDF weighting as that would introduce statefulness in the
-  model. A :class:`TfidfTransformer` can be appended to it in a pipeline if
-  required.
+- 没有提供 IDF 加权，因为这需要在模型中引入状态。如果需要的话，可以在管道中添加 :class:`TfidfTransformer` 。
 
 使用 HashingVectorizer 执行核外scaling 
 ------------------------------------------------------
 
-An interesting development of using a :class:`HashingVectorizer` is the ability
-to perform `out-of-core`_ scaling. This means that we can learn from data that
-does not fit into the computer's main memory.
+使用 :class:`HashingVectorizer` 的一个有趣的开发是执行外核 `out-of-core`_ 缩放的能力。 
+这意味着我们可以从无法放入电脑主内存的数据中进行学习。
 
 .. _out-of-core: https://en.wikipedia.org/wiki/Out-of-core_algorithm
 
-A strategy to implement out-of-core scaling is to stream data to the estimator
-in mini-batches. Each mini-batch is vectorized using :class:`HashingVectorizer`
-so as to guarantee that the input space of the estimator has always the same
-dimensionality. The amount of memory used at any time is thus bounded by the
-size of a mini-batch. Although there is no limit to the amount of data that can
-be ingested using such an approach, from a practical point of view the learning
-time is often limited by the CPU time one wants to spend on the task.
+实现核外扩展的一个策略是将数据以流的方式以一小批提交给估计器。每批的向量化都是用 :class:`HashingVectorizer` 。
+这样来保证估计器的输入空间的维度是相等的。 因此任何时间使用的内存数都限定在小频次的大小。 尽管用这种方法可以处理的数据没有限制，
+但是从实用角度学习时间受到想要在这个任务上花费的CPU时间的限制。
 
-For a full-fledged example of out-of-core scaling in a text classification
-task see :ref:`sphx_glr_auto_examples_applications_plot_out_of_core_classification.py`.
+对于文本分类任务中的外核缩放的完整示例，请参阅  :ref:`sphx_glr_auto_examples_applications_plot_out_of_core_classification.py`.
 
-Customizing the vectorizer classes
+自定义向量化器类
 ----------------------------------
 
-It is possible to customize the behavior by passing a callable
-to the vectorizer constructor::
+通过将可调用对象传递给向量化程序构造函数可以定制行为:::
 
   >>> def my_tokenizer(s):
   ...     return s.split()
@@ -820,40 +699,27 @@ to the vectorizer constructor::
   ...     ['some...', 'punctuation!'])
   True
 
-In particular we name:
+特别的，我们命名:
 
-  * ``preprocessor``: a callable that takes an entire document as input (as a
-    single string), and returns a possibly transformed version of the document,
-    still as an entire string. This can be used to remove HTML tags, lowercase
-    the entire document, etc.
+  * ``preprocessor``: 可以将整个文档作为输入（作为单个字符串）的可调用对象，并返回文档的可能转换的版本，仍然是整个字符串。
+    这可以用于删除HTML标签，小写整个文档等。
 
-  * ``tokenizer``: a callable that takes the output from the preprocessor
-    and splits it into tokens, then returns a list of these.
+  * ``tokenizer``: 一个可从预处理器接收输出并将其分成标记的可调用对象，然后返回这些列表。
 
-  * ``analyzer``: a callable that replaces the preprocessor and tokenizer.
-    The default analyzers all call the preprocessor and tokenizer, but custom
-    analyzers will skip this. N-gram extraction and stop word filtering take
-    place at the analyzer level, so a custom analyzer may have to reproduce
-    these steps.
+  * ``analyzer``: 一个可替代预处理程序和标记器的可调用程序。默认分析仪都会调用预处理器和刻录机，但是自定义分析仪将会跳过这个。 
+    N-gram 提取和停止字过滤在分析器级进行，因此定制分析器可能必须重现这些步骤。
 
-(Lucene users might recognize these names, but be aware that scikit-learn
-concepts may not map one-to-one onto Lucene concepts.)
+(Lucene 用户可能会识别这些名称，但请注意，scikit-learn 概念可能无法一对一映射到 Lucene 概念上。)
 
-To make the preprocessor, tokenizer and analyzers aware of the model
-parameters it is possible to derive from the class and override the
-``build_preprocessor``, ``build_tokenizer`` and ``build_analyzer``
-factory methods instead of passing custom functions.
+为了使预处理器，标记器和分析器了解模型参数，可以从类派生并覆盖 ``build_preprocessor``, ``build_tokenizer`` 和 ``build_analyzer`` 工厂方法，
+而不是传递自定义函数。
 
 一些经验和技巧:
 
-  * If documents are pre-tokenized by an external package, then store them in
-    files (or strings) with the tokens separated by whitespace and pass
-    ``analyzer=str.split``
-  * Fancy token-level analysis such as stemming, lemmatizing, compound
-    splitting, filtering based on part-of-speech, etc. are not included in the
-    scikit-learn codebase, but can be added by customizing either the
-    tokenizer or the analyzer.
-    Here's a ``CountVectorizer`` with a tokenizer and lemmatizer using
+  * 如果文档由外部包进行预先标记，则将它们存储在文件（或字符串）中，令牌由空格分隔，并传递  ``analyzer=str.split``  
+  * Fancy 令牌级分析，如词干，词法，复合分割，基于词性的过滤等不包括在 scikit-learn 代码库中，但可以通过定制分词器或分析器来添加。
+  
+    这是一个 ``CountVectorizer``, 使用 NLTK 的 tokenizer 和 lemmatizer:
     `NLTK <http://www.nltk.org>`_::
 
         >>> from nltk import word_tokenize          # doctest: +SKIP
@@ -866,11 +732,10 @@ factory methods instead of passing custom functions.
         ...
         >>> vect = CountVectorizer(tokenizer=LemmaTokenizer())  # doctest: +SKIP
 
-    (Note that this will not filter out punctuation.)
+    (请注意，这不会过滤标点符号。)
 
 
-    The following example will, for instance, transform some British spelling
-    to American spelling::
+    例如，以下例子将英国的一些拼写变成美国拼写::::
 
         >>> import re
         >>> def to_british(tokens):
@@ -889,14 +754,12 @@ factory methods instead of passing custom functions.
         >>> print(CustomVectorizer().build_analyzer()(u"color colour")) # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
         [...'color', ...'color']
 
-    for other styles of preprocessing; examples include stemming, lemmatization,
-    or normalizing numerical tokens, with the latter illustrated in:
+    用于其他样式的预处理; 例子包括 stemming, lemmatization, 或 normalizing numerical tokens, 后者说明如下:
 
      * :ref:`sphx_glr_auto_examples_bicluster_plot_bicluster_newsgroups.py`
 
 
-Customizing the vectorizer can also be useful when handling Asian languages
-that do not use an explicit word separator such as whitespace.
+在处理不使用显式字分隔符（例如空格）的亚洲语言时，自定义向量化器也是有用的。
 
 .. _image_feature_extraction:
 
@@ -908,11 +771,9 @@ that do not use an explicit word separator such as whitespace.
 图像块提取
 ----------------
 
-The :func:`extract_patches_2d` function extracts patches from an image stored
-as a two-dimensional array, or three-dimensional with color information along
-the third axis. For rebuilding an image from all its patches, use
-:func:`reconstruct_from_patches_2d`. For example let use generate a 4x4 pixel
-picture with 3 color channels (e.g. in RGB format)::
+:func:`extract_patches_2d` 函数从存储为二维数组的图像或沿着第三轴的颜色信息三维提取图像块程序。 
+要从其所有补丁重建图像，请使用 :func:`reconstruct_from_patches_2d` 。
+例如让我们使用3个彩色通道（例如 RGB 格式）生成一个 4x4 像素的图像::
 
     >>> import numpy as np
     >>> from sklearn.feature_extraction import image
@@ -941,15 +802,13 @@ picture with 3 color channels (e.g. in RGB format)::
     array([[15, 18],
            [27, 30]])
 
-Let us now try to reconstruct the original image from the patches by averaging
-on overlapping areas::
+现在让我们尝试通过在重叠区域进行平均来从补丁重建原始图像::
 
     >>> reconstructed = image.reconstruct_from_patches_2d(patches, (4, 4, 3))
     >>> np.testing.assert_array_equal(one_image, reconstructed)
 
-The :class:`PatchExtractor` class works in the same way as
-:func:`extract_patches_2d`, only it supports multiple images as input. It is
-implemented as an estimator, so it can be used in pipelines. See::
+:class:`PatchExtractor` 类的工作方式与 :func:`extract_patches_2d` 函数相同, 只是它支持多种图像作为输入。
+它被实现为一个估计器，因此它可以在 pipelines 中使用。请看::
 
     >>> five_images = np.arange(5 * 4 * 4 * 3).reshape(5, 4, 4, 3)
     >>> patches = image.PatchExtractor((2, 2)).transform(five_images)
@@ -959,27 +818,19 @@ implemented as an estimator, so it can be used in pipelines. See::
 图像的连接图
 -------------------------------
 
-Several estimators in the scikit-learn can use connectivity information between
-features or samples. For instance Ward clustering
-(:ref:`hierarchical_clustering`) can cluster together only neighboring pixels
-of an image, thus forming contiguous patches:
+scikit-learn 中的几个估计可以使用特征或样本之间的连接信息。 例如，Ward clustering (:ref:`hierarchical_clustering`) 
+可以聚集在一起，只有图像的相邻像素，从而形成连续的斑块:
 
 .. figure:: ../auto_examples/cluster/images/sphx_glr_plot_coin_ward_segmentation_001.png
    :target: ../auto_examples/cluster/plot_coin_ward_segmentation.html
    :align: center
    :scale: 40
 
-For this purpose, the estimators use a 'connectivity' matrix, giving
-which samples are connected.
+For this purpose, the estimators use a 'connectivity' matrix, giving which samples are connected.
 
-The function :func:`img_to_graph` returns such a matrix from a 2D or 3D
-image. Similarly, :func:`grid_to_graph` build a connectivity matrix for
-images given the shape of these image.
+该函数 :func:`img_to_graph` 从2D或3D图像返回这样一个矩阵。类似地，:func:`grid_to_graph` 为给定这些图像的形状的图像构建连接矩阵。
 
-These matrices can be used to impose connectivity in estimators that use
-connectivity information, such as Ward clustering
-(:ref:`hierarchical_clustering`), but also to build precomputed kernels,
-or similarity matrices.
+这些矩阵可用于在使用连接信息的估计器中强加连接，如 (:ref:`hierarchical_clustering`)，而且还要构建预计算的内核或相似矩阵。
 
 .. note:: **案例**
 
