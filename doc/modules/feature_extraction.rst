@@ -1,43 +1,35 @@
 ﻿.. _feature_extraction:
 
 ==================
-特征抽取(Feature extraction)
+特征提取(Feature extraction)
 ==================
 
 .. currentmodule:: sklearn.feature_extraction
 
-The :mod:`sklearn.feature_extraction` module can be used to extract
-features in a format supported by machine learning algorithms from datasets
-consisting of formats such as text and image.
+:mod:`sklearn.feature_extraction` 模块可以被用于以机器学习算法支持的格式从原始数据集(如文本和图像)提取特征。
 
 .. note::
 
-   Feature extraction is very different from :ref:`feature_selection`:
-   the former consists in transforming arbitrary data, such as text or
-   images, into numerical features usable for machine learning. The latter
-   is a machine learning technique applied on these features.
+   特征提取与特征选择 :ref:`feature_selection` 有很大的不同 ：前者是将任何形式的数据如文本，图像转换成可用于机器学习的数值型特征；
+   后者是一种应用在这些特征上的机器学习技术。
+
 
 .. _dict_feature_extraction:
 
-Loading features from dicts
+从字典加载特征
 ===========================
 
-The class :class:`DictVectorizer` can be used to convert feature
-arrays represented as lists of standard Python ``dict`` objects to the
-NumPy/SciPy representation used by scikit-learn estimators.
+类 :class:`DictVectorizer` 可用于将 以标准Python ``dict`` 对象的列表形式表示的特征数组转换为 
+scikit-learn 估计器使用的 NumPy/SciPy 表示形式。
 
-While not particularly fast to process, Python's ``dict`` has the
-advantages of being convenient to use, being sparse (absent features
-need not be stored) and storing feature names in addition to values.
+虽然处理速度不是特别快，但Python的 ``dict`` 优点是使用方便，稀疏（缺失的特征不需要存储），
+并且除了值之外还存储特征名称。
 
-:class:`DictVectorizer` implements what is called one-of-K or "one-hot"
-coding for categorical (aka nominal, discrete) features. Categorical
-features are "attribute-value" pairs where the value is restricted
-to a list of discrete of possibilities without ordering (e.g. topic
-identifiers, types of objects, tags, names...).
 
-In the following, "city" is a categorical attribute while "temperature"
-is a traditional numerical feature::
+:class:`DictVectorizer` 类实现了对 标称型特征(categorical or  nominal or discrete features)的 one-of-K 或 "one-hot" 编码。
+标称型特征是 "attribute-value" 对，其中 value的取值被限制在一个不排序的可能性的离散列表中。 (e.g. 话题标识符，对象类型，标签，名称)。
+
+在下面, "city" 是一个 标称型属性(特征)，而 "temperature" 是一个传统的 数值型特征(numerical feature)::
 
   >>> measurements = [
   ...     {'city': 'Dubai', 'temperature': 33.},
@@ -56,10 +48,11 @@ is a traditional numerical feature::
   >>> vec.get_feature_names()
   ['city=Dubai', 'city=London', 'city=San Francisco', 'temperature']
 
-:class:`DictVectorizer` is also a useful representation transformation
-for training sequence classifiers in Natural Language Processing models
-that typically work by extracting feature windows around a particular
-word of interest.
+:class:`DictVectorizer` 类也是在自然语言处理模型中训练序列分类器的有用的表达变换(representation transformation)，
+通常通过提取围绕特定兴趣词的特征窗口来工作。
+
+例如，假设我们具有提取我们想要用作训练序列分类器（例如：块）的互补标签的部分语音（PoS）标签的一个算法。
+以下 dict 可以是在 “坐在垫子上的猫” 的句子，围绕 “sat” 一词提取的这样一个特征窗口:
 
 For example, suppose that we have a first algorithm that extracts Part of
 Speech (PoS) tags that we want to use as complementary tags for training
@@ -79,9 +72,7 @@ such a window of features extracted around the word 'sat' in the sentence
   ...     # in a real application one would extract many such dictionaries
   ... ]
 
-This description can be vectorized into a sparse two-dimensional matrix
-suitable for feeding into a classifier (maybe after being piped into a
-:class:`text.TfidfTransformer` for normalization)::
+上述描述可以被矢量化为适合于传递给分类器的稀疏二维矩阵（可能要在pipe之后进行 :class:`text.TfidfTransformer` 归一化）::
 
   >>> vec = DictVectorizer()
   >>> pos_vectorized = vec.fit_transform(pos_window)
@@ -93,69 +84,44 @@ suitable for feeding into a classifier (maybe after being piped into a
   >>> vec.get_feature_names()
   ['pos+1=PP', 'pos-1=NN', 'pos-2=DT', 'word+1=on', 'word-1=cat', 'word-2=the']
 
-As you can imagine, if one extracts such a context around each individual
-word of a corpus of documents the resulting matrix will be very wide
-(many one-hot-features) with most of them being valued to zero most
-of the time. So as to make the resulting data structure able to fit in
-memory the ``DictVectorizer`` class uses a ``scipy.sparse`` matrix by
-default instead of a ``numpy.ndarray``.
+你可以想象，如果一个文本语料库的每一个单词都提取了这样一个上下文，那么所得的矩阵将会非常宽（许多 one-hot-features），其中大部分通常将会是0。 
+为了使产生的数据结构能够适应内存，该类 ``DictVectorizer`` 默认使用 ``scipy.sparse`` 矩阵而不是 ``numpy.ndarray``。
+
 
 
 .. _feature_hashing:
 
-Feature hashing
+特征哈希(散列)化
 ===============
 
 .. currentmodule:: sklearn.feature_extraction
 
-The class :class:`FeatureHasher` is a high-speed, low-memory vectorizer that
-uses a technique known as
-`feature hashing <https://en.wikipedia.org/wiki/Feature_hashing>`_,
-or the "hashing trick".
-Instead of building a hash table of the features encountered in training,
-as the vectorizers do, instances of :class:`FeatureHasher`
-apply a hash function to the features
-to determine their column index in sample matrices directly.
-The result is increased speed and reduced memory usage,
-at the expense of inspectability;
-the hasher does not remember what the input features looked like
-and has no ``inverse_transform`` method.
+类 :class:`FeatureHasher` 是一种高速，低内存消耗的 向量化方法，它使用了特征散列化
+(`feature hashing <https://en.wikipedia.org/wiki/Feature_hashing>`_) 技术 ，或可称为 “散列法”(hashing trick)的技术。 
+该类的做法不是去构建 训练中遇到的特征 的哈希表，如向量化所做的那样, :class:`FeatureHasher` 类实例 将哈希函数应用于特征，
+以便直接在样本矩阵中确定它们的列索引。 
+结果是以牺牲可检测性(inspectability)为代价，带来速度的提高和内存使用的减少; 
+hasher 不记得输入特征是什么样的，也没有 ``inverse_transform`` 办法。
 
-Since the hash function might cause collisions between (unrelated) features,
-a signed hash function is used and the sign of the hash value
-determines the sign of the value stored in the output matrix for a feature.
-This way, collisions are likely to cancel out rather than accumulate error,
-and the expected mean of any output feature's value is zero. This mechanism
-is enabled by default with ``alternate_sign=True`` and is particularly useful
-for small hash table sizes (``n_features < 10000``). For large hash table
-sizes, it can be disabled, to allow the output to be passed to estimators like
-:class:`sklearn.naive_bayes.MultinomialNB` or
-:class:`sklearn.feature_selection.chi2`
-feature selectors that expect non-negative inputs.
+由于散列函数可能导致（不相关）特征之间的冲突，因此使用带符号散列函数，并且散列值的符号确定存储在特征的输出矩阵中的值的符号。 
+这样，碰撞可能会抵消而不是累积错误，并且任何输出特征的值的预期平均值为零。默认情况下，此机制将使用 ``alternate_sign=True`` 启用，
+尤其对小型哈希表的大小（ ``n_features < 10000`` ）特别有用。 对于大哈希表的大小，可以禁用它，以便将输出传递给估计器，
+如 :class:`sklearn.naive_bayes.MultinomialNB` 或 :class:`sklearn.feature_selection.chi2` 特征选择器，这些特征选项器希望输入是非负的。
 
-:class:`FeatureHasher` accepts either mappings
-(like Python's ``dict`` and its variants in the ``collections`` module),
-``(feature, value)`` pairs, or strings,
-depending on the constructor parameter ``input_type``.
-Mapping are treated as lists of ``(feature, value)`` pairs,
-while single strings have an implicit value of 1,
-so ``['feat1', 'feat2', 'feat3']`` is interpreted as
-``[('feat1', 1), ('feat2', 1), ('feat3', 1)]``.
-If a single feature occurs multiple times in a sample,
-the associated values will be summed
-(so ``('feat', 2)`` and ``('feat', 3.5)`` become ``('feat', 5.5)``).
-The output from :class:`FeatureHasher` is always a ``scipy.sparse`` matrix
-in the CSR format.
+:class:`FeatureHasher` 类接受三种类型的输入：mappings ，``(feature, value)`` pairs，或 strings。
+其中 mappings 就像是python的 ``dict`` 或在 ``collections`` 模块中的字典的变体。
+到底使用哪种参数依赖于构造器的 ``input_type`` 参数。
+Mapping 被当作是由 ``(feature, value)`` 组成的列表(list), 而 单个字符串有一个内在的值 1 ，因此 ``['feat1', 'feat2', 'feat3']`` 
+被解释成 ``[('feat1', 1), ('feat2', 1), ('feat3', 1)]``。
+如果一个特征在一个样本中多次出现，那么该特征关联的值就会被累加起来，比如像这样 (``('feat', 2)`` 和 ``('feat', 3.5)`` 就变成了 ``('feat', 5.5)``)。
+类 :class:`FeatureHasher` 的输出总是 CSR 格式的 一个 ``scipy.sparse`` 矩阵。
 
-Feature hashing can be employed in document classification,
-but unlike :class:`text.CountVectorizer`,
-:class:`FeatureHasher` does not do word
-splitting or any other preprocessing except Unicode-to-UTF-8 encoding;
-see :ref:`hashing_vectorizer`, below, for a combined tokenizer/hasher.
+特征散列(Feature hashing)可以被用于文档分类，但是它不像 :class:`text.CountVectorizer` 类,
+:class:`FeatureHasher` 类不进行单词分割 或其他预处理除了 Unicode-to-UTF-8 编码;
+请看下面 :ref:`hashing_vectorizer` , 是一个 combined tokenizer/hasher 。
 
-As an example, consider a word-level natural language processing task
-that needs features extracted from ``(token, part_of_speech)`` pairs.
-One could use a Python generator function to extract features::
+作为一个例子，考虑一个单词级的自然语言处理任务，它需要从 ``(token, part_of_speech)`` pairs 中抽取特征。
+我们可以使用一个 Python 生成器函数 来提取特征 ::
 
   def token_features(token, part_of_speech):
       if token.isdigit():
@@ -169,41 +135,33 @@ One could use a Python generator function to extract features::
           yield "all_uppercase"
       yield "pos={}".format(part_of_speech)
 
-Then, the ``raw_X`` to be fed to ``FeatureHasher.transform``
-can be constructed using::
+然后, 要被传递到 ``FeatureHasher.transform`` 里面去的 ``raw_X`` 可以使用下面的方法构建::
 
   raw_X = (token_features(tok, pos_tagger(tok)) for tok in corpus)
 
-and fed to a hasher with::
+然后使用下面的方法把它喂给 FeatureHasher 类的一个对象实例 (hasher) ::
 
   hasher = FeatureHasher(input_type='string')
   X = hasher.transform(raw_X)
 
-to get a ``scipy.sparse`` matrix ``X``.
+得到的输出是一个 ``scipy.sparse`` 类型的矩阵 ``X``。
 
-Note the use of a generator comprehension,
-which introduces laziness into the feature extraction:
-tokens are only processed on demand from the hasher.
+这里需要注意的是 由于我们使用了Python的生成器，导致在特征抽取过程中引入了懒惰性:
+只有在hasher有需求的时候tokens才会被处理(tokens are only processed on demand from the hasher)。 
 
-Implementation details
+实现细节
 ----------------------
 
-:class:`FeatureHasher` uses the signed 32-bit variant of MurmurHash3.
-As a result (and because of limitations in ``scipy.sparse``),
-the maximum number of features supported is currently :math:`2^{31} - 1`.
+:class:`FeatureHasher` 类使用带符号的 32-bit 变体的 MurmurHash3。 作为其结果(也因为 ``scipy.sparse`` 里面的限制)，
+当前支持的特征的最大数量 :math:`2^{31} - 1` 。
 
-The original formulation of the hashing trick by Weinberger et al.
-used two separate hash functions :math:`h` and :math:`\xi`
-to determine the column index and sign of a feature, respectively.
-The present implementation works under the assumption
-that the sign bit of MurmurHash3 is independent of its other bits.
+散列技巧(hashing trick)的原始形式源于Weinberger et al。 使用两个分开的哈希函数，:math:`h` 和 :math:`\xi` 分别确定特征的列索引和符号。 
+现有的实现是基于假设：MurmurHash3的符号位与其他位独立(the sign bit of MurmurHash3 is independent of its other bits)。
 
-Since a simple modulo is used to transform the hash function to a column index,
-it is advisable to use a power of two as the ``n_features`` parameter;
-otherwise the features will not be mapped evenly to the columns.
+由于使用简单的模数将哈希函数转换为列索引，建议使用2次幂作为 ``n_features`` 参数; 否则特征不会被均匀的分布到列中。
 
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * Kilian Weinberger, Anirban Dasgupta, John Langford, Alex Smola and
    Josh Attenberg (2009). `Feature hashing for large scale multitask learning
@@ -214,79 +172,58 @@ otherwise the features will not be mapped evenly to the columns.
 
 .. _text_feature_extraction:
 
-Text feature extraction
+文本特征提取
 =======================
 
 .. currentmodule:: sklearn.feature_extraction.text
 
 
-The Bag of Words representation
+词袋表示法
 -------------------------------
 
-Text Analysis is a major application field for machine learning
-algorithms. However the raw data, a sequence of symbols cannot be fed
-directly to the algorithms themselves as most of them expect numerical
-feature vectors with a fixed size rather than the raw text documents
-with variable length.
+文本分析是机器学习算法的主要应用领域。 然而，原始数据，符号文字序列不能直接传递给算法，因为它们大多数要求具有固定长度的数字矩阵特征向量，
+而不是具有可变长度的原始文本文档。
 
-In order to address this, scikit-learn provides utilities for the most
-common ways to extract numerical features from text content, namely:
+为解决这个问题，scikit-learn 提供了从文本内容中提取数字特征的最常见方法，即：
 
-- **tokenizing** strings and giving an integer id for each possible token,
-  for instance by using white-spaces and punctuation as token separators.
+- **tokenizing** 令牌化 即对每个可能的 词令牌(token) 分成字符串并赋予整型id，例如通过使用空格和标点符号作为令牌分隔符(token separators)。
 
-- **counting** the occurrences of tokens in each document.
+- **counting** 统计计数 即数出每个文档中令牌的出现次数。
 
-- **normalizing** and weighting with diminishing importance tokens that
-  occur in the majority of samples / documents.
+- **normalizing** 标准化 即 对大多数样本/文档中出现的重要性递减的token进行归一化和加权
 
-In this scheme, features and samples are defined as follows:
+在这个机制中, 特征和样本是如下定义的：
 
-- each **individual token occurrence frequency** (normalized or not)
-  is treated as a **feature**.
+- 每个单独的令牌发生频率（归一化或不归一化）被视为一个特征 (each **individual token occurrence frequency** (normalized or not)
+  is treated as a **feature**.)。
 
-- the vector of all the token frequencies for a given **document** is
-  considered a multivariate **sample**.
+- 给定文档中所有的令牌频率向量被看做一个多元样本(the vector of all the token frequencies for a given **document** is
+  considered a multivariate **sample**.)。
 
-A corpus of documents can thus be represented by a matrix with one row
-per document and one column per token (e.g. word) occurring in the corpus.
+因此，文档的集合(文集：corpus of documents)可被表示为矩阵形式，每行对应一个文本文档，每列对应文集中出现的词令牌(如单个词)。
 
-We call **vectorization** the general process of turning a collection
-of text documents into numerical feature vectors. This specific strategy
-(tokenization, counting and normalization) is called the **Bag of Words**
-or "Bag of n-grams" representation. Documents are described by word
-occurrences while completely ignoring the relative position information
-of the words in the document.
+我们称 向量化(**vectorization**) 是将文本文档集合转换为数字集合特征向量的通用方法。 这种特别的策略（令牌化，计数和归一化）被称为
+**Bag of Words** 或 "Bag of n-grams" 表示法。文档由单词的出现与否和出现频率来描述，同时完全忽略文档中单词的相对位置信息。
 
 
-Sparsity
+稀疏性
 --------
 
-As most documents will typically use a very small subset of the words used in
-the corpus, the resulting matrix will have many feature values that are
-zeros (typically more than 99% of them).
+由于大多数文本文档通常只使用文集的词向量全集中的一个小子集，所以得到的矩阵将具有许多特征值为零（通常大于99％）。
 
-For instance a collection of 10,000 short text documents (such as emails)
-will use a vocabulary with a size in the order of 100,000 unique words in
-total while each document will use 100 to 1000 unique words individually.
+例如，10,000 个短文本文档（如电子邮件）的集合将使用总共100,000个独特词的大小的词汇，而每个文档将单独使用100到1000个独特的单词。
 
-In order to be able to store such a matrix in memory but also to speed
-up algebraic operations matrix / vector, implementations will typically
-use a sparse representation such as the implementations available in the
-``scipy.sparse`` package.
+为了能够将这样的矩阵存储在存储器中，并且还可以加速代数的矩阵/向量运算，实现通常将使用诸如 ``scipy.sparse`` 包中的稀疏实现
 
 
-Common Vectorizer usage
+常见 Vectorizer 的用法
 -----------------------
 
-:class:`CountVectorizer` implements both tokenization and occurrence
-counting in a single class::
+:class:`CountVectorizer` 在单个类中实现了 词语切分(tokenization) 和 出现频数统计(occurrence counting) ::
 
   >>> from sklearn.feature_extraction.text import CountVectorizer
 
-This model has many parameters, however the default values are quite
-reasonable (please see  the :ref:`reference documentation
-<text_feature_extraction_ref>` for the details)::
+这个模型有很多参数，但参数的默认初始值是相当合理的（请参阅 :ref:`参考文档 <text_feature_extraction_ref>` 了解详细信息）::
 
   >>> vectorizer = CountVectorizer()
   >>> vectorizer                     # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
@@ -297,8 +234,7 @@ reasonable (please see  the :ref:`reference documentation
           strip_accents=None, token_pattern=...'(?u)\\b\\w\\w+\\b',
           tokenizer=None, vocabulary=None)
 
-Let's use it to tokenize and count the word occurrences of a minimalistic
-corpus of text documents::
+我们用该类对一个简约的文本语料库进行 分词(tokenize)和 统计单词出现频数 ::
 
   >>> corpus = [
   ...     'This is the first document.',
@@ -311,18 +247,15 @@ corpus of text documents::
   <4x9 sparse matrix of type '<... 'numpy.int64'>'
       with 19 stored elements in Compressed Sparse ... format>
 
-The default configuration tokenizes the string by extracting words of
-at least 2 letters. The specific function that does this step can be
-requested explicitly::
+默认配置是 通过提取至少包含2个字母的单词来对 string 进行分词。做这一步的函数可以显式地被调用 ::
 
   >>> analyze = vectorizer.build_analyzer()
   >>> analyze("This is a text document to analyze.") == (
   ...     ['this', 'is', 'text', 'document', 'to', 'analyze'])
   True
 
-Each term found by the analyzer during the fit is assigned a unique
-integer index corresponding to a column in the resulting matrix. This
-interpretation of the columns can be retrieved as follows::
+analyzer 在拟合过程中找到的每个 term（项）都会被分配一个唯一的整数索引，对应于 resulting matrix 中的一列。
+此列的一些说明可以被检索如下 ::
 
   >>> vectorizer.get_feature_names() == (
   ...     ['and', 'document', 'first', 'is', 'one',
@@ -335,24 +268,20 @@ interpretation of the columns can be retrieved as follows::
          [1, 0, 0, 0, 1, 0, 1, 1, 0],
          [0, 1, 1, 1, 0, 0, 1, 0, 1]]...)
 
-The converse mapping from feature name to column index is stored in the
-``vocabulary_`` attribute of the vectorizer::
+从 feature名称 到 列索引(column index) 的逆映射存储在 ``vocabulary_`` 属性中::
 
   >>> vectorizer.vocabulary_.get('document')
   1
 
-Hence words that were not seen in the training corpus will be completely
-ignored in future calls to the transform method::
+因此，在未来对 transform 方法的调用中，在 训练语料库(training corpus) 中没有看到的单词将被完全忽略：::
 
   >>> vectorizer.transform(['Something completely new.']).toarray()
   ...                           # doctest: +ELLIPSIS
   array([[0, 0, 0, 0, 0, 0, 0, 0, 0]]...)
 
-Note that in the previous corpus, the first and the last documents have
-exactly the same words hence are encoded in equal vectors. In particular
-we lose the information that the last document is an interrogative form. To
-preserve some of the local ordering information we can extract 2-grams
-of words in addition to the 1-grams (individual words)::
+请注意，在前面的语料库中，第一个和最后一个文档具有完全相同的词，因此被编码成相同的向量。 
+特别是我们丢失了 最后一个文件是一个疑问的形式 的信息。
+为了保留局部的词组顺序信息，除了提取一元模型 1-grams（个别词）之外，我们还可以提取 2-grams 的单词 ::
 
   >>> bigram_vectorizer = CountVectorizer(ngram_range=(1, 2),
   ...                                     token_pattern=r'\b\w+\b', min_df=1)
@@ -361,8 +290,7 @@ of words in addition to the 1-grams (individual words)::
   ...     ['bi', 'grams', 'are', 'cool', 'bi grams', 'grams are', 'are cool'])
   True
 
-The vocabulary extracted by this vectorizer is hence much bigger and
-can now resolve ambiguities encoded in local positioning patterns::
+由上述 向量化器(vectorizer) 提取的 vocabulary 因此会变得更大，同时可以在局部定位模式时消除歧义 ::
 
   >>> X_2 = bigram_vectorizer.fit_transform(corpus).toarray()
   >>> X_2
@@ -373,8 +301,7 @@ can now resolve ambiguities encoded in local positioning patterns::
          [0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1]]...)
 
 
-In particular the interrogative form "Is this" is only present in the
-last document::
+特别是 “Is this” 的疑问形式只出现在最后一个文档中::
 
   >>> feature_index = bigram_vectorizer.vocabulary_.get('is this')
   >>> X_2[:, feature_index]     # doctest: +ELLIPSIS
@@ -382,7 +309,7 @@ last document::
 
 .. _stop_words:
 
-Using stop words
+使用 stop words
 ................
 
 Stop words are words like "and", "the", "him", which are presumed to be
@@ -417,15 +344,10 @@ identify and warn about some kinds of inconsistencies.
 Tf–idf term weighting
 ---------------------
 
-In a large text corpus, some words will be very present (e.g. "the", "a",
-"is" in English) hence carrying very little meaningful information about
-the actual contents of the document. If we were to feed the direct count
-data directly to a classifier those very frequent terms would shadow
-the frequencies of rarer yet more interesting terms.
+在一个大的文本语料库中，一些单词将出现很多次（例如 “the”, “a”, “is” 是英文），因此对文档的实际内容没有什么有意义的信息。 
+如果我们直接将直接计数数据提供给分类器，那么这些非常频繁的词组(very frequent terms)会掩盖住那些我们感兴趣但却很少出现的词。
 
-In order to re-weight the count features into floating point values
-suitable for usage by a classifier it is very common to use the tf–idf
-transform.
+为了重新计算特征权重，并将其转化为适合分类器使用的浮点值，因此使用 tf-idf 变换(tf–idf transform)是非常常见的。
 
 Tf means **term-frequency** while tf–idf means term-frequency times
 **inverse document-frequency**:
@@ -597,7 +519,7 @@ feature extractor with a classifier:
  * :ref:`sphx_glr_auto_examples_model_selection_grid_search_text_feature_extraction.py`
 
 
-Decoding text files
+解码文本文件
 -------------------
 Text is made of characters, but files are made of bytes. These bytes represent
 characters according to some *encoding*. To work with text files in Python,
@@ -678,7 +600,7 @@ About Unicode <http://www.joelonsoftware.com/articles/Unicode.html>`_.
 .. _`ftfy`: https://github.com/LuminosoInsight/python-ftfy
 
 
-Applications and examples
+应用和案例
 -------------------------
 
 The bag of words representation is quite simplistic but surprisingly
@@ -702,7 +624,7 @@ using :ref:`NMF`:
   * :ref:`sphx_glr_auto_examples_applications_plot_topics_extraction_with_nmf_lda.py`
 
 
-Limitations of the Bag of Words representation
+词袋表示法的局限性
 ----------------------------------------------
 
 A collection of unigrams (what bag of words is) cannot capture phrases
@@ -779,7 +701,7 @@ problems which are currently outside of the scope of scikit-learn.
 
 .. _hashing_vectorizer:
 
-Vectorizing a large text corpus with the hashing trick
+用散列技巧矢量化大型语料库
 ------------------------------------------------------
 
 The above vectorization scheme is simple but the fact that it holds an **in-
@@ -864,7 +786,7 @@ The :class:`HashingVectorizer` also comes with the following limitations:
   model. A :class:`TfidfTransformer` can be appended to it in a pipeline if
   required.
 
-Performing out-of-core scaling with HashingVectorizer
+使用 HashingVectorizer 执行核外scaling 
 ------------------------------------------------------
 
 An interesting development of using a :class:`HashingVectorizer` is the ability
@@ -922,7 +844,7 @@ parameters it is possible to derive from the class and override the
 ``build_preprocessor``, ``build_tokenizer`` and ``build_analyzer``
 factory methods instead of passing custom functions.
 
-Some tips and tricks:
+一些经验和技巧:
 
   * If documents are pre-tokenized by an external package, then store them in
     files (or strings) with the tokens separated by whitespace and pass
@@ -978,12 +900,12 @@ that do not use an explicit word separator such as whitespace.
 
 .. _image_feature_extraction:
 
-Image feature extraction
+图像特征提取
 ========================
 
 .. currentmodule:: sklearn.feature_extraction.image
 
-Patch extraction
+图像块提取
 ----------------
 
 The :func:`extract_patches_2d` function extracts patches from an image stored
@@ -1034,7 +956,7 @@ implemented as an estimator, so it can be used in pipelines. See::
     >>> patches.shape
     (45, 2, 2, 3)
 
-Connectivity graph of an image
+图像的连接图
 -------------------------------
 
 Several estimators in the scikit-learn can use connectivity information between
@@ -1059,7 +981,7 @@ connectivity information, such as Ward clustering
 (:ref:`hierarchical_clustering`), but also to build precomputed kernels,
 or similarity matrices.
 
-.. note:: **Examples**
+.. note:: **案例**
 
    * :ref:`sphx_glr_auto_examples_cluster_plot_coin_ward_segmentation.py`
 
