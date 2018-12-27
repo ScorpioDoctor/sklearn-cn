@@ -5,21 +5,16 @@
 ==================
 .. currentmodule:: sklearn.random_projection
 
-The :mod:`sklearn.random_projection` module implements a simple and
-computationally efficient way to reduce the dimensionality of the data by
-trading a controlled amount of accuracy (as additional variance) for faster
-processing times and smaller model sizes. This module implements two types of
-unstructured random matrix:
-:ref:`Gaussian random matrix <gaussian_random_matrix>` and
+:mod:`sklearn.random_projection` 模块实现了一种简单、计算效率高的方法来降低数据的维数。
+该方法通过交易 准确率的可控量 来换取 更快的处理时间和更小的模型规模。
+这个模块实现了两种类型的无结构化的随机矩阵(unstructured random matrix):
+:ref:`Gaussian random matrix <gaussian_random_matrix>` 和
 :ref:`sparse random matrix <sparse_random_matrix>`.
 
-The dimensions and distribution of random projections matrices are
-controlled so as to preserve the pairwise distances between any two
-samples of the dataset. Thus random projection is a suitable approximation
-technique for distance based method.
+控制随机投影矩阵的维数和分布，以保持数据集中任意两个样本之间的配对距离。因此，随机投影是一种适合于基于距离的近似方法。
 
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * Sanjoy Dasgupta. 2000.
    `Experiments with random projection. <http://cseweb.ucsd.edu/~dasgupta/papers/randomf.pdf>`_
@@ -39,22 +34,16 @@ technique for distance based method.
 The Johnson-Lindenstrauss lemma
 ===============================
 
-The main theoretical result behind the efficiency of random projection is the
-`Johnson-Lindenstrauss lemma (quoting Wikipedia)
+随机投影效率背后的主要理论结果 是 
+`Johnson-Lindenstrauss lemma (引用自维基百科)
 <https://en.wikipedia.org/wiki/Johnson%E2%80%93Lindenstrauss_lemma>`_:
 
-  In mathematics, the Johnson-Lindenstrauss lemma is a result
-  concerning low-distortion embeddings of points from high-dimensional
-  into low-dimensional Euclidean space. The lemma states that a small set
-  of points in a high-dimensional space can be embedded into a space of
-  much lower dimension in such a way that distances between the points are
-  nearly preserved. The map used for the embedding is at least Lipschitz,
-  and can even be taken to be an orthogonal projection.
+  在数学上, Johnson-Lindenstrauss 引理是一个关于点从高维到低维欧氏空间的低失真嵌入(low-distortion embeddings)的结果。
+  引理指出，高维空间中的一小部分点可以嵌入到较低维的空间中，这样就几乎保持了点之间的距离。
+  用于嵌入的映射至少是Lipschitz的，甚至可以看作是正交投影(orthogonal projection)。
 
-Knowing only the number of samples, the
-:func:`sklearn.random_projection.johnson_lindenstrauss_min_dim` estimates
-conservatively the minimal size of the random subspace to guarantee a
-bounded distortion introduced by the random projection::
+仅仅只知道样本的数量, 函数 :func:`sklearn.random_projection.johnson_lindenstrauss_min_dim` 保守估计随机子空间的最小
+size 以便保证随机投影引入的是一个有界的失真(bounded distortion)。
 
   >>> from sklearn.random_projection import johnson_lindenstrauss_min_dim
   >>> johnson_lindenstrauss_min_dim(n_samples=1e6, eps=0.5)
@@ -74,13 +63,13 @@ bounded distortion introduced by the random projection::
    :scale: 75
    :align: center
 
-.. topic:: Example:
+.. topic:: 案例:
 
   * See :ref:`sphx_glr_auto_examples_plot_johnson_lindenstrauss_bound.py`
     for a theoretical explication on the Johnson-Lindenstrauss lemma and an
     empirical validation using sparse random matrices.
 
-.. topic:: References:
+.. topic:: 参考文献:
 
   * Sanjoy Dasgupta and Anupam Gupta, 1999.
     `An elementary proof of the Johnson-Lindenstrauss Lemma.
@@ -88,15 +77,12 @@ bounded distortion introduced by the random projection::
 
 .. _gaussian_random_matrix:
 
-Gaussian random projection
+高斯随机投影
 ==========================
-The :class:`sklearn.random_projection.GaussianRandomProjection` reduces the
-dimensionality by projecting the original input space on a randomly generated
-matrix where components are drawn from the following distribution
-:math:`N(0, \frac{1}{n_{components}})`.
+:class:`sklearn.random_projection.GaussianRandomProjection` 类 通过把原始输入空间投影(projecting)到
+一个随机产生的矩阵(矩阵的components是从 :math:`N(0, \frac{1}{n_{components}})` 分布中抽取的)进行维数约减。
 
-Here a small excerpt which illustrates how to use the Gaussian random
-projection transformer::
+下面的小例子展示了如何使用高斯随机投影 ::
 
   >>> import numpy as np
   >>> from sklearn import random_projection
@@ -109,18 +95,14 @@ projection transformer::
 
 .. _sparse_random_matrix:
 
-Sparse random projection
+稀疏随机投影
 ========================
-The :class:`sklearn.random_projection.SparseRandomProjection` reduces the
-dimensionality by projecting the original input space using a sparse
-random matrix.
+:class:`sklearn.random_projection.SparseRandomProjection` 类 通过把原始输入空间投影(projecting)到
+一个稀疏随机矩阵进行维数约减。
 
-Sparse random matrices are an alternative to dense Gaussian random
-projection matrix that guarantees similar embedding quality while being much
-more memory efficient and allowing faster computation of the projected data.
+稀疏随机矩阵是稠密高斯随机投影矩阵的一个替代方案，它既保证了相似的嵌入质量同时有很高的存储效率和更快速的投影数据的计算。
 
-If we define ``s = 1 / density``, the elements of the random matrix
-are drawn from
+如果我们定义 ``s = 1 / density``, 那么随机矩阵的元素可以从下面的分布中抽取:
 
 .. math::
 
@@ -132,12 +114,10 @@ are drawn from
   \end{array}
   \right.
 
-where :math:`n_{\text{components}}` is the size of the projected subspace.
-By default the density of non zero elements is set to the minimum density as
-recommended by Ping Li et al.: :math:`1 / \sqrt{n_{\text{features}}}`.
+其中 :math:`n_{\text{components}}` 是投影子空间的size。默认情况下，Ping Li 等人推荐把非零元素的密度被设置为最小密度:
+:math:`1 / \sqrt{n_{\text{features}}}` 。
 
-Here a small excerpt which illustrates how to use the sparse random
-projection transformer::
+下面的小例子展示了如何使用 稀疏随机投影变换器::
 
   >>> import numpy as np
   >>> from sklearn import random_projection
@@ -148,7 +128,7 @@ projection transformer::
   (100, 3947)
 
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * D. Achlioptas. 2003.
    `Database-friendly random projections: Johnson-Lindenstrauss  with binary
