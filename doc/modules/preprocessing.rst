@@ -6,43 +6,30 @@
 
 .. currentmodule:: sklearn.preprocessing
 
-The ``sklearn.preprocessing`` package provides several common
-utility functions and transformer classes to change raw feature vectors
-into a representation that is more suitable for the downstream estimators.
+``sklearn.preprocessing`` 包提供了几个常见的实用工具函数和变换器类，用来将原始特征向量修改为更适合机器学习模型的表达形式。
 
-In general, learning algorithms benefit from standardization of the data set. If
-some outliers are present in the set, robust scalers or transformers are more
-appropriate. The behaviors of the different scalers, transformers, and
-normalizers on a dataset containing marginal outliers is highlighted in
-:ref:`sphx_glr_auto_examples_preprocessing_plot_all_scaling.py`.
+一般来说，机器学习算法会受益于数据集的标准化。如果数据集中出现一些离群/异常值(outliers)，那么鲁棒的缩放器或变换器(scalers or transformers)更合适。
+不同缩放器、变换器和归一化器(normalizer)在包含边缘离群值的数据集上的行为请参看 :ref:`sphx_glr_auto_examples_preprocessing_plot_all_scaling.py` 。
 
 
 .. _preprocessing_scaler:
 
-Standardization, or mean removal and variance scaling
+标准化,or 均值去除和方差缩放
 =====================================================
 
-**Standardization** of datasets is a **common requirement for many
-machine learning estimators** implemented in scikit-learn; they might behave
-badly if the individual features do not more or less look like standard
-normally distributed data: Gaussian with **zero mean and unit variance**.
+数据集的 标准化(**Standardization**) 对 **scikit-learn中实现的大多数机器学习算法来说是常见的要求** 。
+如果个别特征或多或少看起来不是很像标准正态分布(具有零均值和单位方差)，那么这些机器学习算法的表现可能会比较差。
 
-In practice we often ignore the shape of the distribution and just
-transform the data to center it by removing the mean value of each
-feature, then scale it by dividing non-constant features by their
-standard deviation.
+在实践中,我们经常忽略分布的形状，直接通过去除每个特征分量的均值来对每个特征进行中心化，
+再通过除以非常量特征(non-constant features)的标准差对其进行缩放。
 
-For instance, many elements used in the objective function of
-a learning algorithm (such as the RBF kernel of Support Vector
-Machines or the l1 and l2 regularizers of linear models) assume that
-all features are centered around zero and have variance in the same
-order. If a feature has a variance that is orders of magnitude larger
-than others, it might dominate the objective function and make the
-estimator unable to learn from other features correctly as expected.
+例如，在机器学习算法的目标函数(例如SVM的RBF内核或线性模型的l1和l2正则化)
+中有很多地方都假定了所有特征都是以0为中心而且它们的方差也具有相同的阶数。
+如果某个特征的方差比其他特征大几个数量级，那么它就会在学习算法的目标函数中占据主导位置，
+导致学习器并不能像我们所期望的那样，从其他特征中学习。
 
 
-The function :func:`scale` provides a quick and easy way to perform this
-operation on a single array-like dataset::
+函数 :func:`scale` 提供了一个快速简单的方法来在单个 array-like 数据集上执行上述标准化操作 ::
 
   >>> from sklearn import preprocessing
   >>> import numpy as np
@@ -61,7 +48,7 @@ operation on a single array-like dataset::
         >>> print_options = np.get_printoptions()
         >>> np.set_printoptions(suppress=True)
 
-Scaled data has zero mean and unit variance::
+被缩放的数据具有零均值和单位方差::
 
   >>> X_scaled.mean(axis=0)
   array([0., 0., 0.])
@@ -106,7 +93,7 @@ passing ``with_mean=False`` or ``with_std=False`` to the constructor
 of :class:`StandardScaler`.
 
 
-Scaling features to a range
+缩放特征到一个范围
 ---------------------------
 
 An alternative standardization is scaling features to
@@ -186,7 +173,7 @@ As with :func:`scale`, the module further provides convenience functions
 an object.
 
 
-Scaling sparse data
+缩放稀疏数据
 -------------------
 Centering sparse data would destroy the sparseness structure in the data, and
 thus rarely is a sensible thing to do. However, it can make sense to scale
@@ -213,7 +200,7 @@ converting the input to an array using the ``toarray`` method of sparse matrices
 is another option.
 
 
-Scaling data with outliers
+缩放带有异常值的数据
 --------------------------
 
 If your data contains many outliers, scaling using the mean and variance
@@ -257,10 +244,10 @@ defined by :math:`phi` followed by removal of the mean in that space.
 
 .. _preprocessing_transformer:
 
-Non-linear transformation
+非线性变换
 =========================
 
-Mapping to a Uniform distribution
+映射到均匀分布
 ---------------------------------
 
 Like scalers, :class:`QuantileTransformer` puts all features into the same,
@@ -301,7 +288,7 @@ This can be confirmed on a independent testing set with similar remarks::
   ... # doctest: +ELLIPSIS +SKIP
   array([ 0.01...,  0.25...,  0.46...,  0.60... ,  0.94...])
 
-Mapping to a Gaussian distribution
+映射到高斯分布
 ----------------------------------
 
 In many modeling scenarios, normality of the features in a dataset is desirable.
@@ -387,7 +374,7 @@ become infinite under the transformation.
 
 .. _preprocessing_normalization:
 
-Normalization
+归一化
 =============
 
 **Normalization** is the process of **scaling individual samples to have
@@ -449,7 +436,7 @@ The normalizer instance can then be used on sample vectors as any transformer::
 
 .. _preprocessing_categorical_features:
 
-Encoding categorical features
+编码标称型特征
 =============================
 Often features are not given as continuous values but categorical.
 For example a person could have features ``["male", "female"]``,
@@ -545,7 +532,7 @@ as a dict, not as scalars.
 
 .. _preprocessing_discretization:
 
-Discretization
+离散化
 ==============
 
 `Discretization <https://en.wikipedia.org/wiki/Discretization_of_continuous_features>`_
@@ -558,7 +545,7 @@ One-hot encoded discretized features can make a model more expressive, while
 maintaining interpretability. For instance, pre-processing with a discretizer
 can introduce nonlinearity to linear models.
 
-K-bins discretization
+K-bins 离散化
 ---------------------
 
 :class:`KBinsDiscretizer` discretizers features into ``k`` equal width bins::
@@ -607,7 +594,7 @@ on a k-means clustering procedure performed on each feature independently.
 
 .. _preprocessing_binarization:
 
-Feature binarization
+特征二值化
 --------------------
 
 **Feature binarization** is the process of **thresholding numerical
@@ -667,14 +654,14 @@ when ``k = 2``, and when the bin edge is at the value ``threshold``.
 
 .. _imputation:
 
-Imputation of missing values
+缺失值补全
 ============================
 
 Tools for imputing missing values are discussed at :ref:`impute`.
 
 .. _polynomial_features:
 
-Generating polynomial features
+产生多项式特征
 ==============================
 
 Often it's useful to add complexity to the model by considering nonlinear features of the input data. A simple and common method to use is polynomial features, which can get features' high-order and interaction terms. It is implemented in :class:`PolynomialFeatures`::
@@ -715,7 +702,7 @@ See :ref:`sphx_glr_auto_examples_linear_model_plot_polynomial_interpolation.py` 
 
 .. _function_transformer:
 
-Custom transformers
+自定义变换器
 ===================
 
 Often, you will want to convert an existing Python function into a transformer
