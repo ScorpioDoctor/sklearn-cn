@@ -1,46 +1,38 @@
 .. _metrics:
 
-Pairwise metrics, Affinities and Kernels
+成对测度, 相似性 和 核
 ========================================
 
-The :mod:`sklearn.metrics.pairwise` submodule implements utilities to evaluate
-pairwise distances or affinity of sets of samples.
+:mod:`sklearn.metrics.pairwise` 子模块实现了一系列工具用于评估成对距离(pairwise distances)或 样本集合之间的相似性(affinity of sets of samples)。
 
-This module contains both distance metrics and kernels. A brief summary is
-given on the two here.
+这个模块包含了距离测度(distance metrics)和核函数(kernel)。这里给出了它们的一个简要的总结。
 
-Distance metrics are functions ``d(a, b)`` such that ``d(a, b) < d(a, c)``
-if objects ``a`` and ``b`` are considered "more similar" than objects ``a``
-and ``c``. Two objects exactly alike would have a distance of zero.
-One of the most popular examples is Euclidean distance.
-To be a 'true' metric, it must obey the following four conditions::
+距离测度是一种函数 ``d(a, b)``,  如果 ``a`` 和 ``b`` 的相似性比 ``a`` 和 ``c`` 的相似性高的话 ，那么 ``d(a, b) < d(a, c)`` ;
+如果 ``a`` 和 ``b`` 完全相似的话， 那么 ``d(a, b) = 0`` 。
+距离测度中最广为人知的就是 欧氏距离(Euclidean distance)。
+要想成为一个真正的测度('true' metric), 它必须遵守以下四个条件 ::
 
-    1. d(a, b) >= 0, for all a and b
-    2. d(a, b) == 0, if and only if a = b, positive definiteness
-    3. d(a, b) == d(b, a), symmetry
-    4. d(a, c) <= d(a, b) + d(b, c), the triangle inequality
+    1. d(a, b) >= 0, 对所有的 a 和 b
+    2. d(a, b) == 0, if and only if a = b, 正定性(positive definiteness)
+    3. d(a, b) == d(b, a), 对称性(symmetry)
+    4. d(a, c) <= d(a, b) + d(b, c), 三角不等式(the triangle inequality)
 
-Kernels are measures of similarity, i.e. ``s(a, b) > s(a, c)``
-if objects ``a`` and ``b`` are considered "more similar" than objects
-``a`` and ``c``. A kernel must also be positive semi-definite.
+核(kernel)是相似性的度量, i.e.  如果 ``a`` 和 ``b`` 被认为比 ``a`` 和 ``c`` "更相似"，则 ``s(a, b) > s(a, c)`` 。
+核(kernel)也必须是半正定的(positive semi-definite)。
 
-There are a number of ways to convert between a distance metric and a
-similarity measure, such as a kernel. Let ``D`` be the distance, and ``S`` be
-the kernel:
+有很多种方法可以在一个距离测度(distance metric)和相似性度量(similarity measure)之间转换，比如用 kenel 进行这种转换。
+让 ``D`` 是某种距离, 并且 ``S`` 是一个 kernel:
 
-    1. ``S = np.exp(-D * gamma)``, where one heuristic for choosing
-       ``gamma`` is ``1 / num_features``
+    1. ``S = np.exp(-D * gamma)``, 其中用于选择 ``gamma`` 的一种启发式方法是 ``1 / num_features``
     2. ``S = 1. / (D / np.max(D))``
 
 
 .. currentmodule:: sklearn.metrics
 
-The distances between the row vectors of ``X`` and the row vectors of ``Y``
-can be evaluated using :func:`pairwise_distances`. If ``Y`` is omitted the
-pairwise distances of the row vectors of ``X`` are calculated. Similarly,
-:func:`pairwise.pairwise_kernels` can be used to calculate the kernel between `X`
-and `Y` using different kernel functions. See the API reference for more
-details.
+``X`` 的行向量和 ``Y`` 的行向量之间的距离可以用函数 :func:`pairwise_distances` 进行计算。
+如果 ``Y`` 被忽略，则 ``X`` 的所有行向量的成对距离(pairwise distances)就会被计算。 
+类似的，函数 :func:`pairwise.pairwise_kernels` 可以使用不同的核函数(kernel functions)来计算 `X` 和 `Y` 之间的 kernel。
+请查看API获得更对详情。::
 
     >>> import numpy as np
     >>> from sklearn.metrics import pairwise_distances
@@ -65,29 +57,26 @@ details.
 
 .. _cosine_similarity:
 
-Cosine similarity
+余弦相似度
 -----------------
-:func:`cosine_similarity` computes the L2-normalized dot product of vectors.
-That is, if :math:`x` and :math:`y` are row vectors,
-their cosine similarity :math:`k` is defined as:
+函数 :func:`cosine_similarity` 计算向量之间的L2归范化的点积(L2-normalized dot product)。
+那就是, 如果 :math:`x` 和 :math:`y` 是两个行向量,则它们的余弦相似度(cosine similarity) 
+:math:`k` 定义如下:
 
 .. math::
 
     k(x, y) = \frac{x y^\top}{\|x\| \|y\|}
 
-This is called cosine similarity, because Euclidean (L2) normalization
-projects the vectors onto the unit sphere,
-and their dot product is then the cosine of the angle between the points
-denoted by the vectors.
+之所以被称之为 余弦相似度, 是因为 Euclidean (L2) normalization 把两个向量投影到单位球
+(unit sphere),这时它们的点积就是两个向量之间的夹角的余弦值。
 
-This kernel is a popular choice for computing the similarity of documents
-represented as tf-idf vectors.
-:func:`cosine_similarity` accepts ``scipy.sparse`` matrices.
-(Note that the tf-idf functionality in ``sklearn.feature_extraction.text``
-can produce normalized vectors, in which case :func:`cosine_similarity`
-is equivalent to :func:`linear_kernel`, only slower.)
+kernel 是计算以 tf-idf 向量表示的文档相似度的流行选择。
+函数 :func:`cosine_similarity` 接受 ``scipy.sparse`` 矩阵。
+(注意 ``sklearn.feature_extraction.text`` 中的 tf-idf 系列函数 能够产生规范化的向量
+(normalized vectors), 在这种情况下 函数 :func:`cosine_similarity` 等价于 函数 
+:func:`linear_kernel`, 只是较慢一点儿。)
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     * C.D. Manning, P. Raghavan and H. Schütze (2008). Introduction to
       Information Retrieval. Cambridge University Press.
@@ -95,11 +84,11 @@ is equivalent to :func:`linear_kernel`, only slower.)
 
 .. _linear_kernel:
 
-Linear kernel
+线性核
 -------------
-The function :func:`linear_kernel` computes the linear kernel, that is, a
-special case of :func:`polynomial_kernel` with ``degree=1`` and ``coef0=0`` (homogeneous).
-If ``x`` and ``y`` are column vectors, their linear kernel is:
+函数 :func:`linear_kernel` 计算线性核(linear kernel), 这就是说, 这是函数 :func:`polynomial_kernel` 的一种特殊情形，
+其中参数取值为：``degree=1`` 并且 ``coef0=0`` (homogeneous)。
+若 ``x`` 和 ``y`` 是列向量, 它们的线性核 计算如下:
 
 .. math::
 
@@ -107,86 +96,79 @@ If ``x`` and ``y`` are column vectors, their linear kernel is:
 
 .. _polynomial_kernel:
 
-Polynomial kernel
+多项式核
 -----------------
-The function :func:`polynomial_kernel` computes the degree-d polynomial kernel
-between two vectors. The polynomial kernel represents the similarity between two
-vectors. Conceptually, the polynomial kernels considers not only the similarity
-between vectors under the same dimension, but also across dimensions. When used
-in machine learning algorithms, this allows to account for feature interaction.
+函数 :func:`polynomial_kernel` 计算两个向量之间的d-阶多项式核(polynomial kernel)。
+多项式核表达了两个向量之间的相似度。在概念上，多项式核不仅考虑了同一维下向量之间的相似性，而且考虑了各维之间的相似性。
+当用于机器学习算法的时候, 这个特性允许我们把特征之间的相互作用也考虑进去。
 
-The polynomial kernel is defined as:
+多项式核的定义如下:
 
 .. math::
 
     k(x, y) = (\gamma x^\top y +c_0)^d
 
-where:
+其中:
 
-    * ``x``, ``y`` are the input vectors
-    * ``d`` is the kernel degree
+    * ``x``, ``y`` 是输入向量
+    * ``d`` 是 核的阶数(kernel degree)
 
-If :math:`c_0 = 0` the kernel is said to be homogeneous.
+如果 :math:`c_0 = 0` ， 则这个 kernel 就被说成是 同质的(homogeneous)。
 
 .. _sigmoid_kernel:
 
-Sigmoid kernel
+Sigmoid核
 --------------
-The function :func:`sigmoid_kernel` computes the sigmoid kernel between two
-vectors. The sigmoid kernel is also known as hyperbolic tangent, or Multilayer
-Perceptron (because, in the neural network field, it is often used as neuron
-activation function). It is defined as:
+函数 :func:`sigmoid_kernel` 计算两个向量之间的 sigmoid kernel 。
+sigmoid kernel 也被称之为 双曲正切(hyperbolic tangent), 或 Multilayer Perceptron 
+(因为在神经网络领域, 它经常被用于 神经元激活函数)。 它的定义如下:
 
 .. math::
 
     k(x, y) = \tanh( \gamma x^\top y + c_0)
 
-where:
+其中:
 
-    * ``x``, ``y`` are the input vectors
-    * :math:`\gamma` is known as slope
-    * :math:`c_0` is known as intercept
+    * ``x``, ``y`` 时输入向量
+    * :math:`\gamma` 是 斜率(slope)
+    * :math:`c_0` 是 截距(intercept)
 
 .. _rbf_kernel:
 
-RBF kernel
+RBF 核
 ----------
-The function :func:`rbf_kernel` computes the radial basis function (RBF) kernel
-between two vectors. This kernel is defined as:
+函数 :func:`rbf_kernel` 计算两个向量之间的 径向基函数核(RBF kernel)。
+它的定义如下: 
 
 .. math::
 
     k(x, y) = \exp( -\gamma \| x-y \|^2)
 
-where ``x`` and ``y`` are the input vectors. If :math:`\gamma = \sigma^{-2}`
-the kernel is known as the Gaussian kernel of variance :math:`\sigma^2`.
+其中 ``x`` 和 ``y`` 是输入向量。 如果 :math:`\gamma = \sigma^{-2}` ，
+该 RBF kernel 被称为 方差的高斯核(the Gaussian kernel of variance :math:`\sigma^2`)。
 
 .. _laplacian_kernel:
 
-Laplacian kernel
+拉普拉斯核
 ----------------
-The function :func:`laplacian_kernel` is a variant on the radial basis 
-function kernel defined as:
+函数 :func:`laplacian_kernel` 是 RBF kernel 的一个变体:
 
 .. math::
 
     k(x, y) = \exp( -\gamma \| x-y \|_1)
 
-where ``x`` and ``y`` are the input vectors and :math:`\|x-y\|_1` is the 
-Manhattan distance between the input vectors.
+其中 ``x`` 和 ``y`` 是输入向量 并且 :math:`\|x-y\|_1` 是输入向量之间的 曼哈顿距离(Manhattan distance) 。
 
-It has proven useful in ML applied to noiseless data.
-See e.g. `Machine learning for quantum mechanics in a nutshell
+它在ML中被证明是适用于无噪音数据的。
+请看 e.g. `Machine learning for quantum mechanics in a nutshell
 <http://onlinelibrary.wiley.com/doi/10.1002/qua.24954/abstract/>`_.
 
 .. _chi2_kernel:
 
 Chi-squared kernel
 ------------------
-The chi-squared kernel is a very popular choice for training non-linear SVMs in
-computer vision applications.
-It can be computed using :func:`chi2_kernel` and then passed to an
-:class:`sklearn.svm.SVC` with ``kernel="precomputed"``::
+The chi-squared kernel 是一个在计算机视觉应用中广受欢迎的用于训练 non-linear SVMs 的核。
+它使用函数 :func:`chi2_kernel` 进行计算，然后传递给类 :class:`sklearn.svm.SVC` ，并将参数设置为 ``kernel="precomputed"``::
 
     >>> from sklearn.svm import SVC
     >>> from sklearn.metrics.pairwise import chi2_kernel
@@ -203,26 +185,25 @@ It can be computed using :func:`chi2_kernel` and then passed to an
     >>> svm.predict(K)
     array([0, 1, 0, 1])
 
-It can also be directly used as the ``kernel`` argument::
+它也可以直接被用作 ``kernel`` 的参数 ::
 
     >>> svm = SVC(kernel=chi2_kernel).fit(X, y)
     >>> svm.predict(X)
     array([0, 1, 0, 1])
 
 
-The chi squared kernel is given by
+The chi squared kernel 由下式给出:
 
 .. math::
 
         k(x, y) = \exp \left (-\gamma \sum_i \frac{(x[i] - y[i]) ^ 2}{x[i] + y[i]} \right )
 
-The data is assumed to be non-negative, and is often normalized to have an L1-norm of one.
-The normalization is rationalized with the connection to the chi squared distance,
-which is a distance between discrete probability distributions.
+数据被假定为非负的，并且通常被归一化为 1 的 L1范数 (L1-norm of one)。归一化是通过与 chi squared distance 的连接来合理化的，
+chi squared distance 是 两个离散概率分布之间的距离。
 
-The chi squared kernel is most commonly used on histograms (bags) of visual words.
+chi squared kernel 最常用于 视觉词汇的直方图(词袋)(histograms (bags) of visual words)。
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     * Zhang, J. and Marszalek, M. and Lazebnik, S. and Schmid, C.
       Local features and kernels for classification of texture and object
