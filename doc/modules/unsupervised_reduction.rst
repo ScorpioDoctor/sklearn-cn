@@ -5,56 +5,48 @@
 无监督维数约减(Unsupervised dimensionality reduction)
 =====================================
 
-If your number of features is high, it may be useful to reduce it with an
-unsupervised step prior to supervised steps. Many of the
-:ref:`unsupervised-learning` methods implement a ``transform`` method that
-can be used to reduce the dimensionality. Below we discuss two specific
-example of this pattern that are heavily used.
+如果您的features数量很高，那么在有监督的步骤之前使用一个无监督的步骤来减少它可能是有用的。
+很多 :ref:`unsupervised-learning` 方法实现一种可用于降维的 ``transform`` 方法。
+下面我们将讨论已经被大量使用的这种无监督降维模式的两个具体示例。
 
 .. topic:: **Pipelining**
 
-    The unsupervised data reduction and the supervised estimator can be
-    chained in one step. See :ref:`pipeline`.
+    非监督数据约简和监督估计器可以链接起来。 请看 :ref:`pipeline`.
 
 .. currentmodule:: sklearn
 
-PCA: principal component analysis
+PCA: 主成分分析
 ----------------------------------
 
-:class:`decomposition.PCA` looks for a combination of features that
-capture well the variance of the original features. See :ref:`decompositions`.
+:class:`decomposition.PCA` 类寻找能够很好地捕捉原始特征方差的一个特征组合。
+请看 :ref:`decompositions`.
 
-.. topic:: **Examples**
+.. topic:: **案例**
 
    * :ref:`sphx_glr_auto_examples_applications_plot_face_recognition.py`
 
-Random projections
+随机投影
 -------------------
 
-The module: :mod:`random_projection` provides several tools for data
-reduction by random projections. See the relevant section of the
-documentation: :ref:`random_projection`.
+:mod:`random_projection` 模块提供了若干通过随机投影(random projections)用于数据约简的工具。
+请查看相关文档的介绍: :ref:`random_projection`。
 
-.. topic:: **Examples**
+.. topic:: **案例**
 
    * :ref:`sphx_glr_auto_examples_plot_johnson_lindenstrauss_bound.py`
 
-Feature agglomeration
+特征集聚
 ------------------------
 
-:class:`cluster.FeatureAgglomeration` applies
-:ref:`hierarchical_clustering` to group together features that behave
-similarly.
+:class:`cluster.FeatureAgglomeration` 类 应用 :ref:`hierarchical_clustering` 来将相似的特征分组。
 
-.. topic:: **Examples**
+.. topic:: **案例**
 
    * :ref:`sphx_glr_auto_examples_cluster_plot_feature_agglomeration_vs_univariate_selection.py`
    * :ref:`sphx_glr_auto_examples_cluster_plot_digits_agglomeration.py`
 
-.. topic:: **Feature scaling**
+.. topic:: **特征尺度变换(Feature scaling)**
 
-   Note that if features have very different scaling or statistical
-   properties, :class:`cluster.FeatureAgglomeration` may not be able to
-   capture the links between related features. Using a 
-   :class:`preprocessing.StandardScaler` can be useful in these settings.
+   请注意，如果 features 具有非常不同的缩放或统计属性，:class:`cluster.FeatureAgglomeration` 类 将不能够捕捉相关特征之间的联系。
+   在这种情况下，使用 :class:`preprocessing.StandardScaler` 类会非常有用。
 
