@@ -719,8 +719,7 @@ N-grams 来救场！不去构建一个简单的unigrams集合 (n=1)，而是使�
   * 如果文档由外部包进行预先标记，则将它们存储在文件（或字符串）中，令牌由空格分隔，并传递  ``analyzer=str.split``  
   * Fancy 令牌级分析，如词干，词法，复合分割，基于词性的过滤等不包括在 scikit-learn 代码库中，但可以通过定制分词器或分析器来添加。
   
-    这是一个 ``CountVectorizer``, 使用 NLTK 的 tokenizer 和 lemmatizer:
-    `NLTK <http://www.nltk.org>`_::
+    这是一个 ``CountVectorizer``, 使用 NLTK 的 tokenizer 和 lemmatizer: `NLTK <http://www.nltk.org>`_::
 
         >>> from nltk import word_tokenize          # doctest: +SKIP
         >>> from nltk.stem import WordNetLemmatizer # doctest: +SKIP
@@ -735,7 +734,7 @@ N-grams 来救场！不去构建一个简单的unigrams集合 (n=1)，而是使�
     (请注意，这不会过滤标点符号。)
 
 
-    例如，以下例子将英国的一些拼写变成美国拼写::::
+    例如，以下例子将英国的一些拼写变成美国拼写::
 
         >>> import re
         >>> def to_british(tokens):
