@@ -3,19 +3,16 @@
 .. _preprocessing_targets:
 
 ==========================================
-Transforming the prediction target (``y``)
+变换预测目标 (``y``)
 ==========================================
 
-These are transformers that are not intended to be used on features, only on
-supervised learning targets. See also :ref:`transformed_target_regressor` if
-you want to transform the prediction target for learning, but evaluate the
-model in the original (untransformed) space.
+本章要介绍的这些变换器(transformers)不是被用于特征的，而是只被用于变换监督学习的目标(targets)。
+如果你希望变换预测目标以进行学习，但是在原始（未变换）空间中评估模型，请看 :ref:`transformed_target_regressor` 。
 
-Label binarization
+标签二值化
 ------------------
 
-:class:`LabelBinarizer` is a utility class to help create a label indicator
-matrix from a list of multi-class labels::
+:class:`LabelBinarizer` 类是一个工具类用于从多类标签的列表创建一个标签指示器矩阵 ::
 
     >>> from sklearn import preprocessing
     >>> lb = preprocessing.LabelBinarizer()
@@ -27,7 +24,7 @@ matrix from a list of multi-class labels::
     array([[1, 0, 0, 0],
            [0, 0, 0, 1]])
 
-For multiple labels per instance, use :class:`MultiLabelBinarizer`::
+对于每个样本实例具有多个标签的情况, 使用 :class:`MultiLabelBinarizer`::
 
     >>> lb = preprocessing.MultiLabelBinarizer()
     >>> lb.fit_transform([(1, 2), (3,)])
@@ -36,13 +33,12 @@ For multiple labels per instance, use :class:`MultiLabelBinarizer`::
     >>> lb.classes_
     array([1, 2, 3])
 
-Label encoding
+
+标签编码
 --------------
 
-:class:`LabelEncoder` is a utility class to help normalize labels such that
-they contain only values between 0 and n_classes-1. This is sometimes useful
-for writing efficient Cython routines. :class:`LabelEncoder` can be used as
-follows::
+:class:`LabelEncoder` 类 是一个工具类可以用它来归一化标签使得标签只包含从0到n_classes-1的值。
+这在有些时候很有用,比如写一个高效的Cython程序。 :class:`LabelEncoder` 类的用法如下所示 ::
 
     >>> from sklearn import preprocessing
     >>> le = preprocessing.LabelEncoder()
@@ -55,8 +51,8 @@ follows::
     >>> le.inverse_transform([0, 0, 1, 2])
     array([1, 1, 2, 6])
 
-It can also be used to transform non-numerical labels (as long as they are
-hashable and comparable) to numerical labels::
+它也可以被用来把 非数值型标签(non-numerical labels) (只要这些非数值型标签是可哈希的和可比较的(hashable and comparable))
+变换成 数值型标签(numerical labels) ::
 
     >>> le = preprocessing.LabelEncoder()
     >>> le.fit(["paris", "paris", "tokyo", "amsterdam"])
