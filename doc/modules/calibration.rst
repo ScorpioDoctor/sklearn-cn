@@ -1,26 +1,18 @@
 .. _calibration:
 
 =======================
-概率校准（Probability calibration）
+概率校准(Probability calibration)
 =======================
 
 .. currentmodule:: sklearn.calibration
 
+在执行分类时，我们不仅想要预测类标签，而且还要获得相应标签的概率。这个概率给了我们一些关于预测的信心。
+有些模型可以给出类概率(class probabilities)的糟糕估计，有些甚至不支持概率预测。
+校准模块(calibration module)允许我们更好地校准给定模型的概率，或者添加对概率预测(probability prediction)的支持。
 
-When performing classification you often want not only to predict the class
-label, but also obtain a probability of the respective label. This probability
-gives you some kind of confidence on the prediction. Some models can give you
-poor estimates of the class probabilities and some even do not support
-probability prediction. The calibration module allows you to better calibrate
-the probabilities of a given model, or to add support for probability
-prediction.
-
-Well calibrated classifiers are probabilistic classifiers for which the output
-of the predict_proba method can be directly interpreted as a confidence level.
-For instance, a well calibrated (binary) classifier should classify the samples
-such that among the samples to which it gave a predict_proba value close to 0.8,
-approximately 80% actually belong to the positive class. The following plot compares
-how well the probabilistic predictions of different classifiers are calibrated:
+经过良好校准的分类器是概率化分类器(probabilistic classifiers)，它的 ``predict_proba`` 方法的输出可以直接解释为置信水平。
+例如，经过良好校准的(二元)分类器应该对样本进行分类，以便在它给出的 predict_proba 值接近0.8的样本中，大约80%实际上属于正类。
+下面的图比较了不同分类器的概率预测(probabilistic predictions)的校准效果:
 
 .. figure:: ../auto_examples/calibration/images/sphx_glr_plot_compare_calibration_001.png
    :target: ../auto_examples/calibration/plot_compare_calibration.html
@@ -28,75 +20,48 @@ how well the probabilistic predictions of different classifiers are calibrated:
 
 .. currentmodule:: sklearn.linear_model
 
-:class:`LogisticRegression` returns well calibrated predictions by default as it directly
-optimizes log-loss. In contrast, the other methods return biased probabilities;
-with different biases per method:
+:class:`LogisticRegression` 在默认情况下返回经过良好校准的预测，因为它直接优化对数损失(log-loss)。相反，其他方法返回有偏概率(biased probabilities)；
+每种方法有不同的偏差:
 
 .. currentmodule:: sklearn.naive_bayes
 
-*  :class:`GaussianNB` tends to push probabilities to 0 or 1 (note the
-   counts in the histograms). This is mainly because it makes the assumption
-   that features are conditionally independent given the class, which is not
-   the case in this dataset which contains 2 redundant features.
+*  :class:`GaussianNB` 倾向于将概率推到0或1(注意直方图中的计数)。这主要是因为它假设 在给定某一类的情况下，
+   特征分量相互之间是条件独立的(conditionally independent)，而在包含2个冗余特征的数据集中则假设不成立。
 
 .. currentmodule:: sklearn.ensemble
 
-*  :class:`RandomForestClassifier` shows the opposite behavior: the histograms
-   show peaks at approximately 0.2 and 0.9 probability, while probabilities close to
-   0 or 1 are very rare. An explanation for this is given by Niculescu-Mizil
-   and Caruana [4]_: "Methods such as bagging and random forests that average
-   predictions from a base set of models can have difficulty making predictions
-   near 0 and 1 because variance in the underlying base models will bias
-   predictions that should be near zero or one away from these values. Because
-   predictions are restricted to the interval [0,1], errors caused by variance
-   tend to be one-sided near zero and one. For example, if a model should
-   predict p = 0 for a case, the only way bagging can achieve this is if all
-   bagged trees predict zero. If we add noise to the trees that bagging is
-   averaging over, this noise will cause some trees to predict values larger
-   than 0 for this case, thus moving the average prediction of the bagged
-   ensemble away from 0. We observe this effect most strongly with random
-   forests because the base-level trees trained with random forests have
-   relatively high variance due to feature subsetting." As a result, the
-   calibration curve also referred to as the reliability diagram (Wilks 1995 [5]_) shows a
-   characteristic sigmoid shape, indicating that the classifier could trust its
-   "intuition" more and return probabilities closer to 0 or 1 typically.
+*  :class:`RandomForestClassifier` 显示了相反的行为：直方图在概率约为0.2和0.9的地方出现峰值，而接近0或1的概率非常罕见。
+   Niculescu-Mizil和Caruana对此作了解释 [4]_ ：“ 像bagging和random forests这样的通过对一组基本模型的预测取平均的方法很难在0和1附近做出预测，
+   因为底层基本模型中的方差会使本应该接近0或1的预测偏离这些值。因为预测被仅限于区间[0，1]，由方差引起的误差往往是近0和1的单边误差。
+   例如，如果一个模型应该对一个情况预测p=0，那么bagging可以实现的唯一方法就是袋子里的所有树(all bagged trees)都预测为零。如果我们给装在袋子里的树添加噪声
+   则噪声会导致其中的某些树的预测值大于0，因此这就使得bagging的平均预测偏离了0。在随机森林模型中我们可以更加强烈的观察到这些现象，
+   因为随机森林中的基本树估计器(都是在全部特征的一个子集上训练的)都具有相对较高的方差。” 。因此，校准曲线(calibration curve)有时候也称之为
+   可靠性图(reliability graph, Wilks 1995 [5]_) 展示了一个 characteristic sigmoid shape，表明分类器更应该相信它们的直觉并返回更接近 0 或 1 的概率。
 
 .. currentmodule:: sklearn.svm
 
-*  Linear Support Vector Classification (:class:`LinearSVC`) shows an even more sigmoid curve
-   as the RandomForestClassifier, which is typical for maximum-margin methods
-   (compare Niculescu-Mizil and Caruana [4]_), which focus on hard samples
-   that are close to the decision boundary (the support vectors).
+* 线性支持向量分类 (:class:`LinearSVC`) 显示了比 RandomForestClassifier 更多的 Sigmoid 曲线, 
+  这对于最大边距方法 (比较 Niculescu-Mizil 和 Caruana [4]_) 是很典型的, 
+  其重点是聚焦在靠近决策边界的难分样本(hard samples)，也就是 支持向量(support vectors)。
 
 .. currentmodule:: sklearn.calibration
 
-Two approaches for performing calibration of probabilistic predictions are
-provided: a parametric approach based on Platt's sigmoid model and a
-non-parametric approach based on isotonic regression (:mod:`sklearn.isotonic`).
-Probability calibration should be done on new data not used for model fitting.
-The class :class:`CalibratedClassifierCV` uses a cross-validation generator and
-estimates for each split the model parameter on the train samples and the
-calibration of the test samples. The probabilities predicted for the
-folds are then averaged. Already fitted classifiers can be calibrated by
-:class:`CalibratedClassifierCV` via the parameter cv="prefit". In this case,
-the user has to take care manually that data for model fitting and calibration
-are disjoint.
+scikit-learn提供了执行概率预测校准的两种方法: 基于Platt的Sigmoid模型的参数化方法和基于保序回归(isotonic regression)
+的非参数方法 (:mod:`sklearn.isotonic`)。概率校准应该在新数据上进行而不是在训练数据上。
+类 :class:`CalibratedClassifierCV` 使用交叉验证生成器, 对每个拆分，在训练样本上估计模型参数，在测试样本上进行校准。 
+然后对所有拆分上预测的概率进行平均。 已经拟合过的分类器可以通过 :class:`CalibratedClassifierCV` 类传递参数 
+``cv="prefit"`` 这种方式进行校准. 在这种情况下, 用户必须手动注意模型拟合的数据和校准的数据是不重叠的。
 
-The following images demonstrate the benefit of probability calibration.
-The first image present a dataset with 2 classes and 3 blobs of
-data. The blob in the middle contains random samples of each class.
-The probability for the samples in this blob should be 0.5.
+以下图像展示了概率校准的好处。 第一个图像显示一个具有2个类和3个数据块的数据集. 
+中间的数据块包含每个类的随机样本. 此数据块中样本的概率应为 0.5.
 
 .. figure:: ../auto_examples/calibration/images/sphx_glr_plot_calibration_001.png
    :target: ../auto_examples/calibration/plot_calibration.html
    :align: center
 
-The following image shows on the data above the estimated probability
-using a Gaussian naive Bayes classifier without calibration,
-with a sigmoid calibration and with a non-parametric isotonic
-calibration. One can observe that the non-parametric model
-provides the most accurate probability estimates for samples
-in the middle, i.e., 0.5.
+以下图像使用没有校准的高斯朴素贝叶斯分类器, 
+使用 sigmoid 校准和非参数的isotonic校准来显示上述估计概率的数据. 
+可以观察到, 非参数模型为中间样本提供最准确的概率估计, 即 0.5。
 
 .. figure:: ../auto_examples/calibration/images/sphx_glr_plot_calibration_002.png
    :target: ../auto_examples/calibration/plot_calibration.html
@@ -104,17 +69,13 @@ in the middle, i.e., 0.5.
 
 .. currentmodule:: sklearn.metrics
 
-The following experiment is performed on an artificial dataset for binary
-classification with 100,000 samples (1,000 of them are used for model fitting)
-with 20 features. Of the 20 features, only 2 are informative and 10 are
-redundant. The figure shows the estimated probabilities obtained with
-logistic regression, a linear support-vector classifier (SVC), and linear SVC with
-both isotonic calibration and sigmoid calibration. 
-The Brier score is a metric which is a combination of calibration loss and refinement loss,
-:func:`brier_score_loss`, reported in the legend (the smaller the better).
-Calibration loss is defined as the mean squared deviation from empirical probabilities
-derived from the slope of ROC segments. Refinement loss can be defined as the expected
-optimal loss as measured by the area under the optimal cost curve.
+在具有20个特征的100,000个样本（其中1,000个用于模型拟合）进行二元分类的人造数据集上进行以下实验.
+在这20个特征中，只有2个是informative的, 10个是冗余的。
+该图显示了使用logistic regression获得的估计概率, 线性支持向量分类器(SVC)
+和具有 isotonic 校准和 sigmoid 校准的linear SVC。Brier score 是一个指标,它是 calibration loss 
+和 refinement loss 的结合，函数 :func:`brier_score_loss` 来计算, 
+请看下面的图例（越小越好）。 校正损失(Calibration loss)定义为从ROC段斜率导出的经验概率的均方偏差。
+细化损失（Refinement loss）可以定义为在最优代价曲线下用面积测量的期望最优损失。
 
 .. figure:: ../auto_examples/calibration/images/sphx_glr_plot_calibration_curve_002.png
    :target: ../auto_examples/calibration/plot_calibration_curve.html
@@ -191,7 +152,7 @@ This calibration results in a lower log-loss. Note that an alternative would
 have been to increase the number of base estimators which would have resulted in
 a similar decrease in log-loss.
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     * Obtaining calibrated probability estimates from decision trees
       and naive Bayesian classifiers, B. Zadrozny & C. Elkan, ICML 2001
