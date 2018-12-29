@@ -8,59 +8,41 @@
 
 .. currentmodule:: sklearn.mixture
 
-``sklearn.mixture`` is a package which enables one to learn
-Gaussian Mixture Models (diagonal, spherical, tied and full covariance
-matrices supported), sample them, and estimate them from
-data. Facilities to help determine the appropriate number of
-components are also provided.
+``sklearn.mixture`` 是一个用于学习高斯混合模型的包(package)，
+它支持的混合模型类型有 diagonal, spherical, tied 和 full covariance matrices 。
+它还提供了对混合分布进行抽样，以及从数据估计混合模型的功能。它还提供了一些工具帮助我们确定分量的合适数量。
 
  .. figure:: ../auto_examples/mixture/images/sphx_glr_plot_gmm_pdf_001.png
    :target: ../auto_examples/mixture/plot_gmm_pdf.html
    :align: center
    :scale: 50%
 
-   **Two-component Gaussian mixture model:** *data points, and equi-probability
-   surfaces of the model.*
+   **二元高斯混合模型(Two-component Gaussian mixture model):** *数据点，以及模型的等概率平面(equi-probability surfaces)。*
 
-A Gaussian mixture model is a probabilistic model that assumes all the
-data points are generated from a mixture of a finite number of
-Gaussian distributions with unknown parameters. One can think of
-mixture models as generalizing k-means clustering to incorporate
-information about the covariance structure of the data as well as the
-centers of the latent Gaussians.
+高斯混合模型是一种概率性模型(probabilistic model)，它假定所有的数据点都是由有限个参数未知的高斯分布的混合产生的。
+可以认为混合模型是k均值聚类的推广，它包含了关于数据的协方差结构以及潜在高斯分布的中心的信息。
 
-Scikit-learn implements different classes to estimate Gaussian
-mixture models, that correspond to different estimation strategies,
-detailed below.
+Scikit-learn 实现不同的类来估计高斯混合模型，这些模型对应于不同的估计策略，详见下文。
 
 高斯混合
 ================
 
-The :class:`GaussianMixture` object implements the
-:ref:`expectation-maximization <expectation_maximization>` (EM)
-algorithm for fitting mixture-of-Gaussian models. It can also draw
-confidence ellipsoids for multivariate models, and compute the
-Bayesian Information Criterion to assess the number of clusters in the
-data. A :meth:`GaussianMixture.fit` method is provided that learns a Gaussian
-Mixture Model from train data. Given test data, it can assign to each
-sample the Gaussian it mostly probably belong to using
-the :meth:`GaussianMixture.predict` method.
+:class:`GaussianMixture` 对象实现了拟合混合高斯模型的期望最大化(:ref:`expectation-maximization <expectation_maximization>`:EM)算法.
+它还可以绘制多元模型的置信椭球，并计算贝叶斯信息准则(BIC)来评估数据中的聚类数。
+该类对象提供了从训练数据中学习高斯混合模型的 :meth:`GaussianMixture.fit` 方法。
+给定测试数据，可以用 :meth:`GaussianMixture.predict` 方法给每个样本分配它可能属于的高斯分布。
 
 ..
-    Alternatively, the probability of each
-    sample belonging to the various Gaussians may be retrieved using the
-    :meth:`GaussianMixture.predict_proba` method.
+    另外的,每个样本属于各个高斯分布的概率可以使用方法 :meth:`GaussianMixture.predict_proba` 进行检索。
 
-The :class:`GaussianMixture` comes with different options to constrain the
-covariance of the difference classes estimated: spherical, diagonal, tied or
-full covariance.
+:class:`GaussianMixture` 有不同的选项来约束估计出的不同类的协方差：球面(spherical)、对角线（diagonal）、平移(tied)或完全协方差(full covariance)。
 
 .. figure:: ../auto_examples/mixture/images/sphx_glr_plot_gmm_covariances_001.png
    :target: ../auto_examples/mixture/plot_gmm_covariances.html
    :align: center
    :scale: 75%
 
-.. topic:: Examples:
+.. topic:: 案例:
 
     * See :ref:`sphx_glr_auto_examples_mixture_plot_gmm_covariances.py` for an example of
       using the Gaussian mixture as clustering on the iris dataset.
@@ -68,125 +50,89 @@ full covariance.
     * See :ref:`sphx_glr_auto_examples_mixture_plot_gmm_pdf.py` for an example on plotting the
       density estimation.
 
-类:class:`GaussianMixture`的优缺点
+类 :class:`GaussianMixture` 的优缺点
 -----------------------------------------------
 
 优点(Pros)
 ....
 
-:Speed: It is the fastest algorithm for learning mixture models
+:速度(Speed): 用于学习混合模型的最快速方法
 
-:Agnostic: As this algorithm maximizes only the likelihood, it
-  will not bias the means towards zero, or bias the cluster sizes to
-  have specific structures that might or might not apply.
+:Agnostic: 由于此算法仅仅最大化似然函数(likelihood), 因此 它不会把均值偏向到0, 或 使聚类大小偏向于可能适用或者可能不适用的特殊结构。
 
 缺点(Cons)
 ....
 
-:Singularities: When one has insufficiently many points per
-   mixture, estimating the covariance matrices becomes difficult,
-   and the algorithm is known to diverge and find solutions with
-   infinite likelihood unless one regularizes the covariances artificially.
+:奇异性(Singularities): 当每个混合模型没有足够多的点时，估算协方差变得困难起来，同时算法会发散并且找具有无穷大似然函数值的解，除非人为地对协方差进行正则化。
 
-:Number of components: This algorithm will always use all the
-   components it has access to, needing held-out data
-   or information theoretical criteria to decide how many components to use
-   in the absence of external cues.
+:分量的数量(Number of components): 这个算法将会总是用所有它能用的分量，所以在没有外部线索的情况下需要留存数据或者用信息理论准则来决定用多少分量。
 
 选择经典高斯混合模型中分量的数量
 ------------------------------------------------------------------------
 
-The BIC criterion can be used to select the number of components in a Gaussian
-Mixture in an efficient way. In theory, it recovers the true number of
-components only in the asymptotic regime (i.e. if much data is available and
-assuming that the data was actually generated i.i.d. from a mixture of Gaussian
-distribution). Note that using a :ref:`Variational Bayesian Gaussian mixture <bgmm>`
-avoids the specification of the number of components for a Gaussian mixture
-model.
+一种高效的方法是利用 BIC（贝叶斯信息准则）来选择高斯混合的分量数。 
+理论上，它仅当在渐进状态(asymptotic regime )下可以恢复正确的分量数（即如果有大量数据可用，
+并且假设这些数据实际上是一个混合高斯模型独立同分布生成的）。
+注意：使用 :ref:`Variational Bayesian Gaussian mixture <bgmm>` 可以避免高斯混合模型中分量数的选择。
 
 .. figure:: ../auto_examples/mixture/images/sphx_glr_plot_gmm_selection_001.png
    :target: ../auto_examples/mixture/plot_gmm_selection.html
    :align: center
    :scale: 50%
 
-.. topic:: Examples:
+.. topic:: 案例:
 
-    * See :ref:`sphx_glr_auto_examples_mixture_plot_gmm_selection.py` for an example
-      of model selection performed with classical Gaussian mixture.
+    * 一个用典型的高斯混合进行模型选择的例子，请看 :ref:`sphx_glr_auto_examples_mixture_plot_gmm_selection.py`  。
 
 .. _expectation_maximization:
 
 估计算法:期望极大化(EM)
 -----------------------------------------------
 
-The main difficulty in learning Gaussian mixture models from unlabeled
-data is that it is one usually doesn't know which points came from
-which latent component (if one has access to this information it gets
-very easy to fit a separate Gaussian distribution to each set of
-points). `Expectation-maximization
-<https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm>`_
-is a well-founded statistical
-algorithm to get around this problem by an iterative process. First
-one assumes random components (randomly centered on data points,
-learned from k-means, or even just normally distributed around the
-origin) and computes for each point a probability of being generated by
-each component of the model. Then, one tweaks the
-parameters to maximize the likelihood of the data given those
-assignments. Repeating this process is guaranteed to always converge
-to a local optimum.
+在从无标记的数据中应用高斯混合模型主要的困难在于：通常不知道哪个点来自哪个潜在的分量(component) 
+（如果可以获取到这些信息，就可以很容易通过相应的数据点，拟合每个独立的高斯分布）。 
+期望最大化(`Expectation-maximization <https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm>`_,EM)
+是一个理论完善的统计算法，其通过迭代过程来解决这个问题。
+首先，假设我们产生了一些随机分量(随机选择数据点的中心做随机分量，数据点的中心可以用k-means算法得到，或者甚至就让在原点周围正态分布的点做随机分量)，
+并且为每个点计算由模型的每个分量生成这个点的概率。
+然后，调整模型参数以最大化模型生成这些数据点的可能性。重复这个过程就可以保证总会收敛到局部最优解。
 
 .. _bgmm:
 
 变分贝叶斯高斯混合
 =====================================
 
-The :class:`BayesianGaussianMixture` object implements a variant of the
-Gaussian mixture model with variational inference algorithms. The API is
-similar as the one defined by :class:`GaussianMixture`.
+:class:`BayesianGaussianMixture` 对象实现了 具有变分推理算法的 高斯混合模型的 变体。 这个类的API和 :class:`GaussianMixture` 是类似的。
+
 
 .. _variational_inference:
 
 估计算法: 变分推理
 ---------------------------------------------
 
-Variational inference is an extension of expectation-maximization that
-maximizes a lower bound on model evidence (including
-priors) instead of data likelihood. The principle behind
-variational methods is the same as expectation-maximization (that is
-both are iterative algorithms that alternate between finding the
-probabilities for each point to be generated by each mixture and
-fitting the mixture to these assigned points), but variational
-methods add regularization by integrating information from prior
-distributions. This avoids the singularities often found in
-expectation-maximization solutions but introduces some subtle biases
-to the model. Inference is often notably slower, but not usually as
-much so as to render usage unpractical.
+变分推断是期望最大化(EM)的扩展，它最大化模型证据（包括先验）的下界，而不是最大化数据似然函数。 
+变分方法的原理与期望最大化相同(二者都是迭代算法，在 寻找每个混合产生每个点的概率 和 根据所分配的点拟合混合模型 之间两步交替)，
+但是变分方法通过整合先验分布信息来增加正则化限制。 这避免了期望最大化解决方案中常出现的奇异性，但是也对模型带来了微小的偏差。 
+变分方法计算过程通常明显较慢，但通常不会慢到无法使用。
 
-Due to its Bayesian nature, the variational algorithm needs more hyper-
-parameters than expectation-maximization, the most important of these being the
-concentration parameter ``weight_concentration_prior``. Specifying a low value
-for the concentration prior will make the model put most of the weight on few
-components set the remaining components weights very close to zero. High values
-of the concentration prior will allow a larger number of components to be active
-in the mixture.
+由于它的贝叶斯特性，变分算法比期望最大化(EM)需要更多的超参数，
+其中最重要的就是 浓度参数 ``weight_concentration_prior`` 。
+指定一个低浓度先验， 将会使模型将大部分的权重放在少数分量上，其余分量的权重则趋近 0。
+而高浓度先验将使混合模型中的大部分分量都有一定的权重。 
 
-The parameters implementation of the :class:`BayesianGaussianMixture` class
-proposes two types of prior for the weights distribution: a finite mixture model
-with Dirichlet distribution and an infinite mixture model with the Dirichlet
-Process. In practice Dirichlet Process inference algorithm is approximated and
-uses a truncated distribution with a fixed maximum number of components (called
-the Stick-breaking representation). The number of components actually used
-almost always depends on the data.
+:class:`BayesianGaussianMixture` 类的参数实现提出了两种先验权重分布： 
+一种是利用狄利克雷分布(Dirichlet distribution)的有限混合模型，
+另一种是利用狄利克雷过程(Dirichlet Process)的无限混合模型。 
+在实际应用上，狄利克雷过程推理算法是近似的，
+并且使用具有固定最大分量数的截尾分布(称之为 Stick-breaking representation)。
+使用的分量数实际上几乎总是取决于数据。
 
-The next figure compares the results obtained for the different type of the
-weight concentration prior (parameter ``weight_concentration_prior_type``)
-for different values of ``weight_concentration_prior``.
-Here, we can see the value of the ``weight_concentration_prior`` parameter
-has a strong impact on the effective number of active components obtained. We
-can also notice that large values for the concentration weight prior lead to
-more uniform weights when the type of prior is 'dirichlet_distribution' while
-this is not necessarily the case for the 'dirichlet_process' type (used by
-default).
+下图比较了权重浓度先验的不同类型(参数 ``weight_concentration_prior_type``) 对于
+不同的权重浓度先验 ``weight_concentration_prior`` 的取值 所获得的结果。 
+在这里，我们可以从图中看到 ``weight_concentration_prior`` 参数的值
+对获得的有效的激活分量数（即权重较大的分量的数量）有很大影响。 
+我们也能注意到当先验是 'dirichlet_distribution' 类型时，
+大的浓度权重先验会导致更均匀的权重，然而 'dirichlet_process' 类型（默认类型）却不是这样。
 
 .. |plot_bgmm| image:: ../auto_examples/mixture/images/sphx_glr_plot_concentration_prior_001.png
    :target: ../auto_examples/mixture/plot_concentration_prior.html
@@ -198,17 +144,12 @@ default).
 
 .. centered:: |plot_bgmm| |plot_dpgmm|
 
-The examples below compare Gaussian mixture models with a fixed number of
-components, to the variational Gaussian mixture models with a Dirichlet process
-prior. Here, a classical Gaussian mixture is fitted with 5 components on a
-dataset composed of 2 clusters. We can see that the variational Gaussian mixture
-with a Dirichlet process prior is able to limit itself to only 2 components
-whereas the Gaussian mixture fits the data with a fixed number of components
-that has to be set a priori by the user. In this case the user has selected
-``n_components=5`` which does not match the true generative distribution of this
-toy dataset. Note that with very little observations, the variational Gaussian
-mixture models with a Dirichlet process prior can take a conservative stand, and
-fit only one component.
+下面的例子将 分量数目固定的高斯混合模型 与 带有狄利克雷过程先验(Dirichlet process prior)的变分高斯混合模型 进行比较。 
+这里，使用5个分量的典型高斯混合模型在由2个聚类组成的数据集上进行拟合。 
+我们可以看到，具有狄利克雷过程先验的变分高斯混合模型可以将自身限制在 2 个分量，
+而高斯混合必须按照用户事先设置的固定数量的分量来拟合数据。 
+在例子中，用户选择了 ``n_components=5`` ，这不符合该数据集的真正的生成分布(generative distribution)。 
+注意到 只有非常少量的观测，带有狄利克雷过程先验的变分高斯混合模型可以采取保守的立场，并且只拟合一个分量。
 
 .. figure:: ../auto_examples/mixture/images/sphx_glr_plot_gmm_001.png
    :target: ../auto_examples/mixture/plot_gmm.html
@@ -216,11 +157,9 @@ fit only one component.
    :scale: 70%
 
 
-On the following figure we are fitting a dataset not well-depicted by a
-Gaussian mixture. Adjusting the ``weight_concentration_prior``, parameter of the
-:class:`BayesianGaussianMixture` controls the number of components used to fit
-this data. We also present on the last two plots a random sampling generated
-from the two resulting mixtures.
+在下图中，我们将拟合一个并不能被高斯混合模型很好描述的数据集。 调整 ``weight_concentration_prior`` ，
+:class:`BayesianGaussianMixture` 类的参数控制着用来拟合数据的分量的数目。
+我们在最后两个图上展示了从两个混合模型产生的随机抽样。
 
 .. figure:: ../auto_examples/mixture/images/sphx_glr_plot_gmm_sin_001.png
    :target: ../auto_examples/mixture/plot_gmm_sin.html
@@ -229,7 +168,7 @@ from the two resulting mixtures.
 
 
 
-.. topic:: Examples:
+.. topic:: 案例:
 
     * See :ref:`sphx_glr_auto_examples_mixture_plot_gmm.py` for an example on
       plotting the confidence ellipsoids for both :class:`GaussianMixture`
@@ -246,46 +185,31 @@ from the two resulting mixtures.
       ``weight_concentration_prior``.
 
 
-类:class:`BayesianGaussianMixture`之变分推理的优缺点
+:class:`BayesianGaussianMixture` 的优缺点
 ----------------------------------------------------------------------------
 
 优点
 .....
 
-:Automatic selection: when ``weight_concentration_prior`` is small enough and
-   ``n_components`` is larger than what is found necessary by the model, the
-   Variational Bayesian mixture model has a natural tendency to set some mixture
-   weights values close to zero. This makes it possible to let the model choose
-   a suitable number of effective components automatically. Only an upper bound
-   of this number needs to be provided. Note however that the "ideal" number of
-   active components is very application specific and is typically ill-defined
-   in a data exploration setting.
+:自动选择: 当 ``weight_concentration_prior`` 足够小以及 ``n_components`` 比模型实际需要的更大时，
+   变分贝叶斯混合模型有一个天然的趋势就是让一些混合权重值趋近 0。 这让模型可以自动选择合适的有效分量数。
+   这仅仅需要提供分量的数量上限。但是请注意，“理想” 的激活分量数只在应用场景中比较明确，在数据挖掘参数设置中通常并不明确。
 
-:Less sensitivity to the number of parameters: unlike finite models, which will
-   almost always use all components as much as they can, and hence will produce
-   wildly different solutions for different numbers of components, the
-   variational inference with a Dirichlet process prior
-   (``weight_concentration_prior_type='dirichlet_process'``) won't change much
-   with changes to the parameters, leading to more stability and less tuning.
+:对参数的数量不敏感: 在有限模型中，总是用尽可以用的分量，因而将为不同数量的components产生不同的解。
+   与上述有限模型不同，带有狄利克雷过程先验的变分推理(``weight_concentration_prior_type='dirichlet_process'``)
+   在参数变化的时候结果并不会改变太多，这使之更稳定和需要更少的调优。
 
-:Regularization: due to the incorporation of prior information,
-   variational solutions have less pathological special cases than
-   expectation-maximization solutions.
+:正则化: 由于结合了先验信息，变分的解比期望最大化(EM)的解有更少的病理特征(pathological special cases)。
 
 
 缺点
 .....
 
-:Speed: the extra parametrization necessary for variational inference make
-   inference slower, although not by much.
+:速度: 变分推理所需要的额外参数化使推理速度变慢，尽管并没有慢很多。
 
-:Hyperparameters: this algorithm needs an extra hyperparameter
-   that might need experimental tuning via cross-validation.
+:超参数: 这个算法需要一个额外的可能需要通过交叉验证进行实验调优的超参数。 
 
-:Bias: there are many implicit biases in the inference algorithms (and also in
-   the Dirichlet process if used), and whenever there is a mismatch between
-   these biases and the data it might be possible to fit better models using a
-   finite mixture.
+:有偏的: 在推理算法中存在许多隐含的偏差（如果用到狄利克雷过程也会有偏差），每当这些偏差和数据之间不匹配时，用有限模型可能可以拟合更好的模型。
 
 
 .. _dirichlet_process:
@@ -293,34 +217,19 @@ from the two resulting mixtures.
 狄利克雷过程(The Dirichlet Process)
 ---------------------
 
-Here we describe variational inference algorithms on Dirichlet process
-mixture. The Dirichlet process is a prior probability distribution on
-*clusterings with an infinite, unbounded, number of partitions*.
-Variational techniques let us incorporate this prior structure on
-Gaussian mixture models at almost no penalty in inference time, comparing
-with a finite Gaussian mixture model.
+这里我们描述了狄利克雷过程混合的变分推理算法。狄利克雷过程是在 *具有无限大，无限制的分区数的聚类* 上的先验概率分布。
+相比于有限高斯混合模型，变分技术让我们在推理时间几乎没有惩罚（penalty）的情况下把先验结构纳入到高斯混合模型。
 
-An important question is how can the Dirichlet process use an infinite,
-unbounded number of clusters and still be consistent. While a full explanation
-doesn't fit this manual, one can think of its `stick breaking process
-<https://en.wikipedia.org/wiki/Dirichlet_process#The_stick-breaking_process>`_
-analogy to help understanding it. The stick breaking process is a generative
-story for the Dirichlet process. We start with a unit-length stick and in each
-step we break off a portion of the remaining stick. Each time, we associate the
-length of the piece of the stick to the proportion of points that falls into a
-group of the mixture. At the end, to represent the infinite mixture, we
-associate the last remaining piece of the stick to the proportion of points
-that don't fall into all the other groups. The length of each piece is a random
-variable with probability proportional to the concentration parameter. Smaller
-value of the concentration will divide the unit-length into larger pieces of
-the stick (defining more concentrated distribution). Larger concentration
-values will create smaller pieces of the stick (increasing the number of
-components with non zero weights).
+一个重要的问题是狄利克雷过程是如何实现用无限的,无限制的聚类数，并且结果仍然是一致的。 
+本文档不做出完整的解释，但是你可以看这里 `stick breaking process <https://en.wikipedia.org/wiki/Dirichlet_process#The_stick-breaking_process>`_ 
+来帮助你理解它。
+折棍(stick breaking)过程是狄利克雷过程的衍生。我们每次从一个单位长度的 stick 开始，
+且每一步都折断剩下的一部分。每次，我们把每个 stick 的长度联想成落入一组混合的点的比例。 
+最后，为了表示无限混合，我们联想成最后每个 stick 的剩下的部分到没有落入其他组的点的比例。 
+每段的长度是随机变量，概率与浓度参数成比例。较小的浓度值将单位长度分成较大的 stick 段（即定义更集中的分布）。
+较高的浓度值将生成更小的 stick 段（即增加非零权重的分量数）。
 
-Variational inference techniques for the Dirichlet process still work
-with a finite approximation to this infinite mixture model, but
-instead of having to specify a priori how many components one wants to
-use, one just specifies the concentration parameter and an upper bound
-on the number of mixture components (this upper bound, assuming it is
-higher than the "true" number of components, affects only algorithmic
-complexity, not the actual number of components used).
+用于狄利克雷过程的变分推理技术在无限混合模型的一个有限近似上仍然可以工作，
+但是与 必须要指定一个关于到底要用多少个components的先验不同，只要指定
+浓度参数和一个关于混合分量的数量的上界就可以了。这个上界，假定它比真正的分量数目要高点儿，
+仅会影响算法复杂度，而不会影响算法实际用到的component的真实数量。
