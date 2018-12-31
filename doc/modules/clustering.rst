@@ -107,7 +107,7 @@ KMeans可以看做是高斯混合模型的特例，其中每个分量的协方�
 
 .. _k_means:
 
-K-均值(K-means)
+K-均值
 =======
 
 :class:`KMeans` 算法通过尝试将样本分离成n个方差相等的组来对数据进行聚类，最小化了一个称为惯性(`inertia <inertia>`_)或
@@ -196,7 +196,7 @@ K-means 可用于矢量量化(vector quantization)。这是使用训练好的 :c
 
 .. _mini_batch_kmeans:
 
-小批量 K-Means
+小批量 K-均值
 ------------------
 
 :class:`MiniBatchKMeans` 是 :class:`KMeans` 算法的一个变体，它使用 mini-batches 来减少计算时间，同时仍然尝试优化相同的目标函数(objective function)。 
@@ -233,17 +233,15 @@ K-means 可用于矢量量化(vector quantization)。这是使用训练好的 :c
 
 .. _affinity_propagation:
 
-Affinity Propagation
+吸引子传播
 ====================
 
-:class:`AffinityPropagation` creates clusters by sending messages between
-pairs of samples until convergence. A dataset is then described using a small
-number of exemplars, which are identified as those most representative of other
-samples. The messages sent between pairs represent the suitability for one
-sample to be the exemplar of the other, which is updated in response to the
-values from other pairs. This updating happens iteratively until convergence,
-at which point the final exemplars are chosen, and hence the final clustering
-is given.
+(译者注：Affinity Propagation Clustering 可翻译为：仿射传播聚类，吸引子传播聚类，相似性传播聚类，亲和力传播聚类，以下简称 AP聚类)
+
+:class:`AffinityPropagation` 聚类方法是通过在样本对之间发送消息直到收敛来创建聚类。
+然后使用少量示例样本作为聚类中心来描述数据集， 聚类中心是数据集中最能代表一类数据的样本。
+在样本对之间发送的消息表示一个样本作为另一个样本的示例样本的 适合程度(suitability)，适合程度值在根据通信的反馈不断更新。
+更新迭代直到收敛，完成聚类中心的选取，因此也给出了最终聚类。
 
 .. figure:: ../auto_examples/cluster/images/sphx_glr_plot_affinity_propagation_001.png
    :target: ../auto_examples/cluster/plot_affinity_propagation.html
@@ -251,22 +249,14 @@ is given.
    :scale: 50
 
 
-Affinity Propagation can be interesting as it chooses the number of
-clusters based on the data provided. For this purpose, the two important
-parameters are the *preference*, which controls how many exemplars are
-used, and the *damping factor* which damps the responsibility and
-availability messages to avoid numerical oscillations when updating these
-messages.
+Affinity Propagation 算法比较有趣的是可以根据提供的数据决定聚类的数目。 因此有两个比较重要的参数:
+*preference*: 决定使用多少个示例样本; *damping factor*: 阻尼因子,用于减少吸引信息和归属信息以防止更新减少吸引度和归属度信息时数据振荡。
 
-The main drawback of Affinity Propagation is its complexity. The
-algorithm has a time complexity of the order :math:`O(N^2 T)`, where :math:`N`
-is the number of samples and :math:`T` is the number of iterations until
-convergence. Further, the memory complexity is of the order
-:math:`O(N^2)` if a dense similarity matrix is used, but reducible if a
-sparse similarity matrix is used. This makes Affinity Propagation most
-appropriate for small to medium sized datasets.
+AP聚类算法主要的缺点是算法的复杂度。 AP聚类算法的时间复杂度是 :math:`O(N^2 T)` , 其中 :math:`N` 是样本的个数 ， 
+:math:`T` 是收敛之前迭代的次数。如果使用密集的相似性矩阵空间复杂度是 :math:`O(N^2)` ，如果使用稀疏的相似性矩阵空间复杂度可以降低。 
+这使得AP聚类最适合中小型数据集(small to medium sized datasets)。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_cluster_plot_affinity_propagation.py`: Affinity
    Propagation on a synthetic 2D datasets with 3 classes.
@@ -275,83 +265,63 @@ appropriate for small to medium sized datasets.
    Financial time series to find groups of companies
 
 
-**Algorithm description:**
-The messages sent between points belong to one of two categories. The first is
-the responsibility :math:`r(i, k)`,
-which is the accumulated evidence that sample :math:`k`
-should be the exemplar for sample :math:`i`.
-The second is the availability :math:`a(i, k)`
-which is the accumulated evidence that sample :math:`i`
-should choose sample :math:`k` to be its exemplar,
-and considers the values for all other samples that :math:`k` should
-be an exemplar. In this way, exemplars are chosen by samples if they are (1)
-similar enough to many samples and (2) chosen by many samples to be
-representative of themselves.
+**算法描述:**
+样本之间传递的信息有两种。 第一种是 responsibility :math:`r(i, k)`, 样本 :math:`k` 适合作为样本 :math:`i` 的典型代表(exemplar)的累计证据。
+第二种是 availability :math:`a(i, k)`, 样本 :math:`i` 应该选择样本 :math:`k` 作为它的典型代表(exemplar)的累计证据，
+并考虑对所有其他样本来说 :math:`k` 作为exemplar的累计证据。
+用这种方式, exemplars被选择是因为这些exemplars满足了两个条件: (1)它们与很多样本足够相似，(2)它们被很多样本选择作为自己的代表。
 
-More formally, the responsibility of a sample :math:`k`
-to be the exemplar of sample :math:`i` is given by:
+更正式一点, 一个样本 :math:`k` 要成为样本 :math:`i` 的exemplar的 responsibility 由下式给出:
 
 .. math::
 
     r(i, k) \leftarrow s(i, k) - max [ a(i, k') + s(i, k') \forall k' \neq k ]
 
-Where :math:`s(i, k)` is the similarity between samples :math:`i` and :math:`k`.
-The availability of sample :math:`k`
-to be the exemplar of sample :math:`i` is given by:
+其中 :math:`s(i, k)` 是样本 :math:`k` 和样本 :math:`i` 之间的相似度。
+
+样本 :math:`k` 要成为样本 :math:`i` 的exemplar的 availability 由下式给出:
 
 .. math::
 
     a(i, k) \leftarrow min [0, r(k, k) + \sum_{i'~s.t.~i' \notin \{i, k\}}{r(i', k)}]
 
-To begin with, all values for :math:`r` and :math:`a` are set to zero,
-and the calculation of each iterates until convergence.
-As discussed above, in order to avoid numerical oscillations when updating the
-messages, the damping factor :math:`\lambda` is introduced to iteration process:
+在开始的时候, :math:`r` 和 :math:`a` 中的所有值被设为 0, 并且迭代计算到收敛为止。
+为了防止更新messages时出现数据振荡，在迭代过程中引入阻尼因子 :math:`\lambda` :
 
 .. math:: r_{t+1}(i, k) = \lambda\cdot r_{t}(i, k) + (1-\lambda)\cdot r_{t+1}(i, k)
 .. math:: a_{t+1}(i, k) = \lambda\cdot a_{t}(i, k) + (1-\lambda)\cdot a_{t+1}(i, k)
 
-where :math:`t` indicates the iteration times.
+其中 :math:`t` 是迭代次数。
 
 .. _mean_shift:
 
-均值漂移(Mean Shift)
+均值漂移
 ==========
-:class:`MeanShift` clustering aims to discover *blobs* in a smooth density of
-samples. It is a centroid based algorithm, which works by updating candidates
-for centroids to be the mean of the points within a given region. These
-candidates are then filtered in a post-processing stage to eliminate
-near-duplicates to form the final set of centroids.
+:class:`MeanShift` 聚类算法旨在于发现一个样本密度平滑的 *blobs* 。 均值漂移算法是一种基于质心的算法，
+其工作原理是更新质心的候选点，使其成为给定区域内点的均值。 
+然后，这些候选者在后处理阶段被过滤以消除近似重复(near-duplicates)，从而形成最终质心集合。
 
-Given a candidate centroid :math:`x_i` for iteration :math:`t`, the candidate
-is updated according to the following equation:
+给定第 :math:`t` 次迭代中的候选质心 :math:`x_i` , 候选质心的位置将按照如下公式更新:
 
 .. math::
 
     x_i^{t+1} = m(x_i^t)
 
-Where :math:`N(x_i)` is the neighborhood of samples within a given distance
-around :math:`x_i` and :math:`m` is the *mean shift* vector that is computed for each
-centroid that points towards a region of the maximum increase in the density of points.
-This is computed using the following equation, effectively updating a centroid
-to be the mean of the samples within its neighborhood:
+其中 :math:`N(x_i)` 是围绕 :math:`x_i` 的给定距离内的样本邻域， :math:`m` 是为指向点密度最大增加的区域的每一个质心计算的均值漂移向量
+(*mean shift* vector)。
+该均值漂移向量由下面的公式计算, 通过漂移向量可以高效的把一个质心更新到它的邻域内样本均值所在的地方：
 
 .. math::
 
     m(x_i) = \frac{\sum_{x_j \in N(x_i)}K(x_j - x_i)x_j}{\sum_{x_j \in N(x_i)}K(x_j - x_i)}
 
-The algorithm automatically sets the number of clusters, instead of relying on a
-parameter ``bandwidth``, which dictates the size of the region to search through.
-This parameter can be set manually, but can be estimated using the provided
-``estimate_bandwidth`` function, which is called if the bandwidth is not set.
+该算法自动设置聚类的数量, 而不是依赖参数 ``bandwidth`` 来决定要搜索的区域的大小。
+此参数可以手动设置，但可以使用提供的 ``estimate_bandwidth`` 函数进行估计，如果没有设置带宽，则调用该函数。
 
-The algorithm is not highly scalable, as it requires multiple nearest neighbor
-searches during the execution of the algorithm. The algorithm is guaranteed to
-converge, however the algorithm will stop iterating when the change in centroids
-is small.
+该算法不具有很高的可扩展性(not highly scalable)，因为在算法执行过程中需要多个最近邻搜索。
+该算法保证收敛，但当质心变化较小时，该算法将停止迭代。
 
-Labelling a new sample is performed by finding the nearest centroid for a
-given sample.
+标记一个新的样本是通过为给定的样本找到最近的质心来完成的。
 
 
 .. figure:: ../auto_examples/cluster/images/sphx_glr_plot_mean_shift_001.png
@@ -360,12 +330,11 @@ given sample.
    :scale: 50
 
 
-.. topic:: Examples:
+.. topic:: 案例:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_mean_shift.py`: Mean Shift clustering
-   on a synthetic 2D datasets with 3 classes.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_mean_shift.py`: 带有3个类的合成2D数据集上的均值漂移聚类。
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * `"Mean shift: A robust approach toward feature space analysis."
    <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.76.8968&rep=rep1&type=pdf>`_
@@ -374,24 +343,16 @@ given sample.
 
 .. _spectral_clustering:
 
-Spectral clustering
+谱聚类
 ===================
 
-:class:`SpectralClustering` does a low-dimension embedding of the
-affinity matrix between samples, followed by a KMeans in the low
-dimensional space. It is especially efficient if the affinity matrix is
-sparse and the `pyamg <https://github.com/pyamg/pyamg>`_ module is installed.
-SpectralClustering requires the number of clusters to be specified. It
-works well for a small number of clusters but is not advised when using
-many clusters.
+:class:`SpectralClustering` 是在样本之间进行affinity matrix的低维度嵌入，后面紧跟一个在低维空间中运行的 KMeans。 
+如果affinity matrix是稀疏的并且 `pyamg <https://github.com/pyamg/pyamg>`_  模块已经安装好，则这是非常有效的。 
+SpectralClustering 需要指定聚类数。这个算法适用于聚类数少时，在聚类数多是不建议使用。
 
-For two clusters, it solves a convex relaxation of the `normalised
-cuts <http://people.eecs.berkeley.edu/~malik/papers/SM-ncut.pdf>`_ problem on
-the similarity graph: cutting the graph in two so that the weight of the
-edges cut is small compared to the weights of the edges inside each
-cluster. This criteria is especially interesting when working on images:
-graph vertices are pixels, and edges of the similarity graph are a
-function of the gradient of the image.
+对于两个聚类，它解决了相似图上正规化割集(`normalised cuts <http://people.eecs.berkeley.edu/~malik/papers/SM-ncut.pdf>`_)问题的一个凸松弛问题：
+将图形切割成两个，使得切割的边缘的权重比每个簇内的边缘的权重小。
+在图像处理时，这个criteria是特别有趣的: 图的顶点是像素，相似图的边缘是图像梯度的函数。
 
 
 .. |noisy_img| image:: ../auto_examples/cluster/images/sphx_glr_plot_segmentation_toy_001.png
@@ -406,24 +367,19 @@ function of the gradient of the image.
 
 .. warning:: Transforming distance to well-behaved similarities
 
-    Note that if the values of your similarity matrix are not well
-    distributed, e.g. with negative values or with a distance matrix
-    rather than a similarity, the spectral problem will be singular and
-    the problem not solvable. In which case it is advised to apply a
-    transformation to the entries of the matrix. For instance, in the
-    case of a signed distance matrix, is common to apply a heat kernel::
+    请注意，如果你的相似矩阵的值分布不均匀，例如:存在负值或者像是一个距离矩阵而不是相似性矩阵，
+    那么 spectral problem 将会变得奇异，并且不能解决。 在这种情况下，建议对矩阵的 entries 进行变换。
+    比如在有符号的距离矩阵情况下 通常使用 heat kernel::
 
         similarity = np.exp(-beta * distance / distance.std())
 
-    See the examples for such an application.
+    请看关于这个应用的例子。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_segmentation_toy.py`: Segmenting objects
-   from a noisy background using spectral clustering.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_segmentation_toy.py`: 利用谱聚类从含噪背景中分割目标。
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_coin_segmentation.py`: Spectral clustering
-   to split the image of coins in regions.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_coin_segmentation.py`: 谱聚类分割在区域中的硬币图像。
 
 .. |coin_kmeans| image:: ../auto_examples/cluster/images/sphx_glr_plot_coin_segmentation_001.png
     :target: ../auto_examples/cluster/plot_coin_segmentation.html
@@ -433,17 +389,13 @@ function of the gradient of the image.
     :target: ../auto_examples/cluster/plot_coin_segmentation.html
     :scale: 65
 
-不同的标记分配策略
+不同的标签分配策略
 -------------------------------------
 
-Different label assignment strategies can be used, corresponding to the
-``assign_labels`` parameter of :class:`SpectralClustering`.
-The ``"kmeans"`` strategy can match finer details of the data, but it can be
-more unstable. In particular, unless you control the ``random_state``, it
-may not be reproducible from run-to-run, as it depends on a random
-initialization. On the other hand, the ``"discretize"`` strategy is 100%
-reproducible, but it tends to create parcels of fairly even and
-geometrical shape.
+可以使用不同的标签分配策略, 对应于 :class:`SpectralClustering` 类的 ``assign_labels`` 参数。 
+``"kmeans"`` 可以匹配更精细的数据细节，但是可能更加不稳定。 特别是，除非你控置 ``random_state``
+否则可能无法复现运行的结果 ，因为它取决于随机初始化。另一方面， 使用 ``"discretize"`` 策略是 100% 可以复现的，
+但是它往往会产生相当均匀的几何形状的边缘。
 
 =====================================  =====================================
  ``assign_labels="kmeans"``              ``assign_labels="discretize"``
@@ -451,19 +403,18 @@ geometrical shape.
 |coin_kmeans|                          |coin_discretize|
 =====================================  =====================================
 
-Spectral Clustering Graphs
+谱聚类用于图聚类问题
 --------------------------
 
-Spectral Clustering can also be used to cluster graphs by their spectral
-embeddings.  In this case, the affinity matrix is the adjacency matrix of the
-graph, and SpectralClustering is initialized with `affinity='precomputed'`::
+谱聚类还可以通过谱嵌入对图进行聚类。在这种情况下，affinity matrix 是图的邻接矩阵，SpectralClustering 
+由 `affinity='precomputed'` 进行初始化 ::
 
     >>> from sklearn.cluster import SpectralClustering
     >>> sc = SpectralClustering(3, affinity='precomputed', n_init=100,
     ...                         assign_labels='discretize')
     >>> sc.fit_predict(adjacency_matrix)  # doctest: +SKIP
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * `"A Tutorial on Spectral Clustering"
    <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.165.9323>`_
@@ -487,77 +438,53 @@ graph, and SpectralClustering is initialized with `affinity='precomputed'`::
 层次聚类(Hierarchical clustering)
 =======================
 
-Hierarchical clustering is a general family of clustering algorithms that
-build nested clusters by merging or splitting them successively. This
-hierarchy of clusters is represented as a tree (or dendrogram). The root of the
-tree is the unique cluster that gathers all the samples, the leaves being the
-clusters with only one sample. See the `Wikipedia page
-<https://en.wikipedia.org/wiki/Hierarchical_clustering>`_ for more details.
+层次聚类是一种通过不断合并或分割嵌套聚类来构建嵌套聚类的通用聚类算法。
+聚类的层次结构被表示为一棵树(或树状图)。树的根是收集所有样本的唯一簇，叶是只有一个样本的簇。
+请看 `维基百科的相关词条 <https://en.wikipedia.org/wiki/Hierarchical_clustering>`_ 获得更多信息。
 
-The :class:`AgglomerativeClustering` object performs a hierarchical clustering
-using a bottom up approach: each observation starts in its own cluster, and
-clusters are successively merged together. The linkage criteria determines the
-metric used for the merge strategy:
+聚合聚类(:class:`AgglomerativeClustering`)对象使用自下而上的方法执行分层聚类：每个observation从自己的簇开始，
+簇依次合并在一起。链接准则(linkage criteria)确定用于合并策略的度量:
 
-- **Ward** minimizes the sum of squared differences within all clusters. It is a
-  variance-minimizing approach and in this sense is similar to the k-means
-  objective function but tackled with an agglomerative hierarchical
-  approach.
-- **Maximum** or **complete linkage** minimizes the maximum distance between
-  observations of pairs of clusters.
-- **Average linkage** minimizes the average of the distances between all
-  observations of pairs of clusters.
-- **Single linkage** minimizes the distance between the closest
-  observations of pairs of clusters.
+- **Ward** 最小化所有簇内的平方差总和。这是一种 方差最小化(variance-minimizing) 的方法， 
+  在这点上，这是与k-means 的目标函数相似的，但是它用了聚合分层(agglomerative hierarchical)的方法处理。
+- **Maximum** or **complete linkage** 最小化每两个簇的样本之间的最大距离。
+- **Average linkage** 最小化每两个簇的样本之间的平均距离。
+- **Single linkage** 最小化每两个簇中最近的样本之间的距离。
 
-:class:`AgglomerativeClustering` can also scale to large number of samples
-when it is used jointly with a connectivity matrix, but is computationally
-expensive when no connectivity constraints are added between samples: it
-considers at each step all the possible merges.
+:class:`AgglomerativeClustering` 在与连接矩阵(connectivity matrix)联合使用时，也可以扩大到大量的样本，但是 在样本之间没有添加连接约束时，
+计算代价很大:每一个步骤都要考虑所有可能的合并。
 
 .. topic:: :class:`FeatureAgglomeration`
 
-   The :class:`FeatureAgglomeration` uses agglomerative clustering to
-   group together features that look very similar, thus decreasing the
-   number of features. It is a dimensionality reduction tool, see
-   :ref:`data_reduction`.
+   :class:`FeatureAgglomeration` 类使用 agglomerative clustering 将看上去相似的特征组合在一起，
+   从而减少特征的数量。这是一个降维工具, 请看 :ref:`data_reduction`。
+
 
 Different linkage type: Ward, complete, average, and single linkage
 -------------------------------------------------------------------
 
-:class:`AgglomerativeClustering` supports Ward, single, average, and complete
-linkage strategies.
+:class:`AgglomerativeClustering` 支持 Ward, single, average, 和 complete linkage 策略。
 
 .. image:: ../auto_examples/cluster/images/sphx_glr_plot_linkage_comparison_001.png
     :target: ../auto_examples/cluster/plot_linkage_comparison.html
     :scale: 43
 
-Agglomerative cluster has a "rich get richer" behavior that leads to
-uneven cluster sizes. In this regard, single linkage is the worst
-strategy, and Ward gives the most regular sizes. However, the affinity
-(or distance used in clustering) cannot be varied with Ward, thus for non
-Euclidean metrics, average linkage is a good alternative. Single linkage,
-while not robust to noisy data, can be computed very efficiently and can
-therefore be useful to provide hierarchical clustering of larger datasets.
-Single linkage can also perform well on non-globular data.
+聚合聚类存在 “rich get richer” 现象导致聚类大小不均匀(uneven cluster sizes)。这方面 single linkage 是最坏的策略，Ward 给出了最规则的大小。
+然而，在 Ward 中 affinity (or distance used in clustering) 不能被改变，对于 non Euclidean metrics 来说 average linkage 是一个好的选择。
+Single linkage,虽然对噪声数据没有鲁棒性，但可以非常有效地进行计算，因此对于提供更大数据集的分层聚类非常有用。
+Single linkage 也可以很好地表现在非球形(non-globular)数据上。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_digits_linkage.py`: exploration of the
-   different linkage strategies in a real dataset.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_digits_linkage.py`: 在一个真实的数据集中探索不同的linkage策略。
 
 
 添加连通性约束
 -------------------------------
 
-An interesting aspect of :class:`AgglomerativeClustering` is that
-connectivity constraints can be added to this algorithm (only adjacent
-clusters can be merged together), through a connectivity matrix that defines
-for each sample the neighboring samples following a given structure of the
-data. For instance, in the swiss-roll example below, the connectivity
-constraints forbid the merging of points that are not adjacent on the swiss
-roll, and thus avoid forming clusters that extend across overlapping folds of
-the roll.
+:class:`AgglomerativeClustering` 类中一个有趣的特点是可以使用连接矩阵(connectivity matrix)将连接约束添加到算法中(只有相邻的聚类可以合并到一起)，
+连接矩阵为每一个样本给定了相邻的样本。 例如，在下面的瑞典卷卷(swiss-roll) 的例子中，连接约束禁止在不相邻的 swiss roll 上合并，
+从而防止形成在 roll 上 重复折叠的聚类。
 
 .. |unstructured| image:: ../auto_examples/cluster/images/sphx_glr_plot_ward_structured_vs_unstructured_001.png
         :target: ../auto_examples/cluster/plot_ward_structured_vs_unstructured.html
@@ -569,48 +496,33 @@ the roll.
 
 .. centered:: |unstructured| |structured|
 
-These constraint are useful to impose a certain local structure, but they
-also make the algorithm faster, especially when the number of the samples
-is high.
+这些约束对于强加一定的局部结构是很有用的，但是这也使得算法更快，特别是当样本数量巨大时。
 
-The connectivity constraints are imposed via an connectivity matrix: a
-scipy sparse matrix that has elements only at the intersection of a row
-and a column with indices of the dataset that should be connected. This
-matrix can be constructed from a-priori information: for instance, you
-may wish to cluster web pages by only merging pages with a link pointing
-from one to another. It can also be learned from the data, for instance
-using :func:`sklearn.neighbors.kneighbors_graph` to restrict
-merging to nearest neighbors as in :ref:`this example
-<sphx_glr_auto_examples_cluster_plot_agglomerative_clustering.py>`, or
-using :func:`sklearn.feature_extraction.image.grid_to_graph` to
-enable only merging of neighboring pixels on an image, as in the
-:ref:`coin <sphx_glr_auto_examples_cluster_plot_coin_ward_segmentation.py>` example.
+连通性的限制是通过连接矩阵(connectivity matrix)来实现的:一个 scipy sparse matrix(仅在一行和一列的交集处具有应该连接在一起的数据集的索引)。
+这个矩阵可以通过先验信息构建:例如，你可能通过仅仅将从一个连接指向另一个的链接合并页面来聚类页面。也可以从数据中学习到,
+例如使用 :func:`sklearn.neighbors.kneighbors_graph` 限制与最近邻的合并，
+就像 :ref:`这个例子 <sphx_glr_auto_examples_cluster_plot_agglomerative_clustering.py>` 
+中那样, 或者使用 :func:`sklearn.feature_extraction.image.grid_to_graph` 仅合并图像上相邻的像素点，
+就像 :ref:`这个例子 <sphx_glr_auto_examples_cluster_plot_coin_ward_segmentation.py>` 。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_coin_ward_segmentation.py`: Ward clustering
-   to split the image of coins in regions.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_coin_ward_segmentation.py`: 使用 Ward 聚类 分割硬币图像。
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_ward_structured_vs_unstructured.py`: Example of
-   Ward algorithm on a swiss-roll, comparison of structured approaches
-   versus unstructured approaches.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_ward_structured_vs_unstructured.py`: 瑞士卷上的Ward算法示例，结构化方法与非结构化方法的比较。
 
  * :ref:`sphx_glr_auto_examples_cluster_plot_feature_agglomeration_vs_univariate_selection.py`:
-   Example of dimensionality reduction with feature agglomeration based on
-   Ward hierarchical clustering.
+   基于Ward层次聚类的特征聚类降维实例。
 
  * :ref:`sphx_glr_auto_examples_cluster_plot_agglomerative_clustering.py`
 
 .. warning:: **Connectivity constraints with single, average and complete linkage**
 
-    Connectivity constraints and single, complete or average linkage can enhance
-    the 'rich getting richer' aspect of agglomerative clustering,
-    particularly so if they are built with
-    :func:`sklearn.neighbors.kneighbors_graph`. In the limit of a small
-    number of clusters, they tend to give a few macroscopically occupied
-    clusters and almost empty ones. (see the discussion in
-    :ref:`sphx_glr_auto_examples_cluster_plot_agglomerative_clustering.py`).
-    Single linkage is the most brittle linkage option with regard to this issue.
+    连接约束 和 complete or average linkage 可以增强聚合聚类中的 ‘rich getting richer’ 现象。
+    特别是，当它们使用函数 :func:`sklearn.neighbors.kneighbors_graph` 进行构建时。 在少量聚类的限制下， 
+    更倾向于给出一些 macroscopically occupied clusters 
+    并且几乎是空的 (讨论内容请查看 :ref:`sphx_glr_auto_examples_cluster_plot_agglomerative_clustering.py`)。
+    在这个问题上，Single linkage 是最脆弱的 linkage 选项。
 
 .. image:: ../auto_examples/cluster/images/sphx_glr_plot_agglomerative_clustering_001.png
     :target: ../auto_examples/cluster/plot_agglomerative_clustering.html
@@ -632,21 +544,15 @@ enable only merging of neighboring pixels on an image, as in the
 改变聚类测度
 -------------------
 
-Single, average and complete linkage can be used with a variety of distances (or
-affinities), in particular Euclidean distance (*l2*), Manhattan distance
-(or Cityblock, or *l1*), cosine distance, or any precomputed affinity
-matrix.
+Single, average 和 complete linkage 可以使用各种距离 (or affinities), 特别是 欧氏距离(l2), 
+曼哈顿距离(Manhattan distance)(or 城市区块距离(Cityblock), or l1), 余弦距离(cosine distance),
+或者 任何预先计算的亲和度(affinity)矩阵。
 
-* *l1* distance is often good for sparse features, or sparse noise: i.e.
-  many of the features are zero, as in text mining using occurrences of
-  rare words.
+* *l1* distance 有利于稀疏特征或者稀疏噪声: 例如很多特征都是0，在文本挖掘中统计稀有词汇的出现就会出现这种情况。
 
-* *cosine* distance is interesting because it is invariant to global
-  scalings of the signal.
+* *cosine* distance 非常有趣因为它对信号的全局放缩具有不变性。
 
-The guidelines for choosing a metric is to use one that maximizes the
-distance between samples in different classes, and minimizes that within
-each class.
+选择度量的准则是使用一个准则，使不同类中的样本之间的距离最大化，并使每个类内的距离最小化。
 
 .. image:: ../auto_examples/cluster/images/sphx_glr_plot_agglomerative_clustering_metrics_005.png
     :target: ../auto_examples/cluster/plot_agglomerative_clustering_metrics.html
@@ -660,7 +566,7 @@ each class.
     :target: ../auto_examples/cluster/plot_agglomerative_clustering_metrics.html
     :scale: 32
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_cluster_plot_agglomerative_clustering_metrics.py`
 
@@ -670,39 +576,21 @@ each class.
 DBSCAN
 ======
 
-The :class:`DBSCAN` algorithm views clusters as areas of high density
-separated by areas of low density. Due to this rather generic view, clusters
-found by DBSCAN can be any shape, as opposed to k-means which assumes that
-clusters are convex shaped. The central component to the DBSCAN is the concept
-of *core samples*, which are samples that are in areas of high density. A
-cluster is therefore a set of core samples, each close to each other
-(measured by some distance measure)
-and a set of non-core samples that are close to a core sample (but are not
-themselves core samples). There are two parameters to the algorithm,
-``min_samples`` and ``eps``,
-which define formally what we mean when we say *dense*.
-Higher ``min_samples`` or lower ``eps``
-indicate higher density necessary to form a cluster.
+:class:`DBSCAN` 算法将聚类视为被低密度区域分隔的高密度区域。由于这个相当普遍的观点， 
+DBSCAN发现的聚类可以是任何形状的，与假设聚类是 convex shaped 的 K-means 相反。 
+DBSCAN 的核心概念是 *core samples* , 是指位于高密度区域的样本。 因此一个聚类是一组核心样本，
+每个核心样本彼此靠近（通过一定距离度量测量） 和一组接近核心样本的非核心样本（但本身不是核心样本）。
+算法中的两个参数, ``min_samples``  和 ``eps`` ,正式的定义了我们所说的 *dense*（稠密）。
+较高的 ``min_samples`` 或者较低的 ``eps`` 表示形成聚类需要较高的密度。
 
-More formally, we define a core sample as being a sample in the dataset such
-that there exist ``min_samples`` other samples within a distance of
-``eps``, which are defined as *neighbors* of the core sample. This tells
-us that the core sample is in a dense area of the vector space. A cluster
-is a set of core samples that can be built by recursively taking a core
-sample, finding all of its neighbors that are core samples, finding all of
-*their* neighbors that are core samples, and so on. A cluster also has a
-set of non-core samples, which are samples that are neighbors of a core sample
-in the cluster but are not themselves core samples. Intuitively, these samples
-are on the fringes of a cluster.
+更正式的,我们定义核心样本(core sample)是指数据集中的一个样本，在 ``eps`` 距离范围内存在 ``min_samples`` 个其他样本，
+这些样本被定义为核心样本的邻居(*neighbors*) 。 这告诉我们核心样本在向量空间的稠密区域。 一个聚类是一个核心样本的集合，
+可以通过递归来构建，选取一个核心样本，寻找它所有的neighbors中的核心样本，然后寻找新获取的核心样本(*their*)的 neighbors中的核心样本，
+递归这个过程。 聚类中还具有一组非核心样本，它们是聚类中核心样本的邻居的样本，但本身并不是核心样本。 显然，这些样本位于聚类的边缘。
 
-Any core sample is part of a cluster, by definition. Any sample that is not a
-core sample, and is at least ``eps`` in distance from any core sample, is
-considered an outlier by the algorithm.
+根据定义，任何核心样本都是聚类的一部分，任何不是核心样本并且和任意一个核心样本距离都至少大于 ``eps`` 的样本被认为是 outliers。
 
-In the figure below, the color indicates cluster membership, with large circles
-indicating core samples found by the algorithm. Smaller circles are non-core
-samples that are still part of a cluster. Moreover, the outliers are indicated
-by black points below.
+在下图中，颜色表示聚类成员，大圆圈表示算法发现的核心样本。 较小的圆圈是仍然是聚类的一部分的非核心样本。 此外，异常值(outliers)由下面的黑点表示。
 
 .. |dbscan_results| image:: ../auto_examples/cluster/images/sphx_glr_plot_dbscan_001.png
         :target: ../auto_examples/cluster/plot_dbscan.html
@@ -710,50 +598,35 @@ by black points below.
 
 .. centered:: |dbscan_results|
 
-.. topic:: Examples:
+.. topic:: 案例:
 
     * :ref:`sphx_glr_auto_examples_cluster_plot_dbscan.py`
 
-.. topic:: Implementation
+.. topic:: 实现
 
-    The DBSCAN algorithm is deterministic, always generating the same clusters
-    when given the same data in the same order.  However, the results can differ when
-    data is provided in a different order. First, even though the core samples
-    will always be assigned to the same clusters, the labels of those clusters
-    will depend on the order in which those samples are encountered in the data.
-    Second and more importantly, the clusters to which non-core samples are assigned
-    can differ depending on the data order.  This would happen when a non-core sample
-    has a distance lower than ``eps`` to two core samples in different clusters. By the
-    triangular inequality, those two core samples must be more distant than
-    ``eps`` from each other, or they would be in the same cluster. The non-core
-    sample is assigned to whichever cluster is generated first in a pass
-    through the data, and so the results will depend on the data ordering.
+    DBSCAN 算法是具有确定性的，当以相同的顺序给出相同的数据时总是形成相同的聚类。 
+    然而，当以不同的顺序提供数据时聚类的结果可能不相同。首先，即使核心样本总是被分配给相同的簇，
+    这些簇的标签将取决于数据中遇到这些样本的顺序。第二个更重要的是，给非核心样本分派的聚簇可能因数据顺序而有所不同。 
+    当一个非核心样本距离两个核心样本的距离都小于  ``eps`` 时，就会发生这种情况。 
+    通过三角不等式可知，这两个核心样本距离一定大于  ``eps`` 或者处于同一个聚类中。 
+    非核心样本将被非配到首先查找到改样本的类别，因此结果将取决于数据的顺序。
+    
+    当前版本使用 ball trees 和 kd-trees 来确定样本点的邻域，这样避免了计算全部的距离矩阵 （0.14 之前的 scikit-learn 版本计算全部的距离矩阵）。
+    保留使用自定义指标(custom metrics)的可能性。细节请参照 :class:`NearestNeighbors` 。
 
-    The current implementation uses ball trees and kd-trees
-    to determine the neighborhood of points,
-    which avoids calculating the full distance matrix
-    (as was done in scikit-learn versions before 0.14).
-    The possibility to use custom metrics is retained;
-    for details, see :class:`NearestNeighbors`.
+.. topic:: 大样本量的内存消耗
 
-.. topic:: Memory consumption for large sample sizes
+    默认的实现方式并不是内存高效的，因为它在不能使用 kd-trees 或者 ball-trees 的情况下构建一个完整的两两相似度矩阵(pairwise similarity matrix)。
+    这个矩阵将消耗 n^2 个浮点数。 解决这个问题的几种机制:
 
-    This implementation is by default not memory efficient because it constructs
-    a full pairwise similarity matrix in the case where kd-trees or ball-trees cannot
-    be used (e.g. with sparse matrices). This matrix will consume n^2 floats.
-    A couple of mechanisms for getting around this are:
+    - 稀疏半径邻域图(A sparse radius neighborhood graph)(其中缺少条目被假定为距离超出 eps) 可以以内存高效的方式预先计算，
+      并且dbscan(参数设置为 ``metric='precomputed'``)可以在这个图上运行。
+      请看 :meth:`sklearn.neighbors.NearestNeighbors.radius_neighbors_graph` 。
 
-    - A sparse radius neighborhood graph (where missing entries are presumed to
-      be out of eps) can be precomputed in a memory-efficient way and dbscan
-      can be run over this with ``metric='precomputed'``.  See
-      :meth:`sklearn.neighbors.NearestNeighbors.radius_neighbors_graph`.
+    - 通过删除发生在数据中的准确副本或着使用 BIRCH 方法对数据集进行压缩。
+      然后，你就可以用一个数量相对少的样本集合来代表大量的样本点。再然后，你还可以在拟合DBSCAN的时候提供 ``sample_weight``。
 
-    - The dataset can be compressed, either by removing exact duplicates if
-      these occur in your data, or by using BIRCH. Then you only have a
-      relatively small number of representatives for a large number of points.
-      You can then provide a ``sample_weight`` when fitting DBSCAN.
-
-.. topic:: References:
+.. topic:: 参考文献:
 
  * "A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases
    with Noise"
@@ -825,7 +698,7 @@ clusters (labels) and the samples are mapped to the global label of the nearest 
    Birch is more useful than MiniBatchKMeans.
 
 
-**How to use partial_fit?**
+**如何使用partial_fit?**
 
 To avoid the computation of global clustering, for every call of ``partial_fit``
 the user is advised
@@ -840,7 +713,7 @@ the user is advised
 .. image:: ../auto_examples/cluster/images/sphx_glr_plot_birch_vs_minibatchkmeans_001.png
     :target: ../auto_examples/cluster/plot_birch_vs_minibatchkmeans.html
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * Tian Zhang, Raghu Ramakrishnan, Maron Livny
    BIRCH: An efficient data clustering method for large databases.
@@ -856,14 +729,15 @@ the user is advised
 聚类算法性能评估
 =================================
 
-Evaluating the performance of a clustering algorithm is not as trivial as
-counting the number of errors or the precision and recall of a supervised
-classification algorithm. In particular any evaluation metric should not
+评估聚类算法的性能并不像计算错误数或监督分类算法的精确度和召回率那样简单。
+特别是，任何评估指标都不应该考虑聚类标签的绝对值。
+In particular any evaluation metric should not
 take the absolute values of the cluster labels into account but rather
 if this clustering define separations of the data similar to some ground
 truth set of classes or satisfying some assumption such that members
 belong to the same class are more similar that members of different
 classes according to some similarity metric.
+(译者注：这句英文简直逆天了，看了五分钟都没看出咋断句，不译了,o(∩_∩)o 哈哈)。
 
 .. currentmodule:: sklearn.metrics
 
@@ -872,11 +746,8 @@ classes according to some similarity metric.
 Adjusted Rand index
 -------------------
 
-Given the knowledge of the ground truth class assignments ``labels_true``
-and our clustering algorithm assignments of the same samples
-``labels_pred``, the **adjusted Rand index** is a function that measures
-the **similarity** of the two assignments, ignoring permutations and **with
-chance normalization**::
+给定真实的类分配(ground truth class assignments): ``labels_true`` 和 我们的聚类算法对同样的样本集预测出的类分配：``labels_pred``, 
+**adjusted Rand index** 是一个用来度量上述两种分配的相似度(**similarity**)的函数，ignoring permutations 和 **with chance normalization**::
 
   >>> from sklearn import metrics
   >>> labels_true = [0, 0, 0, 1, 1, 1]
@@ -885,27 +756,25 @@ chance normalization**::
   >>> metrics.adjusted_rand_score(labels_true, labels_pred)  # doctest: +ELLIPSIS
   0.24...
 
-One can permute 0 and 1 in the predicted labels, rename 2 to 3, and get
-the same score::
+可以在预测的标签中排列(permute) 0 和 1，重命名为 2 到 3， 得到相同的分数 ::
 
   >>> labels_pred = [1, 1, 0, 0, 3, 3]
   >>> metrics.adjusted_rand_score(labels_true, labels_pred)  # doctest: +ELLIPSIS
   0.24...
 
-Furthermore, :func:`adjusted_rand_score` is **symmetric**: swapping the argument
-does not change the score. It can thus be used as a **consensus
-measure**::
+更进一步, 函数 :func:`adjusted_rand_score` 是 **对称的(symmetric)**: 交换参数(argument)不会改变得分(score)。
+它可以作为 **共识度量(consensus measure)** ::
 
   >>> metrics.adjusted_rand_score(labels_pred, labels_true)  # doctest: +ELLIPSIS
   0.24...
 
-Perfect labeling is scored 1.0::
+完美的标记(perfect labeling)得分为 1.0 ::
 
   >>> labels_pred = labels_true[:]
   >>> metrics.adjusted_rand_score(labels_true, labels_pred)
   1.0
 
-Bad (e.g. independent labelings) have negative or close to 0.0 scores::
+坏的标记 (e.g. independent labelings) 具有负值或接近 0.0 的得分::
 
   >>> labels_true = [0, 1, 2, 0, 3, 4, 5, 1]
   >>> labels_pred = [1, 1, 0, 0, 2, 2, 2, 2]
@@ -916,68 +785,54 @@ Bad (e.g. independent labelings) have negative or close to 0.0 scores::
 优点
 ~~~~~~~~~~
 
-- **Random (uniform) label assignments have a ARI score close to 0.0**
-  for any value of ``n_clusters`` and ``n_samples`` (which is not the
-  case for raw Rand index or the V-measure for instance).
+- **随机(均匀)标签分配的 ARI 得分接近于 0.0**
+  对于 ``n_clusters`` 和 ``n_samples`` 的任何值（这不是 raw Rand index 或者 V-measure 的情况）。
 
-- **Bounded range [-1, 1]**: negative values are bad (independent
-  labelings), similar clusterings have a positive ARI, 1.0 is the perfect
-  match score.
+- **得分被界定在 [-1, 1] 的区间内**: 负值是坏的(独立性标签), 相似的聚类有一个正的 ARI， 1.0 是完美的匹配得分。
 
-- **No assumption is made on the cluster structure**: can be used
-  to compare clustering algorithms such as k-means which assumes isotropic
-  blob shapes with results of spectral clustering algorithms which can
-  find cluster with "folded" shapes.
+- **没有对簇的结构做任何假定**:  可以用于比较聚类算法，比如 假定了各向同性的blob shapes的k-means方法的结果 和 寻找具有
+  "folded"形状的谱聚类方法的结果进行比较。
 
 
 缺点
 ~~~~~~~~~
 
-- Contrary to inertia, **ARI requires knowledge of the ground truth
-  classes** while is almost never available in practice or requires manual
-  assignment by human annotators (as in the supervised learning setting).
+- 与惯性(inertia)方法不同, **ARI 需要 ground truth classes 的相关知识** 
+  而在实践中几乎不可得到，或者需要人工标注者手动分配（如在监督学习环境中）。
 
-  However ARI can also be useful in a purely unsupervised setting as a
-  building block for a Consensus Index that can be used for clustering
-  model selection (TODO).
+  然而，ARI 还可以在纯粹无监督的设置中作为可用于 聚类模型选择 的共识索引的构建模块。
 
 
-.. topic:: Examples:
+.. topic:: 案例:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_adjusted_for_chance_measures.py`: Analysis of
-   the impact of the dataset size on the value of clustering measures
-   for random assignments.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_adjusted_for_chance_measures.py`: 分析数据集大小对随机分配聚类度量值的影响。
 
 
-数学化表达形式
+数学表达形式
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-If C is a ground truth class assignment and K the clustering, let us
-define :math:`a` and :math:`b` as:
+如果 C 是 ground truth class assignment 以及 K 是聚类算法给出的class assignment, 让我们定义 :math:`a` 和 :math:`b` 如下:
 
-- :math:`a`, the number of pairs of elements that are in the same set
-  in C and in the same set in K
+- :math:`a`, 在C中相同集合和在K中相同集合的元素对的数量(the number of pairs of elements that are in the same set
+  in C and in the same set in K)
 
-- :math:`b`, the number of pairs of elements that are in different sets
-  in C and in different sets in K
+- :math:`b`, 在C中不同集合和在K中不同集合的元素对的数量(the number of pairs of elements that are in different sets
+  in C and in different sets in K)
 
-The raw (unadjusted) Rand index is then given by:
+那么，原始的 (未调整的,unadjusted) Rand index 由下式给出:
 
 .. math:: \text{RI} = \frac{a + b}{C_2^{n_{samples}}}
 
-Where :math:`C_2^{n_{samples}}` is the total number of possible pairs
-in the dataset (without ordering).
+其中 :math:`C_2^{n_{samples}}` 是在(未排序的)数据集中所有可能的元素对的总数量。
 
-However the RI score does not guarantee that random label assignments
-will get a value close to zero (esp. if the number of clusters is in
-the same order of magnitude as the number of samples).
+然而，RI 评分不能保证随机标签分配(random label assignments)将获得接近零的值（特别是如果簇的数量与样本数量有相同的数量级）。
 
-To counter this effect we can discount the expected RI :math:`E[\text{RI}]` of
-random labelings by defining the adjusted Rand index as follows:
+为了抵消这种影响，我们可以通过定义调整后的 Rand index(adjusted Rand index,即ARI) 来 
+对随机标签分配的 期望 RI :math:`E[\text{RI}]` 打折(discount), 如下所示:
 
 .. math:: \text{ARI} = \frac{\text{RI} - E[\text{RI}]}{\max(\text{RI}) - E[\text{RI}]}
 
-.. topic:: References
+.. topic:: 参考文献
 
  * `Comparing Partitions
    <http://link.springer.com/article/10.1007%2FBF01908075>`_
@@ -991,13 +846,11 @@ random labelings by defining the adjusted Rand index as follows:
 基于互信息的得分
 -------------------------------
 
-Given the knowledge of the ground truth class assignments ``labels_true`` and
-our clustering algorithm assignments of the same samples ``labels_pred``, the
-**Mutual Information** is a function that measures the **agreement** of the two
-assignments, ignoring permutations.  Two different normalized versions of this
-measure are available, **Normalized Mutual Information (NMI)** and **Adjusted
-Mutual Information (AMI)**. NMI is often used in the literature, while AMI was
-proposed more recently and is **normalized against chance**::
+给定真实的类分配(class assignments): ``labels_true`` 和 我们的聚类算法对同样的样本集预测出的类分配：``labels_pred``, 
+**互信息(Mutual Information)** 是一个函数，用于度量两个分配集合的一致性，忽略了排列组合(the **agreement** of the two
+assignments, ignoring permutations)。
+这种度量方法的两个不同的归一化版本目前可用: **Normalized Mutual Information (NMI)** 和 **Adjusted Mutual Information (AMI)**。 
+NMI 在文献中可以经常看到, 而 AMI 最近才被提出 and is **normalized against chance**::
 
   >>> from sklearn import metrics
   >>> labels_true = [0, 0, 0, 1, 1, 1]
@@ -1006,21 +859,19 @@ proposed more recently and is **normalized against chance**::
   >>> metrics.adjusted_mutual_info_score(labels_true, labels_pred)  # doctest: +SKIP
   0.22504...
 
-One can permute 0 and 1 in the predicted labels, rename 2 to 3 and get
-the same score::
+可以在预测出的标签(predicted labels)中排列 0 和 1, 重命名为 2 到 3， 并得到相同的得分 ::
 
   >>> labels_pred = [1, 1, 0, 0, 3, 3]
   >>> metrics.adjusted_mutual_info_score(labels_true, labels_pred)  # doctest: +SKIP
   0.22504...
 
-All, :func:`mutual_info_score`, :func:`adjusted_mutual_info_score` and
-:func:`normalized_mutual_info_score` are symmetric: swapping the argument does
-not change the score. Thus they can be used as a **consensus measure**::
+所有的函数, :func:`mutual_info_score`, :func:`adjusted_mutual_info_score` 和 :func:`normalized_mutual_info_score` 
+都是对称的(symmetric): 交换函数的参数不会改变得分。 因此它们可以用作 **consensus measure**::
 
   >>> metrics.adjusted_mutual_info_score(labels_pred, labels_true)  # doctest: +SKIP
   0.22504...
 
-Perfect labeling is scored 1.0::
+完美标签分配(Perfect labeling)的得分是 1.0::
 
   >>> labels_pred = labels_true[:]
   >>> metrics.adjusted_mutual_info_score(labels_true, labels_pred)  # doctest: +SKIP
@@ -1029,12 +880,12 @@ Perfect labeling is scored 1.0::
   >>> metrics.normalized_mutual_info_score(labels_true, labels_pred)  # doctest: +SKIP
   1.0
 
-This is not true for ``mutual_info_score``, which is therefore harder to judge::
+这对于 ``mutual_info_score`` 是不成立的, 因此该得分更难于判断::
 
   >>> metrics.mutual_info_score(labels_true, labels_pred)  # doctest: +SKIP
   0.69...
 
-Bad (e.g. independent labelings) have non-positive scores::
+坏的标签分配 (e.g. independent labelings) 具有负的得分(non-positive scores)::
 
   >>> labels_true = [0, 1, 2, 0, 3, 4, 5, 1]
   >>> labels_pred = [1, 1, 0, 0, 2, 2, 2, 2]
@@ -1045,77 +896,62 @@ Bad (e.g. independent labelings) have non-positive scores::
 优点
 ~~~~~~~~~~
 
-- **Random (uniform) label assignments have a AMI score close to 0.0**
-  for any value of ``n_clusters`` and ``n_samples`` (which is not the
-  case for raw Mutual Information or the V-measure for instance).
+- **随机(均匀)标签分配有一个接近于0的 AMI得分。**
+  对于 ``n_clusters`` 和 ``n_samples`` 的任何值（这不是 raw Mutual Information 或者 V-measure 的情况）。
 
-- **Upper bound  of 1**:  Values close to zero indicate two label
-  assignments that are largely independent, while values close to one
-  indicate significant agreement. Further, an AMI of exactly 1 indicates
-  that the two label assignments are equal (with or without permutation).
+- **上界为 1** :  得分值接近于 0 表明两个标签分配集合很大程度上是独立的(largely independent), 而得分值接近于 1 表明两个标签分配集合
+  具有很大的一致性(significant agreement)。 更进一步, 正好是1的AMI表示两个标签分配相等。 (with or without permutation).
 
 
 缺点
 ~~~~~~~~~
 
-- Contrary to inertia, **MI-based measures require the knowledge
-  of the ground truth classes** while almost never available in practice or
-  requires manual assignment by human annotators (as in the supervised learning
-  setting).
+- 与惯性(inertia)方法不同, **基于互信息的度量(MI-based measures) 需要 ground truth classes 的相关知识** 
+  而在实践中几乎不可得到，或者需要人工标注者手动分配（如在监督学习环境中）。
 
-  However MI-based measures can also be useful in purely unsupervised setting as a
-  building block for a Consensus Index that can be used for clustering
-  model selection.
+  然而，MI-based measures 还可以在纯粹无监督的设置中作为可用于 聚类模型选择 的共识索引的构建模块。
 
 - NMI and MI are not adjusted against chance.
 
 
 .. topic:: Examples:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_adjusted_for_chance_measures.py`: Analysis of
-   the impact of the dataset size on the value of clustering measures
-   for random assignments. This example also includes the Adjusted Rand
-   Index.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_adjusted_for_chance_measures.py`: 
+  分析数据集大小对随机分配聚类度量值的影响。 此示例还包括 Adjusted Rand Index。
 
 
 数学表达形式
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Assume two label assignments (of the same N objects), :math:`U` and :math:`V`.
-Their entropy is the amount of uncertainty for a partition set, defined by:
+假定我们有两个标签分配集合(of the same N objects), :math:`U` 和 :math:`V`.
+它们的熵(entropy)是划分集(partition set)的不确定性量(the amount of uncertainty), 定义如下:
 
 .. math:: H(U) = - \sum_{i=1}^{|U|}P(i)\log(P(i))
 
-where :math:`P(i) = |U_i| / N` is the probability that an object picked at
-random from :math:`U` falls into class :math:`U_i`. Likewise for :math:`V`:
+其中 :math:`P(i) = |U_i| / N` 是从 :math:`U` 集合中随机挑选的一个object落到 :math:`U_i` 集合中的概率。 
+对于 :math:`V` 集合也是一样的:
 
 .. math:: H(V) = - \sum_{j=1}^{|V|}P'(j)\log(P'(j))
 
-With :math:`P'(j) = |V_j| / N`. The mutual information (MI) between :math:`U`
-and :math:`V` is calculated by:
+其中 :math:`P'(j) = |V_j| / N`。 :math:`U` 和 :math:`V` 之间的互信息(mutual information)的计算公式如下 :
 
 .. math:: \text{MI}(U, V) = \sum_{i=1}^{|U|}\sum_{j=1}^{|V|}P(i, j)\log\left(\frac{P(i,j)}{P(i)P'(j)}\right)
 
-where :math:`P(i, j) = |U_i \cap V_j| / N` is the probability that an object
-picked at random falls into both classes :math:`U_i` and :math:`V_j`.
+其中 :math:`P(i, j) = |U_i \cap V_j| / N` 是随机选择的object落到这两类集合 :math:`U_i` 和 :math:`V_j` 中的概率。
 
-It also can be expressed in set cardinality formulation:
+互信息还可以用set cardinality的形式来表述 :
 
 .. math:: \text{MI}(U, V) = \sum_{i=1}^{|U|} \sum_{j=1}^{|V|} \frac{|U_i \cap V_j|}{N}\log\left(\frac{N|U_i \cap V_j|}{|U_i||V_j|}\right)
 
-The normalized mutual information is defined as
+归一化的互信息定义如下:
 
 .. math:: \text{NMI}(U, V) = \frac{\text{MI}(U, V)}{\text{mean}(H(U), H(V))}
 
-This value of the mutual information and also the normalized variant is not
-adjusted for chance and will tend to increase as the number of different labels
-(clusters) increases, regardless of the actual amount of "mutual information"
-between the label assignments.
+不管两个标签分配集合(label assignments)之间的互信息的实际量有多大，互信息的值包括归一化互信息的值没有针对偶然性进行调整(not adjusted for chance) 
+而且 倾向于随着不同标签(聚类)的数量的增加而增加。
 
-The expected value for the mutual information can be calculated using the
-following equation [VEB2009]_. In this equation,
-:math:`a_i = |U_i|` (the number of elements in :math:`U_i`) and
-:math:`b_j = |V_j|` (the number of elements in :math:`V_j`).
+互信息的期望值可以用等式 [VEB2009]_ 计算。在这个等式中, :math:`a_i = |U_i|` (:math:`U_i` 集合中的元素数量) 和
+:math:`b_j = |V_j|` ( :math:`V_j` 集合中的元素数量)。
 
 
 .. math:: E[\text{MI}(U,V)]=\sum_{i=1}^{|U|} \sum_{j=1}^{|V|} \sum_{n_{ij}=(a_i+b_j-N)^+
@@ -1123,24 +959,19 @@ following equation [VEB2009]_. In this equation,
    \frac{a_i!b_j!(N-a_i)!(N-b_j)!}{N!n_{ij}!(a_i-n_{ij})!(b_j-n_{ij})!
    (N-a_i-b_j+n_{ij})!}
 
-Using the expected value, the adjusted mutual information can then be
-calculated using a similar form to that of the adjusted Rand index:
+使用了互信息期望值后, 经过调整的互信息的计算将使用与 ARI(adjusted Rand index) 类似的形式进行 :
 
 .. math:: \text{AMI} = \frac{\text{MI} - E[\text{MI}]}{\text{mean}(H(U), H(V)) - E[\text{MI}]}
 
-For normalized mutual information and adjusted mutual information, the normalizing
-value is typically some *generalized* mean of the entropies of each clustering.
-Various generalized means exist, and no firm rules exist for preferring one over the
-others.  The decision is largely a field-by-field basis; for instance, in community
-detection, the arithmetic mean is most common. Each
-normalizing method provides "qualitatively similar behaviours" [YAT2016]_. In our
-implementation, this is controlled by the ``average_method`` parameter.
+对于归一化互信息和调整后的互信息，归一化值通常是每个聚类的熵的一些广义均值(*generalized* mean)。
+有各种广义均值存在，并没有明确的规则说某一个优先于其他的。这个决定很大程度上是取决于各个领域的基础；
+例如，在社区检测(community detection)中，算术平均值是最常见的。每一种归一化方法提供 "qualitatively similar behaviours" [YAT2016]_。
+在我们的实现中, 这是通过参数 ``average_method`` 进行控制的。
 
-Vinh et al. (2010) named variants of NMI and AMI by their averaging method [VEB2010]_. Their
-'sqrt' and 'sum' averages are the geometric and arithmetic means; we use these
-more broadly common names.
+Vinh et al. (2010) 对各种 NMI 和 AMI 的变体 用它们使用的平均方法(averaging method) 进行了命名 [VEB2010]_ 。 
+他们在论文里说的 'sqrt' 和 'sum' 平均 分别是 几何 和 算数 平均；我们使用这些更广泛的通用名称。
 
-.. topic:: References
+.. topic:: 参考文献
 
  * Strehl, Alexander, and Joydeep Ghosh (2002). "Cluster ensembles – a
    knowledge reuse framework for combining multiple partitions". Journal of
