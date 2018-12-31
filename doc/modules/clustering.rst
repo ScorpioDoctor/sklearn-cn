@@ -4,27 +4,23 @@
 聚类(Clustering)
 ==========
 
-`Clustering <https://en.wikipedia.org/wiki/Cluster_analysis>`__ of
-unlabeled data can be performed with the module :mod:`sklearn.cluster`.
+:mod:`sklearn.cluster` 模块提供了对无标签数据的聚类算法
+(`Clustering <https://en.wikipedia.org/wiki/Cluster_analysis>`__)。
 
-Each clustering algorithm comes in two variants: a class, that implements
-the ``fit`` method to learn the clusters on train data, and a function,
-that, given train data, returns an array of integer labels corresponding
-to the different clusters. For the class, the labels over the training
-data can be found in the ``labels_`` attribute.
+该模块中每一个聚类算法都有两个变体: 一个是类(class)另一个是函数(function)。 
+类实现了 ``fit`` 方法来从训练数据中学习聚类；函数接受训练数据返回对应于不同聚类的一个整数标签数组。
+对类来说，训练过程得到的标签数据可以在属性  ``labels_`` 中找到。
 
 .. currentmodule:: sklearn.cluster
 
-.. topic:: Input data
+.. topic:: 输入数据
 
-    One important thing to note is that the algorithms implemented in
-    this module can take different kinds of matrix as input. All the
-    methods accept standard data matrices of shape ``[n_samples, n_features]``.
-    These can be obtained from the classes in the :mod:`sklearn.feature_extraction`
-    module. For :class:`AffinityPropagation`, :class:`SpectralClustering`
-    and :class:`DBSCAN` one can also input similarity matrices of shape
-    ``[n_samples, n_samples]``. These can be obtained from the functions
-    in the :mod:`sklearn.metrics.pairwise` module.
+    需要注意的一点是，在该模块中实现的算法可以以不同类型的矩阵作为输入。
+    所有方法都接受标准形状的数据矩阵，shape为 ``[n_samples, n_features]`` 。
+    这些内容可以从 :mod:`sklearn.feature_extraction` 模块中的类中获得。
+    对于 :class:`AffinityPropagation`, :class:`SpectralClustering`
+    和 :class:`DBSCAN` 类，你还可以输入shape为 ``[n_samples, n_samples]`` 的相似矩阵。
+    这些可以从 :mod:`sklearn.metrics.pairwise` 模块中的函数中获得。
 
 聚类算法一览
 ===============================
@@ -34,7 +30,7 @@ data can be found in the ``labels_`` attribute.
    :align: center
    :scale: 50
 
-   A comparison of the clustering algorithms in scikit-learn
+   scikit-learn中的聚类算法比较
 
 
 .. list-table::
@@ -103,97 +99,67 @@ data can be found in the ``labels_`` attribute.
      - Large dataset, outlier removal, data reduction.
      - Euclidean distance between points
 
-Non-flat geometry clustering is useful when the clusters have a specific
-shape, i.e. a non-flat manifold, and the standard euclidean distance is
-not the right metric. This case arises in the two top rows of the figure
-above.
+非平面几何聚类(Non-flat geometry clustering)在集群具有特定形状时非常有用，
+i.e. 一个非平坦的流形，而标准的欧氏距离不是正确的度量.这种情况出现在上图中最上面两行中。
 
-Gaussian mixture models, useful for clustering, are described in
-:ref:`another chapter of the documentation <mixture>` dedicated to
-mixture models. KMeans can be seen as a special case of Gaussian mixture
-model with equal covariance per component.
+用于聚类的高斯混合模型在 :ref:`专门讨论混合模型的文档 <mixture>`中进行了描述。
+KMeans可以看做是高斯混合模型的特例，其中每个分量的协方差相等。
 
 .. _k_means:
 
 K-均值(K-means)
 =======
 
-The :class:`KMeans` algorithm clusters data by trying to separate samples
-in n groups of equal variance, minimizing a criterion known as the
-`inertia <inertia>`_ or within-cluster sum-of-squares.
-This algorithm requires the number of clusters to be specified.
-It scales well to large number of samples and has been used
-across a large range of application areas in many different fields.
+:class:`KMeans` 算法通过尝试将样本分离成n个方差相等的组来对数据进行聚类，最小化了一个称为惯性(`inertia <inertia>`_)或
+聚类内和平方(within-cluster sum-of-squares)的准则。
+该算法需要指定簇数。它可以很好地扩展到大量的样本，并且已经在许多不同的应用领域得到了广泛的应用。
 
-The k-means algorithm divides a set of :math:`N` samples :math:`X`
-into :math:`K` disjoint clusters :math:`C`,
-each described by the mean :math:`\mu_j` of the samples in the cluster.
-The means are commonly called the cluster "centroids";
-note that they are not, in general, points from :math:`X`,
-although they live in the same space.
-The K-means algorithm aims to choose centroids
-that minimise the *inertia*, or within-cluster sum of squared criterion:
+k-均值算法将 :math:`N` 个样本的集合 :math:`X` 划分为 :math:`K` 个不相交的簇 :math:`C` ，
+每个簇由聚类中样本的均值 :math:`\mu_j` 描述。
+这些均值通常被称为簇的“质心(centroids)”；请注意，它们通常不是 :math:`X` 内的样本点，尽管它们处在同一个空间。
+K-均值算法的目标是选择那些可以最小化惯性(*inertia*)或最小化簇内平方和准则(within-cluster sum of squared criterion) 的质心 :
 
 .. math:: \sum_{i=0}^{n}\min_{\mu_j \in C}(||x_i - \mu_j||^2)
 
-Inertia, or the within-cluster sum of squares criterion,
-can be recognized as a measure of how internally coherent clusters are.
-It suffers from various drawbacks:
+惯性(*inertia*), 或 簇内平方和准则(within-cluster sum of squared criterion) ,
+可以被认为是一种对簇内 内相干(internally coherent) 程度的度量。
+它有以下缺点:
 
-- Inertia makes the assumption that clusters are convex and isotropic,
-  which is not always the case. It responds poorly to elongated clusters,
-  or manifolds with irregular shapes.
+- 惯性(*inertia*)假设团簇是凸的和各向同性的，但情况并不总是如此。它在细长的团簇或不规则形状的流形上效果很差。
 
-- Inertia is not a normalized metric: we just know that lower values are
-  better and zero is optimal. But in very high-dimensional spaces, Euclidean
-  distances tend to become inflated
-  (this is an instance of the so-called "curse of dimensionality").
-  Running a dimensionality reduction algorithm such as `PCA <PCA>`_
-  prior to k-means clustering can alleviate this problem
-  and speed up the computations.
+- 惯性(*inertia*)不是一个规范化的度量：我们只知道较低的值更好，而零是最优的。但是在高维空间中，欧几里得距离往往会膨胀。
+  (这是 维数灾难("curse of dimensionality")的一个实例)。
+  在k-均值聚类前运行 `PCA <PCA>`_ 等降维算法可以缓解这一问题，加快计算速度。
 
 .. image:: ../auto_examples/cluster/images/sphx_glr_plot_kmeans_assumptions_001.png
    :target: ../auto_examples/cluster/plot_kmeans_assumptions.html
    :align: center
    :scale: 50
 
-K-means is often referred to as Lloyd's algorithm. In basic terms, the
-algorithm has three steps. The first step chooses the initial centroids, with
-the most basic method being to choose :math:`k` samples from the dataset
-:math:`X`. After initialization, K-means consists of looping between the
-two other steps. The first step assigns each sample to its nearest centroid.
-The second step creates new centroids by taking the mean value of all of the
-samples assigned to each previous centroid. The difference between the old
-and the new centroids are computed and the algorithm repeats these last two
-steps until this value is less than a threshold. In other words, it repeats
-until the centroids do not move significantly.
+K-均值常被称为劳埃德算法(Lloyd's algorithm)。基本上讲，该算法分为三个步骤。第一步选择初始质心，
+最基本的方法是从数据集 :math:`k` 中选择k个样本。完成了第一步初始化后，K-means将会在接下来的两步中循环执行：
+第二步将每个样本分配到最近的质心。
+第三步通过获取分配给每个先前质心的所有样本的平均值来创建新的质心。计算旧质心和新质心之间的差值。
+算法重复第二、第三这两个步骤，直到新旧质心之间的差值小于一个阈值为止。
+换句话说，它会重复，直到质心没有明显的移动。
 
 .. image:: ../auto_examples/cluster/images/sphx_glr_plot_kmeans_digits_001.png
    :target: ../auto_examples/cluster/plot_kmeans_digits.html
    :align: right
    :scale: 35
 
-K-means is equivalent to the expectation-maximization algorithm
-with a small, all-equal, diagonal covariance matrix.
+K-均值等价于具有小的、完全相等的对角协方差矩阵的期望最大化算法。
 
-The algorithm can also be understood through the concept of `Voronoi diagrams
-<https://en.wikipedia.org/wiki/Voronoi_diagram>`_. First the Voronoi diagram of
-the points is calculated using the current centroids. Each segment in the
-Voronoi diagram becomes a separate cluster. Secondly, the centroids are updated
-to the mean of each segment. The algorithm then repeats this until a stopping
-criterion is fulfilled. Usually, the algorithm stops when the relative decrease
-in the objective function between iterations is less than the given tolerance
-value. This is not the case in this implementation: iteration stops when
-centroids move less than the tolerance.
+K-均值算法还可以通过这个 `Voronoi diagrams <https://en.wikipedia.org/wiki/Voronoi_diagram>`_ 概念进行理解。
+首先使用当前质心计算点的 Voronoi 图。Voronoi 图中的每个段(segment)都成为一个单独分开的簇(separate cluster)。
+其次，质心被更新为每个段(segment)的平均值。然后，该算法重复此操作，直到满足停止条件。 
+通常情况下，当每两次迭代之间的目标函数的相对减小小于给定的容忍值(tolerance value)时，算法停止。
+我们的实现与上述过程是有点儿区别的: 当质心移动小于容忍值(tolerance)时，迭代停止。
 
-Given enough time, K-means will always converge, however this may be to a local
-minimum. This is highly dependent on the initialization of the centroids.
-As a result, the computation is often done several times, with different
-initializations of the centroids. One method to help address this issue is the
-k-means++ initialization scheme, which has been implemented in scikit-learn
-(use the ``init='k-means++'`` parameter). This initializes the centroids to be
-(generally) distant from each other, leading to provably better results than
-random initialization, as shown in the reference.
+给定足够的时间，K-means 总是能够收敛的，但这可能是局部最小的。
+这很大程度上取决于质心的初始化。因此，通常会进行几次不同的质心初始化的计算。
+帮助解决这个问题的一种方法是 k-means++ 初始化方案，它已经在 scikit-learn 中实现（使用 ``init='k-means++'`` 参数）。 
+这种方法通常将初始化质心彼此远离，导致比随机初始化更好的结果，如参考文献所示。
 
 The algorithm supports sample weights, which can be given by a parameter
 ``sample_weight``. This allows to assign more weight to some samples when
@@ -201,30 +167,26 @@ computing cluster centers and values of inertia. For example, assigning a
 weight of 2 to a sample is equivalent to adding a duplicate of that sample
 to the dataset :math:`X`.
 
-A parameter can be given to allow K-means to be run in parallel, called
-``n_jobs``. Giving this parameter a positive value uses that many processors
-(default: 1). A value of -1 uses all available processors, with -2 using one
-less, and so on. Parallelization generally speeds up computation at the cost of
-memory (in this case, multiple copies of centroids need to be stored, one for
-each job).
+为了允许 K-means 并行运行，给出一个参数称为 ``n_jobs`` 。给这个参数一个正值可以使用多个处理器（默认值: 1）。
+如果给 -1 则使用所有可用的处理器，-2 使用少一个，等等。
+并行化通常以增加内存的代价加速计算（在这种情况下，需要存储多个质心副本，每个job使用一个）。
+
 
 .. warning::
 
-    The parallel version of K-Means is broken on OS X when `numpy` uses the
-    `Accelerate` Framework. This is expected behavior: `Accelerate` can be called
-    after a fork but you need to execv the subprocess with the Python binary
-    (which multiprocessing does not do under posix).
+    当 `numpy` 使用 `Accelerate` 框架时，K-Means 的并行版本在 OS X 上会崩溃。
+    这是预期的行为(expected behavior): `Accelerate` 可以在 fork 之后调用，
+    但是您需要使用 Python binary（该多进程在 posix 下不执行）来执行子进程。
 
-K-means can be used for vector quantization. This is achieved using the
-transform method of a trained model of :class:`KMeans`.
+K-means 可用于矢量量化(vector quantization)。这是使用训练好的 :class:`KMeans` 类的 ``transform`` 变换方法获得的结果。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
  * :ref:`sphx_glr_auto_examples_cluster_plot_kmeans_assumptions.py`: Demonstrating when
    k-means performs intuitively and when it does not
- * :ref:`sphx_glr_auto_examples_cluster_plot_kmeans_digits.py`: Clustering handwritten digits
+ * :ref:`sphx_glr_auto_examples_cluster_plot_kmeans_digits.py`: 聚类手写数字
 
-.. topic:: References:
+.. topic:: 参考文献:
 
  * `"k-means++: The advantages of careful seeding"
    <http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf>`_
@@ -237,28 +199,16 @@ transform method of a trained model of :class:`KMeans`.
 小批量 K-Means
 ------------------
 
-The :class:`MiniBatchKMeans` is a variant of the :class:`KMeans` algorithm
-which uses mini-batches to reduce the computation time, while still attempting
-to optimise the same objective function. Mini-batches are subsets of the input
-data, randomly sampled in each training iteration. These mini-batches
-drastically reduce the amount of computation required to converge to a local
-solution. In contrast to other algorithms that reduce the convergence time of
-k-means, mini-batch k-means produces results that are generally only slightly
-worse than the standard algorithm.
+:class:`MiniBatchKMeans` 是 :class:`KMeans` 算法的一个变体，它使用 mini-batches 来减少计算时间，同时仍然尝试优化相同的目标函数(objective function)。 
+小批量样本(Mini-batches)是输入数据的子集，在每个训练迭代中进行随机抽样。
+这些mini-batches大大减少了收敛到局部解所需的计算量。 与其他降低 k-means 收敛时间的算法作对比，mini-batch k-means 产生的结果通常只比标准算法略差。
 
-The algorithm iterates between two major steps, similar to vanilla k-means.
-In the first step, :math:`b` samples are drawn randomly from the dataset, to form
-a mini-batch. These are then assigned to the nearest centroid. In the second
-step, the centroids are updated. In contrast to k-means, this is done on a
-per-sample basis. For each sample in the mini-batch, the assigned centroid
-is updated by taking the streaming average of the sample and all previous
-samples assigned to that centroid. This has the effect of decreasing the
-rate of change for a centroid over time. These steps are performed until
-convergence or a predetermined number of iterations is reached.
+该算法在两个主要步骤之间进行迭代，类似于 vanilla k-means 。 在第一步，从数据集中随机抽取 :math:`b` 个样本形成一个 mini-batch。
+然后将它们分配到最近的质心。 在第二步，更新质心。与 k-means 相反，这是在每个样本的基础上完成的。
+对 mini-batch 中的每个样本，通过取该样本的流平均值(streaming average)和分配给该质心的所有先前样本来更新分配给该样本的质心。 
+这具有随时间降低质心变化率的效果。执行这些步骤直到达到收敛或达到预定次数的迭代。
 
-:class:`MiniBatchKMeans` converges faster than :class:`KMeans`, but the quality
-of the results is reduced. In practice this difference in quality can be quite
-small, as shown in the example and cited reference.
+:class:`MiniBatchKMeans` 收敛速度比 :class:`KMeans` 更快，但是结果的质量会降低。在实践中，质量差异可能相当小，如下面给的案例和引用的参考。
 
 .. figure:: ../auto_examples/cluster/images/sphx_glr_plot_mini_batch_kmeans_001.png
    :target: ../auto_examples/cluster/plot_mini_batch_kmeans.html
@@ -266,21 +216,18 @@ small, as shown in the example and cited reference.
    :scale: 100
 
 
-.. topic:: Examples:
+.. topic:: 案例:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_mini_batch_kmeans.py`: Comparison of KMeans and
-   MiniBatchKMeans
+ * :ref:`sphx_glr_auto_examples_cluster_plot_mini_batch_kmeans.py`:  KMeans 与 MiniBatchKMeans 的对比
 
- * :ref:`sphx_glr_auto_examples_text_plot_document_clustering.py`: Document clustering using sparse
-   MiniBatchKMeans
+ * :ref:`sphx_glr_auto_examples_text_plot_document_clustering.py`: 使用 sparse MiniBatchKMeans 进行文档聚类
 
  * :ref:`sphx_glr_auto_examples_cluster_plot_dict_face_patches.py`
 
 
-.. topic:: References:
+.. topic:: 参考文献:
 
- * `"Web Scale K-Means clustering"
-   <http://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf>`_
+ * `"Web Scale K-Means clustering" <http://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf>`_
    D. Sculley, *Proceedings of the 19th international conference on World
    wide web* (2010)
 
