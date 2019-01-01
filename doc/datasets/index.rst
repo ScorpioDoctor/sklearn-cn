@@ -6,63 +6,57 @@
 
 .. currentmodule:: sklearn.datasets
 
-The ``sklearn.datasets`` package embeds some small toy datasets
-as introduced in the :ref:`Getting Started <loading_example_dataset>` section.
+``sklearn.datasets`` package 自带了一些迷你数据集(small toy datasets)，
+这在 :ref:`Getting Started <loading_example_dataset>` 章节也提到过。
 
-This package also features helpers to fetch larger datasets commonly
-used by the machine learning community to benchmark algorithms on data
-that comes from the 'real world'.
+这个 package 也提供了很多帮助函数去获取稍大一点儿的数据集，这些数据集是在机器学习社区中经常用到的
+用来测试算法的性能的，他们都是来自 真实世界('real world')的数据集。
 
-To evaluate the impact of the scale of the dataset (``n_samples`` and
-``n_features``) while controlling the statistical properties of the data
-(typically the correlation and informativeness of the features), it is
-also possible to generate synthetic data.
+为了评估数据集(``n_samples`` 和 ``n_features``) 的规模(scale)对算法模型的影响，同时还能控制数据的某些统计属性
+(典型的比如特征的相关性和信息量)，我们还需要人工合成一些数据集(generate synthetic data)。
+
+**译者注：** 由于我之前在人工智能社区网(wwww.studyai.com)做过一些scikit-learn的视频课程，当时对数据集的API这块儿讲的挺详细的，下面我把当时讲课
+时自己制作的PPT和视频的链接地址放在这儿，大家可以去听听，看看，我觉得PPT总结的还是不错的，o(∩_∩)o 哈哈  。 
+(`Sklearn数据集操作API (一) <http://www.studyai.com/article/ddf094e18e834a95>`_)，
+(`Sklearn数据集操作API (三) <http://www.studyai.com/article/dbb7ea7264784b11>`_)，
+(`Sklearn数据集操作API (四) <http://www.studyai.com/article/b82ea4b5ae084e8f>`_)，
+数据集这一段 对应的视频教程 可以去 
+(`我的优酷自频道 <https://list.youku.com/albumlist/show/id_49255928.html?spm=a2h0j.11185381.bpmodule-playpage-righttitle.5~H2~A>`_)
+里面找sklearn的播单，感兴趣的可以听听。
+
 
 通用数据集 API
 ===================
 
-There are three main kinds of dataset interfaces that can be used to get 
-datasets depending on the desired type of dataset.
+根据所需数据集的类型，有三种主要类型的数据集API接口可用于获取数据集。
   
-**The dataset loaders.** They can be used to load small standard datasets, 
-described in the :ref:`toy_datasets` section.  
+**The dataset loaders.** 这些可用来加载小的标准数据集, 在 :ref:`toy_datasets` 中有介绍。  
 
-**The dataset fetchers.** They can be used to download and load larger datasets,
-described in the :ref:`real_world_datasets` section.
+**The dataset fetchers.** 这些可用来下载并加载大的 real-world 数据集, 在 :ref:`real_world_datasets` 中有介绍。
 
-Both loaders and fetchers functions return a dictionary-like object holding 
-at least two items: an array of shape ``n_samples`` * ``n_features`` with 
-key ``data`` (except for 20newsgroups) and a numpy array of 
-length ``n_samples``, containing the target values, with key ``target``.
+loaders 和 fetchers 的所有函数都返回一个字典一样的对象，里面至少包含两项 : 
+shape 为 ``n_samples`` * ``n_features`` 的数组，对应的字典key是 ``data`` (20newsgroups 数据集除外) 
+以及 长度为 ``n_samples`` 的numpy数组, 包含了目标值(target values), 对应的字典key是 ``target``。
 
-It's also possible for almost all of these function to constrain the output
-to be a tuple containing only the data and the target, by setting the 
-``return_X_y`` parameter to ``True``.
+通过将 ``return_X_y`` 参数设置为 ``True`` ，几乎所有这些函数都可以将输出约束为只包含数据和目标的元组。
 
-The datasets also contain a full description in their ``DESCR`` attribute and 
-some contain ``feature_names`` and ``target_names``. See the dataset 
-descriptions below for details.  
+数据集还包含一个完整的 ``DESCR`` 属性描述，一些数据集还包含了 ``feature_names`` 和 ``target_names`` 。有关详细信息，请参阅下面的数据集说明。
 
-**The dataset generation functions.** They can be used to generate controlled 
-synthetic datasets, described in the :ref:`sample_generators` section.
+**The dataset generation functions.** 它们可以用来生成受控的合成数据集(synthetic datasets), 在 :ref:`sample_generators` 中有介绍。
 
-These functions return a tuple ``(X, y)`` consisting of a ``n_samples`` *
-``n_features`` numpy array ``X`` and an array of length ``n_samples``
-containing the targets ``y``.
+这些函数返回一个元组 ``(X, y)`` ，该元组由shape为 ``n_samples`` * ``n_features`` 的
+numpy数组 ``X`` 和长度为 ``n_samples`` 的包含目标 ``y`` 的数组组成。
 
-In addition, there are also miscellanous tools to load datasets of other 
-formats or from other locations, described in the :ref:`loading_other_datasets`
-section. 
+此外，还有一些用于加载其他格式或其他位置的数据集的混合工具(miscellanous tools),在 :ref:`loading_other_datasets` 中有介绍。 
 
 .. _toy_datasets:
 
 迷你数据集
 ============
 
-scikit-learn comes with a few small standard datasets that do not require to 
-download any file from some external website. 
+scikit-learn 附带一些小的标准数据集，这些数据集不需要从某个外部网站下载任何文件。
 
-They can be loaded using the following functions:
+这些数据集可以用下面的函数加载 :
 
 .. autosummary::
 
@@ -77,9 +71,7 @@ They can be loaded using the following functions:
    load_wine
    load_breast_cancer
 
-These datasets are useful to quickly illustrate the behavior of the
-various algorithms implemented in scikit-learn. They are however often too
-small to be representative of real world machine learning tasks.
+这些数据集对于快速说明在scikit-learn中实现的各种算法的行为非常有用。然而，它们往往太小，无法代表现实世界中的机器学习任务。
 
 .. toctree::
     :maxdepth: 2
@@ -112,10 +104,9 @@ small to be representative of real world machine learning tasks.
 真实世界中的数据集
 ===================
 
-scikit-learn provides tools to load larger datasets, downloading them if
-necessary.
+scikit-learn 提供加载较大数据集的工具，并在必要时下载这些数据集。
 
-They can be loaded using the following functions:
+这些数据集可以用下面的函数加载 :
 
 .. autosummary::
 
@@ -163,14 +154,13 @@ They can be loaded using the following functions:
 人工合成的数据集
 ==================
 
-In addition, scikit-learn includes various random sample generators that
-can be used to build artificial datasets of controlled size and complexity.
+此外，scikit-learn还包括各种随机样本生成器，可用于构建具有可控大小和复杂性的人工数据集(artificial datasets)。
+
 
 用于分类和回归的数据集的生成器
 --------------------------------------------
 
-These generators produce a matrix of features and corresponding discrete
-targets.
+这些生成器产生一个特征矩阵和相应的离散目标。
 
 单标签
 ~~~~~~~~~~~~
