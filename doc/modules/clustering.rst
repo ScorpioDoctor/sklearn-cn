@@ -808,7 +808,7 @@ Adjusted Rand index
  * :ref:`sphx_glr_auto_examples_cluster_plot_adjusted_for_chance_measures.py`: 分析数据集大小对随机分配聚类度量值的影响。
 
 
-数学表达形式
+数学表达式
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 如果 C 是 ground truth class assignment 以及 K 是聚类算法给出的class assignment, 让我们定义 :math:`a` 和 :math:`b` 如下:
@@ -920,7 +920,7 @@ NMI 在文献中可以经常看到, 而 AMI 最近才被提出 and is **normaliz
   分析数据集大小对随机分配聚类度量值的影响。 此示例还包括 Adjusted Rand Index。
 
 
-数学表达形式
+数学表达式
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 假定我们有两个标签分配集合(of the same N objects), :math:`U` 和 :math:`V`.
@@ -1004,24 +1004,19 @@ Vinh et al. (2010) 对各种 NMI 和 AMI 的变体 用它们使用的平均方�
 
 .. _homogeneity_completeness:
 
-Homogeneity, completeness and V-measure
+同质性, 完备性 与 V-测度
 ---------------------------------------
+(译者注：同质性(Homogeneity)、完备性(completeness)与 V-测度(V-measure))
 
-Given the knowledge of the ground truth class assignments of the samples,
-it is possible to define some intuitive metric using conditional entropy
-analysis.
+给定样本的真实类分配(ground truth class assignments)的相关知识, 则使用条件熵分析(conditional entropy analysis)来定义某个直观的指标(metric)是可能的。
 
-In particular Rosenberg and Hirschberg (2007) define the following two
-desirable objectives for any cluster assignment:
+特别是，Rosenberg和Hirschberg(2007)为任意聚类分配定义了以下两个理想的目标(desirable objectives):
 
-- **homogeneity**: each cluster contains only members of a single class.
+- **同质性(Homogeneity)**: 每个聚类(簇)里面只包含单个类的样本。
 
-- **completeness**: all members of a given class are assigned to the same
-  cluster.
+- **完备性(completeness)**: 一个给定类的所有样本都被分到了同一个聚类(簇)中。
 
-We can turn those concept as scores :func:`homogeneity_score` and
-:func:`completeness_score`. Both are bounded below by 0.0 and above by
-1.0 (higher is better)::
+我们将上述概念转变为函数 :func:`homogeneity_score` 和 :func:`completeness_score` 。 这两个函数的返回值都是介于0到1之间，(返回值越大越好)::
 
   >>> from sklearn import metrics
   >>> labels_true = [0, 0, 0, 1, 1, 1]
@@ -1033,24 +1028,20 @@ We can turn those concept as scores :func:`homogeneity_score` and
   >>> metrics.completeness_score(labels_true, labels_pred) # doctest: +ELLIPSIS
   0.42...
 
-Their harmonic mean called **V-measure** is computed by
-:func:`v_measure_score`::
+它们的调和均值被称之为 **V-measure** ，通过函数 :func:`v_measure_score` 来计算::
 
   >>> metrics.v_measure_score(labels_true, labels_pred)    # doctest: +ELLIPSIS
   0.51...
 
-The V-measure is actually equivalent to the mutual information (NMI)
-discussed above, with the aggregation function being the arithmetic mean [B2011]_.
+如果使用的聚合函数(aggregation function)是 算术平均值 [B2011]_ ， V-measure 实际上等价于前面讨论的互信息(NMI)。
 
-Homogeneity, completeness and V-measure can be computed at once using
-:func:`homogeneity_completeness_v_measure` as follows::
+Homogeneity, completeness 和 V-measure 可以通过 :func:`homogeneity_completeness_v_measure` 函数一次性的计算出来 ::
 
   >>> metrics.homogeneity_completeness_v_measure(labels_true, labels_pred)
   ...                                                      # doctest: +ELLIPSIS
   (0.66..., 0.42..., 0.51...)
 
-The following clustering assignment is slightly better, since it is
-homogeneous but not complete::
+下面的聚类分配稍微好点儿，因为它是同质的但却不是完备的::
 
   >>> labels_pred = [0, 0, 0, 1, 2, 2]
   >>> metrics.homogeneity_completeness_v_measure(labels_true, labels_pred)
@@ -1059,11 +1050,10 @@ homogeneous but not complete::
 
 .. note::
 
-  :func:`v_measure_score` is **symmetric**: it can be used to evaluate
-  the **agreement** of two independent assignments on the same dataset.
+  :func:`v_measure_score` 是 **对称的(symmetric)**: 它可被用于在同一个数据集上评估两个independent assignments的**一致性(agreement)**。
 
-  This is not the case for :func:`completeness_score` and
-  :func:`homogeneity_score`: both are bound by the relationship::
+  函数 :func:`completeness_score` 和
+  :func:`homogeneity_score` 不是这样的: both are bound by the relationship::
 
     homogeneity_score(a, b) == completeness_score(b, a)
 
@@ -1071,83 +1061,68 @@ homogeneous but not complete::
 优点
 ~~~~~~~~~~
 
-- **Bounded scores**: 0.0 is as bad as it can be, 1.0 is a perfect score.
+- **有界的得分**: 0.0 代表最坏的情况, 1.0 是最完美的得分。
 
-- Intuitive interpretation: clustering with bad V-measure can be
-  **qualitatively analyzed in terms of homogeneity and completeness**
-  to better feel what 'kind' of mistakes is done by the assignment.
+- 直观可解释性: 具有坏的 V-measure 值的聚类可以**从同质性和完备性角度进行定性分析(qualitatively analyzed in terms of homogeneity and completeness)**
+  来更好的感受到聚类算法预测标签分配的时候犯了哪种错误。
 
-- **No assumption is made on the cluster structure**: can be used
-  to compare clustering algorithms such as k-means which assumes isotropic
-  blob shapes with results of spectral clustering algorithms which can
-  find cluster with "folded" shapes.
+- **对聚类结构没有做任何假定**: 可以用于比较聚类算法，比如 假定了各向同性的blob shapes的k-means方法的结果 和 寻找具有
+  "folded"形状的谱聚类方法的结果进行比较。
 
 
 缺点
 ~~~~~~~~~
 
-- The previously introduced metrics are **not normalized with regards to
-  random labeling**: this means that depending on the number of samples,
-  clusters and ground truth classes, a completely random labeling will
-  not always yield the same values for homogeneity, completeness and
-  hence v-measure. In particular **random labeling won't yield zero
-  scores especially when the number of clusters is large**.
+- 以前引入的度量指标 **并没有对随机标记(random labeling)进行标准化** ：这意味着，依赖于样本数量、簇的数量和真实类的数量，
+  一个完全的随机标记对于同质性、完备性和v测度来说并不总是产生相同的值。
+  **特别是，随机标记不会产生零得分，尤其是当簇数很大时**。
 
-  This problem can safely be ignored when the number of samples is more
-  than a thousand and the number of clusters is less than 10. **For
-  smaller sample sizes or larger number of clusters it is safer to use
-  an adjusted index such as the Adjusted Rand Index (ARI)**.
+  当样本数大于1000个，簇数小于10个时，可以安全地忽略这个问题。
+  **对于较小的样本大小或较多的簇数，使用调整后的索引比如the Adjusted Rand Index (ARI) 更安全。**
 
 .. figure:: ../auto_examples/cluster/images/sphx_glr_plot_adjusted_for_chance_measures_001.png
    :target: ../auto_examples/cluster/plot_adjusted_for_chance_measures.html
    :align: center
    :scale: 100
 
-- These metrics **require the knowledge of the ground truth classes** while
-  almost never available in practice or requires manual assignment by
-  human annotators (as in the supervised learning setting).
+- 这些度量指标 **需要 ground truth classes 的相关知识** 
+  而在实践中几乎不可得到，或者需要人工标注者手动分配（如在监督学习环境中）。
 
 
-.. topic:: Examples:
+.. topic:: 案例:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_adjusted_for_chance_measures.py`: Analysis of
-   the impact of the dataset size on the value of clustering measures
-   for random assignments.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_adjusted_for_chance_measures.py`: 
+   分析数据集大小对随机分配标签(random assignments)的聚类度量值的影响。
 
 
-数学表达形式
+数学表达式
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Homogeneity and completeness scores are formally given by:
+同质性(Homogeneity) 和 完备性(completeness) 得分正式定义如下:
 
 .. math:: h = 1 - \frac{H(C|K)}{H(C)}
 
 .. math:: c = 1 - \frac{H(K|C)}{H(K)}
 
-where :math:`H(C|K)` is the **conditional entropy of the classes given
-the cluster assignments** and is given by:
+其中 :math:`H(C|K)` 是 **给定聚类标签分配以后各个类的条件熵(conditional entropy of the classes given the cluster assignments)** 并且由下式给出:
 
 .. math:: H(C|K) = - \sum_{c=1}^{|C|} \sum_{k=1}^{|K|} \frac{n_{c,k}}{n}
           \cdot \log\left(\frac{n_{c,k}}{n_k}\right)
 
-and :math:`H(C)` is the **entropy of the classes** and is given by:
+并且 :math:`H(C)` 是 **各个类的熵(entropy of the classes)** 并且由下式给出:
 
 .. math:: H(C) = - \sum_{c=1}^{|C|} \frac{n_c}{n} \cdot \log\left(\frac{n_c}{n}\right)
 
-with :math:`n` the total number of samples, :math:`n_c` and :math:`n_k`
-the number of samples respectively belonging to class :math:`c` and
-cluster :math:`k`, and finally :math:`n_{c,k}` the number of samples
-from class :math:`c` assigned to cluster :math:`k`.
+公式中 :math:`n` 是样本总量, :math:`n_c` 和 :math:`n_k` 分别是属于 class :math:`c` 和 cluster :math:`k` 的样本的数量，最后
+:math:`n_{c,k}` 是从 class :math:`c` 被分配到 cluster :math:`k` 的样本数量。
 
-The **conditional entropy of clusters given class** :math:`H(K|C)` and the
-**entropy of clusters** :math:`H(K)` are defined in a symmetric manner.
+**给定某个类以后簇的条件熵** :math:`H(K|C)` 和 **各个簇的熵(entropy of clusters)** :math:`H(K)` 以对称方式定义。
 
-Rosenberg and Hirschberg further define **V-measure** as the **harmonic
-mean of homogeneity and completeness**:
+Rosenberg 和 Hirschberg 进一步定义了 **V-measure** 作为 **同质性和完备性的调和均值(harmonic mean of homogeneity and completeness)**:
 
 .. math:: v = 2 \cdot \frac{h \cdot c}{h + c}
 
-.. topic:: References
+.. topic:: 参考文献
 
  * `V-Measure: A conditional entropy-based external cluster evaluation
    measure <http://aclweb.org/anthology/D/D07/D07-1043.pdf>`_
@@ -1162,23 +1137,16 @@ mean of homogeneity and completeness**:
 Fowlkes-Mallows scores
 ----------------------
 
-The Fowlkes-Mallows index (:func:`sklearn.metrics.fowlkes_mallows_score`) can be
-used when the ground truth class assignments of the samples is known. The
-Fowlkes-Mallows score FMI is defined as the geometric mean of the
-pairwise precision and recall:
+当已知样本的真实类分配时，可以使用 Fowlkes-Mallows index (:func:`sklearn.metrics.fowlkes_mallows_score`)。
+Fowlkes-Mlets得分 FMI 被定义为成对精度(pairwise precision)和成对召回率(pairwise recall)的几何均值(geometric mean):
 
 .. math:: \text{FMI} = \frac{\text{TP}}{\sqrt{(\text{TP} + \text{FP}) (\text{TP} + \text{FN})}}
 
-Where ``TP`` is the number of **True Positive** (i.e. the number of pair
-of points that belong to the same clusters in both the true labels and the
-predicted labels), ``FP`` is the number of **False Positive** (i.e. the number
-of pair of points that belong to the same clusters in the true labels and not
-in the predicted labels) and ``FN`` is the number of **False Negative** (i.e the
-number of pair of points that belongs in the same clusters in the predicted
-labels and not in the true labels).
+其中 ``TP`` 是 **True Positive** 的数量 (i.e. 在 真实标签集中 和 预测标签集中 属于相同簇的点对的数量), 
+``FP`` 是 **False Positive** 的数量(i.e. 在 真实标签集中 但不在 预测标签集中 属于相同簇的点对的数量),
+``FN`` 是 **False Negative** 的数量(i.e 不在 真实标签集中 但在 预测标签集中 属于相同簇的点对的数量)。
 
-The score ranges from 0 to 1. A high value indicates a good similarity
-between two clusters.
+FMI 得分取值范围在0到1之间。取值越高表明两个簇之间的相似性越好。
 
   >>> from sklearn import metrics
   >>> labels_true = [0, 0, 0, 1, 1, 1]
@@ -1187,21 +1155,20 @@ between two clusters.
   >>> metrics.fowlkes_mallows_score(labels_true, labels_pred)  # doctest: +ELLIPSIS
   0.47140...
 
-One can permute 0 and 1 in the predicted labels, rename 2 to 3 and get
-the same score::
+可以在预测出的标签(predicted labels)中排列 0 和 1, 重命名为 2 到 3， 并得到相同的得分 ::
 
   >>> labels_pred = [1, 1, 0, 0, 3, 3]
 
   >>> metrics.fowlkes_mallows_score(labels_true, labels_pred)  # doctest: +ELLIPSIS
   0.47140...
 
-Perfect labeling is scored 1.0::
+完美标记(Perfect labeling)的得分是 1.0::
 
   >>> labels_pred = labels_true[:]
   >>> metrics.fowlkes_mallows_score(labels_true, labels_pred)  # doctest: +ELLIPSIS
   1.0
 
-Bad (e.g. independent labelings) have zero scores::
+坏的标记 (e.g. independent labelings) 的得分是 0 ::
 
   >>> labels_true = [0, 1, 2, 0, 3, 4, 5, 1]
   >>> labels_pred = [1, 1, 0, 0, 2, 2, 2, 2]
@@ -1211,31 +1178,24 @@ Bad (e.g. independent labelings) have zero scores::
 优点
 ~~~~~~~~~~
 
-- **Random (uniform) label assignments have a FMI score close to 0.0**
-  for any value of ``n_clusters`` and ``n_samples`` (which is not the
-  case for raw Mutual Information or the V-measure for instance).
+- **随机(均匀)标签分配有一个接近于0的 FMI 得分。**
+  对于 ``n_clusters`` 和 ``n_samples`` 的任何值（这不是 raw Mutual Information 或者 V-measure 的情况）。
 
-- **Upper-bounded at 1**:  Values close to zero indicate two label
-  assignments that are largely independent, while values close to one
-  indicate significant agreement. Further, values of exactly 0 indicate
-  **purely** independent label assignments and a FMI of exactly 1 indicates
-  that the two label assignments are equal (with or without permutation).
+- **上界为 1** :  得分值接近于 0 表明两个标签分配集合很大程度上是独立的(largely independent), 而得分值接近于 1 表明两个标签分配集合
+  具有很大的一致性(significant agreement)。 更进一步, 正好是 0 的FMI表示两个标签分配纯粹独立(**purely** independent),
+  正好是 1 的FMI表示两个标签分配相等。 (with or without permutation).
 
-- **No assumption is made on the cluster structure**: can be used
-  to compare clustering algorithms such as k-means which assumes isotropic
-  blob shapes with results of spectral clustering algorithms which can
-  find cluster with "folded" shapes.
+- **对聚类结构没有做任何限制**: 可以用于比较聚类算法，比如 假定了各向同性的blob shapes的k-means方法的结果 和 寻找具有
+  "folded"形状的谱聚类方法的结果进行比较。
 
 
 缺点
 ~~~~~~~~~
 
-- Contrary to inertia, **FMI-based measures require the knowledge
-  of the ground truth classes** while almost never available in practice or
-  requires manual assignment by human annotators (as in the supervised learning
-  setting).
+- 与惯性(inertia)方法不同, **FMI-based measures 需要 ground truth classes 的相关知识** 
+  而在实践中几乎不可得到，或者需要人工标注者手动分配（如在监督学习环境中）。
 
-.. topic:: References
+.. topic:: 参考文献
 
   * E. B. Fowkles and C. L. Mallows, 1983. "A method for comparing two
     hierarchical clusterings". Journal of the American Statistical Association.
@@ -1249,26 +1209,20 @@ Bad (e.g. independent labelings) have zero scores::
 Silhouette Coefficient
 ----------------------
 
-If the ground truth labels are not known, evaluation must be performed using
-the model itself. The Silhouette Coefficient
-(:func:`sklearn.metrics.silhouette_score`)
-is an example of such an evaluation, where a
-higher Silhouette Coefficient score relates to a model with better defined
-clusters. The Silhouette Coefficient is defined for each sample and is composed
-of two scores:
+如果不知道ground truth labels，则必须使用模型本身进行评估。
+Silhouette Coefficient (:func:`sklearn.metrics.silhouette_score`) 就是这样一种评估的例子，
+其中Silhouette Coefficient的得分越高对应于具有更好的聚类能力的模型。
+The Silhouette Coefficient 定义在每个样本上 并且由两个得分组成:
 
-- **a**: The mean distance between a sample and all other points in the same
-  class.
+- **a**: 在同一个类中一个样本到所有其他样本的平均距离。
 
-- **b**: The mean distance between a sample and all other points in the *next
-  nearest cluster*.
+- **b**: 在 *next nearest cluster* 中，一个样本到所有其他样本点的平均距离。
 
-The Silhouette Coefficient *s* for a single sample is then given as:
+那么，对一个单个样本来说，Silhouette Coefficient *s* 由下式给出:
 
 .. math:: s = \frac{b - a}{max(a, b)}
 
-The Silhouette Coefficient for a set of samples is given as the mean of the
-Silhouette Coefficient for each sample.
+对于一个样本集合，Silhouette Coefficient 是集合中每个样本的Silhouette Coefficient的均值。
 
 
   >>> from sklearn import metrics
@@ -1278,8 +1232,7 @@ Silhouette Coefficient for each sample.
   >>> X = dataset.data
   >>> y = dataset.target
 
-In normal usage, the Silhouette Coefficient is applied to the results of a
-cluster analysis.
+在正常的使用中, Silhouette Coefficient 会被运用到一个聚类簇的结果的分析中。
 
   >>> import numpy as np
   >>> from sklearn.cluster import KMeans
@@ -1289,7 +1242,7 @@ cluster analysis.
   ...                                                      # doctest: +ELLIPSIS
   0.55...
 
-.. topic:: References
+.. topic:: 参考文献
 
  * Peter J. Rousseeuw (1987). "Silhouettes: a Graphical Aid to the
    Interpretation and Validation of Cluster Analysis". Computational
@@ -1300,53 +1253,44 @@ cluster analysis.
 优点
 ~~~~~~~~~~
 
-- The score is bounded between -1 for incorrect clustering and +1 for highly
-  dense clustering. Scores around zero indicate overlapping clusters.
+- 对于高度稠密的聚类，得分被限制在 -1 (for incorrect clustering) 和 +1 (for highly dense clustering)之间。 
+  得分在 0 附近表明是有重叠的聚类(overlapping clusters)。
 
-- The score is higher when clusters are dense and well separated, which relates
-  to a standard concept of a cluster.
+- 当簇(cluster)密集且分离良好时，得分较高，这与cluster的标准概念有关。
 
 
 缺点
 ~~~~~~~~~
 
-- The Silhouette Coefficient is generally higher for convex clusters than other
-  concepts of clusters, such as density based clusters like those obtained
-  through DBSCAN.
+- The Silhouette Coefficient 在convex clusters上比在其他一些clusters上一般具有较高的得分，比如 通过DBSCAN获得的基于密度的clusters。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
- * :ref:`sphx_glr_auto_examples_cluster_plot_kmeans_silhouette_analysis.py` : In this example
-   the silhouette analysis is used to choose an optimal value for n_clusters.
+ * :ref:`sphx_glr_auto_examples_cluster_plot_kmeans_silhouette_analysis.py` : 在这个例子中，使用剪影分析(silhouette analysis)来选择n_clusters的最优值。
 
 .. _calinski_harabaz_index:
 
 Calinski-Harabaz Index
 ----------------------
 
-If the ground truth labels are not known, the Calinski-Harabaz index
-(:func:`sklearn.metrics.calinski_harabaz_score`) - also known as the Variance 
-Ratio Criterion - can be used to evaluate the model, where a higher 
-Calinski-Harabaz score relates to a model with better defined clusters.
+如果 ground truth labels 是未知的, the Calinski-Harabaz index (:func:`sklearn.metrics.calinski_harabaz_score`) - 
+也被称之为 方差比率准则(Variance Ratio Criterion) - 可被用于评估模型, 
+其中，Calinski-Harabaz 得分越高，与之关联的模型就有更好的聚类。
 
-For :math:`k` clusters, the Calinski-Harabaz score :math:`s` is given as the
-ratio of the between-clusters dispersion mean and the within-cluster
-dispersion:
+对于 :math:`k` 个簇，给出了Calinski-Harabaz分数 :math:`s` 作为 簇间分散均值(between-clusters dispersion mean) 和 
+簇内分散(within-cluster dispersion)的比值：
 
 .. math::
   s(k) = \frac{\mathrm{Tr}(B_k)}{\mathrm{Tr}(W_k)} \times \frac{N - k}{k - 1}
 
-where :math:`B_K` is the between group dispersion matrix and :math:`W_K`
-is the within-cluster dispersion matrix defined by:
+其中 :math:`B_K` 是簇间分散矩阵 ， :math:`W_K` 是簇内分散矩阵，定义如下:
 
 .. math:: W_k = \sum_{q=1}^k \sum_{x \in C_q} (x - c_q) (x - c_q)^T
 
 .. math:: B_k = \sum_q n_q (c_q - c) (c_q - c)^T
 
-with :math:`N` be the number of points in our data, :math:`C_q` be the set of
-points in cluster :math:`q`, :math:`c_q` be the center of cluster
-:math:`q`, :math:`c` be the center of :math:`E`, :math:`n_q` be the number of
-points in cluster :math:`q`.
+这里， :math:`N` 是我们数据点的数量, :math:`C_q` 是在簇 :math:`q` 中的点的集合, :math:`c_q` 是簇 :math:`q` 的中心, 
+:math:`c` 是 :math:`E` 的中心, :math:`n_q` 是簇 :math:`q` 中点的数量::
 
 
   >>> from sklearn import metrics
@@ -1356,8 +1300,7 @@ points in cluster :math:`q`.
   >>> X = dataset.data
   >>> y = dataset.target
 
-In normal usage, the Calinski-Harabaz index is applied to the results of a
-cluster analysis.
+在正常的使用中, Calinski-Harabaz index 会被运用到一个聚类簇的结果的分析中。
 
   >>> import numpy as np
   >>> from sklearn.cluster import KMeans
@@ -1370,20 +1313,17 @@ cluster analysis.
 优点
 ~~~~~~~~~~
 
-- The score is higher when clusters are dense and well separated, which relates
-  to a standard concept of a cluster.
+- 当簇(cluster)密集且分离良好时，得分较高，这与cluster的标准概念有关。
 
-- The score is fast to compute
+- 此得分的计算很快
 
 
 缺点
 ~~~~~~~~~
 
-- The Calinski-Harabaz index is generally higher for convex clusters than other
-  concepts of clusters, such as density based clusters like those obtained
-  through DBSCAN.
+- The Calinski-Harabaz index 在convex clusters上比在其他一些clusters上一般具有较高的得分，比如 通过DBSCAN获得的基于密度的clusters。
 
-.. topic:: References
+.. topic:: 参考文献
 
  *  Caliński, T., & Harabasz, J. (1974). "A dendrite method for cluster
     analysis". Communications in Statistics-theory and Methods 3: 1-27.
@@ -1395,35 +1335,28 @@ cluster analysis.
 Davies-Bouldin Index
 --------------------
 
-If the ground truth labels are not known, the Davies-Bouldin index
-(:func:`sklearn.metrics.davies_bouldin_score`) can be used to evaluate the
-model, where a lower Davies-Bouldin index relates to a model with better
-separation between the clusters.
+如果 ground truth labels 是未知的, the Davies-Bouldin index (:func:`sklearn.metrics.davies_bouldin_score`) 可被用于评估模型, 
+其中，较低的Davies-Bouldin指数与团簇间分离程度较高的模型有关。
 
-The index is defined as the average similarity between each cluster :math:`C_i`
-for :math:`i=1, ..., k` and its most similar one :math:`C_j`. In the context of
-this index, similarity is defined as a measure :math:`R_{ij}` that trades off:
+Davies-Bouldin 指数 被定义为每个团簇 :math:`C_i` (:math:`i=1, ..., k`)和它的最相似的一个 
+:math:`C_j` 之间的平均相似度(average similarity)。 在该指数的上下文中，相似度被定义为一个度量 :math:`R_{ij}`,在下面两个中做折中:
 
-- :math:`s_i`, the average distance between each point of cluster :math:`i` and
-  the centroid of that cluster -- also know as cluster diameter.
-- :math:`d_{ij}`, the distance between cluster centroids :math:`i` and :math:`j`.
+- :math:`s_i`, 团簇 :math:`i` 中的每个点与该cluster的质心之间的平均距离-- 也被称为 团簇直径(cluster diameter)。
+- :math:`d_{ij}`, 团簇质心 :math:`i` 和 团簇质心 :math:`j` 之间的距离。
 
-A simple choice to construct :math:`R_ij` so that it is nonnegative and
-symmetric is:
+使 :math:`R_ij`  非负和对称的 构建 :math:`R_ij` 的一个简单选择就是:
 
 .. math::
    R_{ij} = \frac{s_i + s_j}{d_{ij}}
 
-Then the Davies-Bouldin index is defined as:
+那么 Davies-Bouldin index 定义如下:
 
 .. math::
    DB = \frac{1}{k} \sum_{i=1}^k \max_{i \neq j} R_{ij}
 
-Zero is the lowest possible score. Values closer to zero indicate a better
-partition.
+零分可能是最低的得分。接近于零的值表示更好的划分。
 
-In normal usage, the Davies-Bouldin index is applied to the results of a
-cluster analysis as follows:
+在正常的使用中, Davies-Bouldin index 会被运用到一个聚类簇的结果的分析中,如下所示:
 
   >>> from sklearn import datasets
   >>> iris = datasets.load_iris()
@@ -1439,20 +1372,20 @@ cluster analysis as follows:
 优点
 ~~~~~~~~~~
 
-- The computation of Davies-Bouldin is simpler than that of Silhouette scores.
-- The index is computed only quantities and features inherent to the dataset.
+- Davies-Bouldin 的计算比Silhouette 得分的计算更简单。
+
+- Davies-Bouldin index 只计算数据集固有的数量和特性。
 
 缺点
 ~~~~~~~~~
 
-- The Davies-Boulding index is generally higher for convex clusters than other
-  concepts of clusters, such as density based clusters like those obtained from
-  DBSCAN.
+- The Davies-Boulding index 在convex clusters上比在其他一些clusters上一般具有较高的得分，比如 通过DBSCAN获得的基于密度的clusters。
 
-- The usage of centroid distance limits the distance metric to Euclidean space.
-- A good value reported by this method does not imply the best information retrieval.
+- 质心距离的使用被限制在欧式空间。
 
-.. topic:: References
+- 此方法所报告的好的值不意味着最佳的信息检索(best information retrieval)。
+
+.. topic:: 参考文献
 
  * Davies, David L.; Bouldin, Donald W. (1979).
    "A Cluster Separation Measure"
@@ -1474,13 +1407,11 @@ cluster analysis as follows:
 Contingency Matrix
 ------------------
 
-Contingency matrix (:func:`sklearn.metrics.cluster.contingency_matrix`)
-reports the intersection cardinality for every true/predicted cluster pair.
-The contingency matrix provides sufficient statistics for all clustering
-metrics where the samples are independent and identically distributed and
-one doesn't need to account for some instances not being clustered.
+Contingency matrix (:func:`sklearn.metrics.cluster.contingency_matrix`) 报告每个 真实/预测团簇对(true/predicted cluster pair) 
+的交集的基数(intersection cardinality)。
+The contingency matrix 为所有聚类度量提供了足够的统计信息，其中样本是独立同分布的，并且不需要考虑某些不能被聚类的实例。
 
-Here is an example::
+这里有个例子::
 
    >>> from sklearn.metrics.cluster import contingency_matrix
    >>> x = ["a", "a", "a", "b", "b", "b"]
@@ -1489,38 +1420,28 @@ Here is an example::
    array([[2, 1, 0],
           [0, 1, 2]])
 
-The first row of output array indicates that there are three samples whose
-true cluster is "a". Of them, two are in predicted cluster 0, one is in 1,
-and none is in 2. And the second row indicates that there are three samples
-whose true cluster is "b". Of them, none is in predicted cluster 0, one is in
-1 and two are in 2.
+输出数组的第一行表示有三个样本真正的类标签是“a”。 在它们中间, 有两个在预测出的 cluster 0 里, 有一个在 cluster 1 里面,
+没有在cluster 2里的样本点。 第二行表示有三个样本真正的聚类为“b”。 
+在它们中间，没有样本被预测到cluster 0中的, 有一个在cluster 1,还有一个在cluster 2里。
 
-A :ref:`confusion matrix <confusion_matrix>` for classification is a square
-contingency matrix where the order of rows and columns correspond to a list
-of classes.
+分类的混淆矩阵(:ref:`confusion matrix <confusion_matrix>`)是一个方阵，其中行和列的顺序对应于类的列表。
 
 
 优点
 ~~~~~~~~~~
 
-- Allows to examine the spread of each true cluster across predicted
-  clusters and vice versa.
+- 允许检查每个true cluster在predicted clusters之间的传播，反之亦然。
 
-- The contingency table calculated is typically utilized in the calculation
-  of a similarity statistic (like the others listed in this document) between
-  the two clusterings.
+- 计算出的contingency table通常用于计算两个聚类之间的相似统计量(就像本文档中列出的其他统计指标一样)。
 
 缺点
 ~~~~~~~~~
 
-- Contingency matrix is easy to interpret for a small number of clusters, but
-  becomes very hard to interpret for a large number of clusters.
+- Contingency matrix 对于少量的聚类来说很容易解释，但是对于大量的聚类则变得非常难以解释。
 
-- It doesn't give a single metric to use as an objective for clustering
-  optimisation.
+- 它没有给出一个单独的度量来作为聚类优化的目标
 
 
-.. topic:: References
+.. topic:: 参考文献
 
- * `Wikipedia entry for contingency matrix
-   <https://en.wikipedia.org/wiki/Contingency_table>`_
+ * `Wikipedia entry for contingency matrix <https://en.wikipedia.org/wiki/Contingency_table>`_
