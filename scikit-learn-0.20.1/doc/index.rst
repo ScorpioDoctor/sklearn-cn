@@ -204,20 +204,20 @@
                 <div class="span4">
                     <h4>新闻</h4>
                     <ul>
-                    <li><em>On-going development:</em>
+                    <li><em>正在开发中的版本:</em>
                     <a href="/dev/whats_new.html"><em>What's new</em> (Changelog)</a>
                     </li>
-                    <li><strong>Scikit-learn 0.21 will drop support for Python 2.7 and Python 3.4.</strong>
+                    <li><strong>Scikit-learn 0.21 将放弃对 Python 2.7 和 3.4 的支持 。</strong>
                     </li>
-                    <li><em>November 2018.</em> scikit-learn 0.20.1 is available for download (<a href="whats_new.html#version-0-20-1">Changelog</a>).
+                    <li><em>November 2018.</em> scikit-learn 0.20.1 可以下载啦 (<a href="whats_new.html#version-0-20-1">Changelog</a>).
                     </li>
-                    <li><em>September 2018.</em> scikit-learn 0.20.0 is available for download (<a href="whats_new.html#version-0-20-0">Changelog</a>).
+                    <li><em>September 2018.</em> scikit-learn 0.20.0 可以下载啦 (<a href="whats_new.html#version-0-20-0">Changelog</a>).
                     </li>
-                    <li><em>July 2018.</em> scikit-learn 0.19.2 is available for download (<a href="whats_new.html#version-0-19">Changelog</a>).
+                    <li><em>July 2018.</em> scikit-learn 0.19.2 可以下载啦 (<a href="whats_new.html#version-0-19">Changelog</a>).
                     </li>
-                    <li><em>July 2017.</em> scikit-learn 0.19.0 is available for download (<a href="whats_new/v0.19.html#version-0-19">Changelog</a>).
+                    <li><em>July 2017.</em> scikit-learn 0.19.0 可以下载啦 (<a href="whats_new/v0.19.html#version-0-19">Changelog</a>).
                     </li>
-                    <li><em>June 2017.</em> scikit-learn 0.18.2 is available for download (<a href="whats_new/v0.18.html#version-0-18-2">Changelog</a>).
+                    <li><em>June 2017.</em> scikit-learn 0.18.2 可以下载啦 (<a href="whats_new/v0.18.html#version-0-18-2">Changelog</a>).
                     </li>
                     </ul>
                 </div>
