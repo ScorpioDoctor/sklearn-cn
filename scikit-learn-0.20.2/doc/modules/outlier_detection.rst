@@ -62,10 +62,10 @@ i.e. 对新的未见过的样本 预测其标签或计算其异常性得分, 你
 ===================== ================================ =====================
 Method                Outlier detection                Novelty detection
 ===================== ================================ =====================
-``fit_predict``       OK                               Not available
-``predict``           Not available                    Use only on new data
-``decision_function`` Not available                    Use only on new data
-``score_samples``     Use ``negative_outlier_factor_`` Use only on new data
+``fit_predict``       可用                             不可用
+``predict``           不可用                           只能用于新数据
+``decision_function`` 不可用                           只能用于新数据
+``score_samples``     用 ``negative_outlier_factor_``  只能用于新数据
 ===================== ================================ =====================
 
 
@@ -84,7 +84,7 @@ Method                Outlier detection                Novelty detection
 
 :class:`ensemble.IsolationForest` 和 :class:`neighbors.LocalOutlierFactor` 
 在这里所用的数据集上表现得相当好。 :class:`svm.OneClassSVM` 类对outliers本来就很敏感，
-因此在outlier的检测中表现的非常好。最后, :class:`covariance.EllipticEnvelope` 类
+因此在outlier的检测中表现的不是很好。最后, :class:`covariance.EllipticEnvelope` 类
 假定了数据是服从高斯分布的且要学习一个椭圆(ellipse)。关于这个对比试验中各种estimators的更多详细信息
 请参考 :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` 和后续小节。
 
@@ -135,32 +135,25 @@ RBF kernel 是通常的选项，尽管没有准确的公式或算法来设置RBF
 孤立点检测(Outlier Detection)
 ==================================
 
-Outlier detection is similar to novelty detection in the sense that
-the goal is to separate a core of regular observations from some
-polluting ones, called *outliers*. Yet, in the case of outlier
-detection, we don't have a clean data set representing the population
-of regular observations that can be used to train any tool.
+孤立点检测与新奇点检测类似，其目的是将常规观测的核心(a core of regular observations)
+与一些污染性(polluting)观测分离开来，即所谓的离群点或孤立点(Outliers).
+然而，在孤立点检测中，我们并没有一个干净的只包含常规观测的数据集用来训练估计器。
 
 
-Fitting an elliptic envelope
+拟合椭圆包络
 ----------------------------
 
-One common way of performing outlier detection is to assume that the
-regular data come from a known distribution (e.g. data are Gaussian
-distributed). From this assumption, we generally try to define the
-"shape" of the data, and can define outlying observations as
-observations which stand far enough from the fit shape.
+进行孤立点检测的一种常见方法是假定常规数据(regular data)来自于某个已知的分布(比如高斯分布)。
+有了这样一个假定以后，我们试图从广义上定义数据的"shape"，并且定义 **外围观测(outlying observations)**
+就是那些足够远离"shape"的观测。
 
-The scikit-learn provides an object
-:class:`covariance.EllipticEnvelope` that fits a robust covariance
-estimate to the data, and thus fits an ellipse to the central data
-points, ignoring points outside the central mode.
+scikit-learn 提供了一个对象 :class:`covariance.EllipticEnvelope` 可以在给定的数据上拟合一个鲁棒的协方差估计
+, 并且因此拟合一个椭圆(ellipse)到中央数据点(central data points), 忽略那些远离中央的外围点。
 
-For instance, assuming that the inlier data are Gaussian distributed, it
-will estimate the inlier location and covariance in a robust way (i.e.
-without being influenced by outliers). The Mahalanobis distances
-obtained from this estimate is used to derive a measure of outlyingness.
-This strategy is illustrated below.
+比如, 假定 inlier data 是呈高斯分布的, 上述的类对象将会以鲁棒的方法估计inlier location和协方差
+(即 此鲁棒估计不会受到数据集中的outliers的影响)。从这一鲁棒估计获得的Mahalanobis距离用来推导一个
+衡量外围程度的度量(a measure of outlyingness)。
+下面的图和实例说明了这一策略。
 
 .. figure:: ../auto_examples/covariance/images/sphx_glr_plot_mahalanobis_distances_001.png
    :target: ../auto_examples/covariance/plot_mahalanobis_distances.html
@@ -169,11 +162,9 @@ This strategy is illustrated below.
 
 .. topic:: 案例:
 
-   * See :ref:`sphx_glr_auto_examples_covariance_plot_mahalanobis_distances.py` for
-     an illustration of the difference between using a standard
-     (:class:`covariance.EmpiricalCovariance`) or a robust estimate
-     (:class:`covariance.MinCovDet`) of location and covariance to
-     assess the degree of outlyingness of an observation.
+   * 请看 :ref:`sphx_glr_auto_examples_covariance_plot_mahalanobis_distances.py` 。这个案例
+     用于说明 标准的经验协方差估计(:class:`covariance.EmpiricalCovariance`) 与 
+     位置和协方差的鲁棒估计(:class:`covariance.MinCovDet`) 之间在评估一个观测的外围性的程度上的区别
 
 .. topic:: 参考文献:
 
@@ -185,22 +176,15 @@ This strategy is illustrated below.
 Isolation Forest
 ----------------------------
 
-One efficient way of performing outlier detection in high-dimensional datasets
-is to use random forests.
-The :class:`ensemble.IsolationForest` 'isolates' observations by randomly selecting
-a feature and then randomly selecting a split value between the maximum and
-minimum values of the selected feature.
+在高维数据集上进行孤立点检测的一个有效方法是使用随机森林。
+:class:`ensemble.IsolationForest` 通过随机选择一个特征，然后在所选特征的最大值和最小值之间随机选择一个分割值来"分离(isolate)"观测集合。
 
-Since recursive partitioning can be represented by a tree structure, the
-number of splittings required to isolate a sample is equivalent to the path
-length from the root node to the terminating node.
+由于递归划分可以用树结构表示，因此分离一个样本(isolate a sample)所需的分割数相当于从根节点到终止节点的路径长度。
 
-This path length, averaged over a forest of such random trees, is a
-measure of normality and our decision function.
+这个路径长度(path length)，是这样一个随机树林中的平均值，是正规性(normality)和我们的决策函数的一种度量
+(a measure of normality and our decision function)。
 
-Random partitioning produces noticeably shorter paths for anomalies.
-Hence, when a forest of random trees collectively produce shorter path
-lengths for particular samples, they are highly likely to be anomalies.
+随机划分为异常数据(anomalies)产生明显较短的路径。因此，当随机树木的森林集体地对特定样本产生较短的路径长度时，这些特定样本很可能是异常样本。
 
 该策略已在下面的例子中进行了说明。
 
@@ -211,12 +195,13 @@ lengths for particular samples, they are highly likely to be anomalies.
 
 .. topic:: 案例:
 
-   * 请看 :ref:`sphx_glr_auto_examples_ensemble_plot_isolation_forest.py`  类 :class:`ensemble.IsolationForest` 的用法的示例说明。
+   * 请看 :ref:`sphx_glr_auto_examples_ensemble_plot_isolation_forest.py` 。 这个例子是对类 
+    :class:`ensemble.IsolationForest` 的用法的示例说明。
 
    * 请看 :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` 
-     类 :class:`ensemble.IsolationForest` ，类 :class:`neighbors.LocalOutlierFactor`,
-     类 :class:`svm.OneClassSVM` (调整为像孤立点检测方法一样执行) 以及 
-     一个基于协方差的孤立点检测和 :class:`covariance.EllipticEnvelope` 类。
+    类 :class:`ensemble.IsolationForest` ，类 :class:`neighbors.LocalOutlierFactor`,
+    类 :class:`svm.OneClassSVM` (调整为像孤立点检测方法一样执行) 以及 
+    一个基于协方差的孤立点检测和 :class:`covariance.EllipticEnvelope` 类。
 
 .. topic:: 参考文献:
 
@@ -224,64 +209,45 @@ lengths for particular samples, they are highly likely to be anomalies.
       Data Mining, 2008. ICDM'08. Eighth IEEE International Conference on.
 
 
-Local Outlier Factor
+局部离群因子
 --------------------
-Another efficient way to perform outlier detection on moderately high dimensional
-datasets is to use the Local Outlier Factor (LOF) algorithm.
+在中高维数据集上进行孤立点检测的另一种有效方法是使用局部离群因子(Local Outlier Factor,LOF)算法。
 
-The :class:`neighbors.LocalOutlierFactor` (LOF) algorithm computes a score
-(called local outlier factor) reflecting the degree of abnormality of the
-observations.
-It measures the local density deviation of a given data point with respect to
-its neighbors. The idea is to detect the samples that have a substantially
-lower density than their neighbors.
+:class:`neighbors.LocalOutlierFactor` (LOF)算法计算反映观测数据异常程度(degree of abnormality)
+的分数(称为局部离群因子)。它测量给定数据点相对于其邻域的局部密度偏差。
+这样做的目的是检测那些密度比邻居低得多的样本。
 
-In practice the local density is obtained from the k-nearest neighbors.
-The LOF score of an observation is equal to the ratio of the
-average local density of his k-nearest neighbors, and its own local density:
-a normal instance is expected to have a local density similar to that of its
-neighbors, while abnormal data are expected to have much smaller local density.
+在实践中，局部密度(local density)是从k近邻得到的。一个观测的LOF分数等于他的k近邻的平均局部密度和它自己的局部密度的比率：
+一个正常的观测数据被期望有一个与它的邻居相似的局部密度，而异常的观测数据被期望有更小的局部密度。
 
-The number k of neighbors considered, (alias parameter n_neighbors) is typically
-chosen 1) greater than the minimum number of objects a cluster has to contain,
-so that other objects can be local outliers relative to this cluster, and 2)
-smaller than the maximum number of close by objects that can potentially be
-local outliers.
-In practice, such informations are generally not available, and taking
-n_neighbors=20 appears to work well in general.
-When the proportion of outliers is high (i.e. greater than 10 \%, as in the
-example below), n_neighbors should be greater (n_neighbors=35 in the example
-below).
+所考虑的邻居数目k(即参数n_neighbors)通常比cluster必须包含的最小对象数目大，这样的话，
+其他对象可以是相对于该cluster的本地异常值，此外，所考虑的邻居数目k小于可能是本地异常值的对象的最大关闭数。
+在实践中，这类信息通常是不可得的，而取n_neighbors=20 似乎在一般情况下是很好的。
+当异常值的比例很高时(如下面的示例所示，大于10%)，则 n_neighbors 应该更大(下面的示例中n_neighbors=35)。
 
-The strength of the LOF algorithm is that it takes both local and global
-properties of datasets into consideration: it can perform well even in datasets
-where abnormal samples have different underlying densities.
-The question is not, how isolated the sample is, but how isolated it is
-with respect to the surrounding neighborhood.
+LOF算法的优点在于它考虑了数据集的局部和全局特性：即使在异常样本具有不同的底层密度时，它表现地也很好。
+问题不在于样品有多孤立，而在于它与周围的邻居之间有多孤立。
 
-When applying LOF for outlier detection, there are no ``predict``,
-``decision_function`` and ``score_samples`` methods but only a ``fit_predict``
-method. The scores of abnormality of the training samples are accessible
-through the ``negative_outlier_factor_`` attribute.
-Note that ``predict``, ``decision_function`` and ``score_samples`` can be used
-on new unseen data when LOF is applied for novelty detection, i.e. when the
-``novelty`` parameter is set to ``True``. See :ref:`novelty_with_lof`.
+当使用 LOF 进行孤立点检测的时候，不能使用 ``predict``, ``decision_function`` 和 ``score_samples`` 方法，
+只能使用 ``fit_predict`` 方法。训练样本的异常性得分可以通过 ``negative_outlier_factor_`` 属性来获得。
+注意当使用LOF算法进行新奇点检测的时候(``novelty`` 设为 ``True``)， ``predict``, ``decision_function`` 和 
+``score_samples`` 函数可被用于新的未见过的观测数据。请查看 :ref:`novelty_with_lof` 小节的说明。
 
 
 该策略已在下面的例子中进行了说明。
 
 .. figure:: ../auto_examples/neighbors/images/sphx_glr_plot_lof_outlier_detection_001.png
-   :target: ../auto_examples/neighbors/sphx_glr_plot_lof_outlier_detection.html
+   :target: ../auto_examples/neighbors/plot_lof_outlier_detection.html
    :align: center
    :scale: 75%
 
 .. topic:: 案例:
 
-   * 请看 :ref:`sphx_glr_auto_examples_neighbors_plot_lof_outlier_detection.py`
+   * 请看 :ref:`sphx_glr_auto_examples_neighbors_plot_lof_outlier_detection.py` 。这个例子展示了 
     :class:`neighbors.LocalOutlierFactor` 类的用法的示例说明。
 
-   * 请看 :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` 
-    将该算法 与其他的异常检测(anomaly detection)算法进行对比。
+   * 请看 :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` 。这个例子将该算法 
+    与其他的异常检测(anomaly detection)算法进行对比。
 
 .. topic:: 参考文献:
 
@@ -313,7 +279,7 @@ i.e. 对新的未见过的样本 预测其标签或计算其异常性得分, 你
 使用 局部异常因子(LOF)进行新奇点检测 的示例见下图。
 
   .. figure:: ../auto_examples/neighbors/images/sphx_glr_plot_lof_novelty_detection_001.png
-     :target: ../auto_examples/neighbors/sphx_glr_plot_lof_novelty_detection.html
+     :target: ../auto_examples/neighbors/plot_lof_novelty_detection.html
      :align: center
      :scale: 75%
 

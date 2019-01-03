@@ -96,25 +96,18 @@ K-近邻分类器
 维数灾难
 -------------------------------
 
-For an estimator to be effective, you need the distance between neighboring
-points to be less than some value :math:`d`, which depends on the problem.
-In one dimension, this requires on average :math:`n \sim 1/d` points.
-In the context of the above :math:`k`-NN example, if the data is described by
-just one feature with values ranging from 0 to 1 and with :math:`n` training
-observations, then new data will be no further away than :math:`1/n`.
-Therefore, the nearest neighbor decision rule will be efficient as soon as
-:math:`1/n` is small compared to the scale of between-class feature variations.
+要使estimator有效，需要相邻点之间的距离小于某个值 :math:`d` ，这取决于具体要解决的问题。
+在一维情形下，这需要平均 :math:`n \sim 1/d` 个点。
+在上面的 :math:`k`-NN 例子的语境下, 如果数据仅用一个取值为0到1的特征和 :math:`n` 个 
+训练观测值来描述，那么新的数据将不会远离 :math:`1/n` 。 因此，最近邻决策规则将会非常有效，只要
+:math:`1/n` 与类间特征方差(between-class feature variations)的尺度相比足够小。
 
-If the number of features is :math:`p`, you now require :math:`n \sim 1/d^p`
-points.  Let's say that we require 10 points in one dimension: now :math:`10^p`
-points are required in :math:`p` dimensions to pave the :math:`[0, 1]` space.
-As :math:`p` becomes large, the number of training points required for a good
-estimator grows exponentially.
+如果特征的数量是 :math:`p` 个, 你现在需要 :math:`n \sim 1/d^p` 个点。 譬如我们在一个维度上需要10个点:
+现在 :math:`p` 个维度就需要 :math:`10^p` 个点去铺(pave) :math:`[0, 1]` 空间。
+随着 :math:`p` 变得越来越大， 做出好的估计器所需要的训练样本的数量就会呈指数级增长。
 
-For example, if each point is just a single number (8 bytes), then an
-effective :math:`k`-NN estimator in a paltry :math:`p \sim 20` dimensions would
-require more training data than the current estimated size of the entire
-internet (±1000 Exabytes or so).
+举例来说, 如果每个点恰好是一个 8 bytes 的数, 那么一个高效的 :math:`k`-NN estimator  在一个 :math:`p \sim 20` 维度下
+需要的训练数据将会超级多，目前的计算机无法满足这个。
 
 这被称之为维数灾难( `curse of dimensionality  <https://en.wikipedia.org/wiki/Curse_of_dimensionality>`_),
 是很多机器学习理论和算法都会强调的核心问题。
@@ -209,11 +202,8 @@ internet (±1000 Exabytes or so).
 
 
 
-高维统计学习的一个解决方案是将回归系数缩小到零：任意两个随机选择的观测值集很可能不相关。这被称之为岭回归。
-A solution in high-dimensional statistical learning is to *shrink* the
-regression coefficients to zero: any two randomly chosen set of
-observations are likely to be uncorrelated. This is called :class:`Ridge`
-regression:
+高维统计学习的一个解决方案是将回归系数缩减(*shrink*)到零：任意两个随机选择的观测集很可能不相关。这被称之为岭回归
+(:class:`Ridge` regression):
 
 .. image:: /auto_examples/linear_model/images/sphx_glr_plot_ols_ridge_variance_002.png
    :target: ../../auto_examples/linear_model/plot_ols_ridge_variance.html

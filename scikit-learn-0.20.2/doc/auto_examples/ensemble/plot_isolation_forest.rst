@@ -8,7 +8,7 @@
 
 
 ==========================================
-IsolationForest example
+IsolationForest 例子
 ==========================================
 
 An example using :class:`sklearn.ensemble.IsolationForest` for anomaly

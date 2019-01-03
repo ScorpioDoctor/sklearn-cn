@@ -83,7 +83,7 @@ Traceback (most recent call last):
 
 
 
-**Total running time of the script:** ( 0 minutes  0.109 seconds)
+**Total running time of the script:** ( 0 minutes  0.101 seconds)
 
 
 .. _sphx_glr_download_auto_examples_datasets_plot_digits_last_image.py:

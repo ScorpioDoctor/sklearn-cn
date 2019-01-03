@@ -306,7 +306,7 @@ array, since ``iris.target_names`` was for fitting.
 多分类拟合 vs. 多标签拟合
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-当使用多类分类器 :class:`multiclass classifiers <sklearn.multiclass>` 时, 所执行的学习和预测任务取决于符合以下条件的目标数据的格式::
+当使用多类分类器(:class:`multiclass classifiers <sklearn.multiclass>`)时, 所执行的学习和预测任务取决于符合以下条件的目标数据的格式::
 
     >>> from sklearn.svm import SVC
     >>> from sklearn.multiclass import OneVsRestClassifier
@@ -320,9 +320,9 @@ array, since ``iris.target_names`` was for fitting.
     >>> classif.fit(X, y).predict(X)
     array([0, 0, 1, 1, 2])
 
-In the above case, the classifier is fit on a 1d array of multiclass labels and
-the ``predict()`` method therefore provides corresponding multiclass predictions.
-It is also possible to fit upon a 2d array of binary label indicators::
+在上面的例子中, 分类器在多类单标签的一维数组上进行拟合,由于每个样本只对应一个类别标签，
+因此预测方法 ``predict()`` 提供了对应的 多类预测结果(multiclass predictions)。
+还可以在二元标签指示器(binary label indicators)的二维数组上拟合分类器::
 
     >>> y = LabelBinarizer().fit_transform(y)
     >>> classif.fit(X, y).predict(X)
@@ -332,14 +332,13 @@ It is also possible to fit upon a 2d array of binary label indicators::
            [0, 0, 0],
            [0, 0, 0]])
 
-Here, the classifier is ``fit()``  on a 2d binary label representation of ``y``,
-using the :class:`LabelBinarizer <sklearn.preprocessing.LabelBinarizer>`.
-In this case ``predict()`` returns a 2d array representing the corresponding
-multilabel predictions.
+这里, 分类器 ``fit()`` 方法在 ``y`` 的二维二元标签表示上执行， 每个样本可同时属于两种类别，同时具有两个种类的标签，
+所以要使用 标签二值化(:class:`LabelBinarizer <sklearn.preprocessing.LabelBinarizer>`)。
+在 ``predict()`` 方法中 返回的是一个 2d array, 表达了对应的 多标签预测结果(multilabel predictions)。
 
-Note that the fourth and fifth instances returned all zeroes, indicating that
-they matched none of the three labels ``fit`` upon. With multilabel outputs, it
-is similarly possible for an instance to be assigned multiple labels::
+注意到上面的结果中第四和第五个样本返回的都是0, 表明它们与三个类标签都不匹配。 
+在多标签输出(multilabel outputs)的情况下,
+类似于二元标签的情况，我们也可以给每个实例分配多个(>2)标签::
 
   >>> from sklearn.preprocessing import MultiLabelBinarizer
   >>> y = [[0, 1], [0, 2], [1, 3], [0, 2, 3], [2, 4]]
@@ -351,7 +350,6 @@ is similarly possible for an instance to be assigned multiple labels::
          [1, 0, 1, 0, 0],
          [1, 0, 1, 0, 0]])
 
-In this case, the classifier is fit upon instances each assigned multiple labels.
-The :class:`MultiLabelBinarizer <sklearn.preprocessing.MultiLabelBinarizer>` is
-used to binarize the 2d array of multilabels to ``fit`` upon. As a result,
-``predict()`` returns a 2d array with multiple predicted labels for each instance.
+在这种情况下, 分类器在 每个样本都具有多个标签的样本集 上拟合。
+:class:`MultiLabelBinarizer <sklearn.preprocessing.MultiLabelBinarizer>` 类被用来二值化多标签的二维数组。
+作为结果，``predict()`` 方法将返回一个二维数组，其中每个样本都具有多个预测到的标签。
