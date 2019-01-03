@@ -1,84 +1,63 @@
 .. _outlier_detection:
 
 ===================================================
-奇异值和外点检测(Novelty and Outlier Detection)
+新奇点和孤立点检测(Novelty and Outlier Detection)
 ===================================================
 
 .. currentmodule:: sklearn
 
-Many applications require being able to decide whether a new observation
-belongs to the same distribution as existing observations (it is an
-*inlier*), or should be considered as different (it is an *outlier*).
-Often, this ability is used to clean real data sets. Two important
-distinctions must be made:
+很多机器学习应用都需要有能力判断一个新的观测是否跟已有观测具有相同的分布，或者来自不同的分布。
+如果来自于相同的分布，则这个新的观测就是一个 *inlier* ; 如果不同，则这个新的观测被称为 *outlier* 。
+这种能力通常用于对真实的数据集进行清洗。首先我们要区分两个重要的概念:
 
 :outlier detection:
-  The training data contains outliers which are defined as observations that
-  are far from the others. Outlier detection estimators thus try to fit the
-  regions where the training data is the most concentrated, ignoring the
-  deviant observations.
+  训练数据中包含有一些outliers,它们被定义为远离其他观测值的观测值。所以，outliers应该译为“离群点，孤立点”。
+  孤立点检测器(Outlier detection estimators) 因此尝试在训练数据最集中的那些区域上进行拟合，
+  而忽略那些异常的观测值(deviant observations)。
 
 :novelty detection:
-  The training data is not polluted by outliers and we are interested in
-  detecting whether a **new** observation is an outlier. In this context an
-  outlier is also called a novelty.
+  已有的训练数据并没有被outliers污染，而我们感兴趣的是去检测一个 **新来的** 观测值是否是outlier。
+  在这样的一个语境下，此时的outlier我们称之为 novelty。
+  在这儿 ，我把 novelty 译为 "新奇点" ,意为 **新来的奇怪的点** 。
 
-Outlier detection and novelty detection are both used for anomaly
-detection, where one is interested in detecting abnormal or unusual
-observations. Outlier detection is then also known as unsupervised anomaly
-detection and novelty detection as semi-supervised anomaly detection. In the
-context of outlier detection, the outliers/anomalies cannot form a
-dense cluster as available estimators assume that the outliers/anomalies are
-located in low density regions. On the contrary, in the context of novelty
-detection, novelties/anomalies can form a dense cluster as long as they are in
-a low density region of the training data, considered as normal in this
-context.
+孤立点检测 和 新奇点检测 都被用于异常检测(anomaly detection), 所谓anomaly detection就是
+检测反常的的观测或不平常的观测。 
+孤立点检测 也被称之为 无监督异常检测; 而 新奇点检测 被称之为 半监督异常检测。
+在孤立点检测的语境下, outliers/anomalies 不能够形成一个稠密的聚类簇，因为可用的estimators都假定了
+outliers/anomalies 位于低密度区域。相反的，在新奇点检测的语境下， novelties/anomalies 是可以形成
+稠密聚类簇(dense cluster)的，只要它们在训练数据的一个低密度区域，这被认为是正常的(normal)。
 
-The scikit-learn project provides a set of machine learning tools that
-can be used both for novelty or outlier detection. This strategy is
-implemented with objects learning in an unsupervised way from the data::
+scikit-learn 提供了一系列机器学习工具可以被用于新奇点或孤立点检测。 
+这些检测策略被实现成一些 以无监督学习的方式从数据中学习 的估计器类(estimator)::
 
     estimator.fit(X_train)
 
-new observations can then be sorted as inliers or outliers with a
-``predict`` method::
+fit好了estimator以后，新的观测数据可以用 ``predict`` 方法判断其是 inliers or outliers？::
 
     estimator.predict(X_test)
 
-Inliers are labeled 1, while outliers are labeled -1. The predict method
-makes use of a threshold on the raw scoring function computed by the
-estimator. This scoring function is accessible through the ``score_samples``
-method, while the threshold can be controlled by the ``contamination``
-parameter.
+Inliers 被标记为 1, 而 outliers 被标记为 -1。 预测方法使用一个阈值在估计器计算出的原始评分函数上。
+这个评分函数可以通过方法 ``score_samples`` 进行访问，而且 这个阈值可以由参数 ``contamination`` 控制。
 
-The ``decision_function`` method is also defined from the scoring function,
-in such a way that negative values are outliers and non-negative ones are
-inliers::
+``decision_function`` 方法也是从评分函数定义的，这样的话，得分为负值的就是 outliers, 得分为非负的就是 inliers::
 
     estimator.decision_function(X_test)
 
-Note that :class:`neighbors.LocalOutlierFactor` does not support
-``predict``, ``decision_function`` and ``score_samples`` methods by default
-but only a ``fit_predict`` method, as this estimator was originally meant to
-be applied for outlier detection. The scores of abnormality of the training
-samples are accessible through the ``negative_outlier_factor_`` attribute.
+请注意 :class:`neighbors.LocalOutlierFactor` 类默认不支持 ``predict``, ``decision_function`` 和 
+``score_samples`` 方法，而只支持 ``fit_predict`` 方法, 因为这个 estimator 一开始就是要把它用到孤立点检测中去的。
+训练样本的异常性得分(scores of abnormality)可以通过 ``negative_outlier_factor_`` 属性来访问获取。
 
-If you really want to use :class:`neighbors.LocalOutlierFactor` for novelty
-detection, i.e. predict labels or compute the score of abnormality of new
-unseen data, you can instantiate the estimator with the ``novelty`` parameter
-set to ``True`` before fitting the estimator. In this case, ``fit_predict`` is
-not available.
+如果你真的特别想用 :class:`neighbors.LocalOutlierFactor` 类进行 新奇点检测(novelty detection), 
+i.e. 对新的未见过的样本 预测其标签或计算其异常性得分, 你可以在实例化这个estimator的时候将其
+``novelty`` 参数设为 ``True`` ，这一步必须要在拟合之前做。这样的话，``fit_predict`` 方法就不可用了。
 
-.. warning:: **Novelty detection with Local Outlier Factor**
+.. warning:: **使用局部异常因子(Local Outlier Factor,LOF)进行新奇点检测**
 
-  When ``novelty`` is set to ``True`` be aware that you must only use
-  ``predict``, ``decision_function`` and ``score_samples`` on new unseen data
-  and not on the training samples as this would lead to wrong results.
-  The scores of abnormality of the training samples are always accessible
-  through the ``negative_outlier_factor_`` attribute.
+  当 ``novelty`` 参数被设为 ``True`` 时，要当心 你必须只能使用 ``predict``, 
+  ``decision_function`` 和 ``score_samples`` 在新的未见过的数据上，而不能把这几个函数用在训练数据上，
+  因为这样会导致错误的结果。训练样本的异常性得分总是可以通过 ``negative_outlier_factor_`` 属性来访问获取。
 
-The behavior of :class:`neighbors.LocalOutlierFactor` is summarized in the
-following table.
+:class:`neighbors.LocalOutlierFactor` 类在孤立点检测和新奇点检测中的行为被总结在下面的表格里啦。
 
 ===================== ================================ =====================
 Method                Outlier detection                Novelty detection
@@ -90,77 +69,61 @@ Method                Outlier detection                Novelty detection
 ===================== ================================ =====================
 
 
-异常点检测方法一览
+
+孤立点检测方法一览
 =====================================
 
-A comparison of the outlier detection algorithms in scikit-learn. Local
-Outlier Factor (LOF) does not show a decision boundary in black as it
-has no predict method to be applied on new data when it is used for outlier
-detection.
+下面这个案例针对scikit-learn 中的所有孤立点检测算法进行了对比。
+局部异常因子(LOF) 没有在图的背景上画出决策边界，因为在孤立点检测中使用LOF时
+它没有 predict 方法可以用在新数据上（见上面表格）。
 
 .. figure:: ../auto_examples/images/sphx_glr_plot_anomaly_comparison_001.png
    :target: ../auto_examples/plot_anomaly_comparison.html
    :align: center
    :scale: 50
 
-:class:`ensemble.IsolationForest` and :class:`neighbors.LocalOutlierFactor`
-perform reasonably well on the data sets considered here.
-The :class:`svm.OneClassSVM` is known to be sensitive to outliers and thus
-does not perform very well for outlier detection. Finally,
-:class:`covariance.EllipticEnvelope` assumes the data is Gaussian and learns
-an ellipse. For more details on the different estimators refer to the example
-:ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` and the sections
-hereunder.
+:class:`ensemble.IsolationForest` 和 :class:`neighbors.LocalOutlierFactor` 
+在这里所用的数据集上表现得相当好。 :class:`svm.OneClassSVM` 类对outliers本来就很敏感，
+因此在outlier的检测中表现的非常好。最后, :class:`covariance.EllipticEnvelope` 类
+假定了数据是服从高斯分布的且要学习一个椭圆(ellipse)。关于这个对比试验中各种estimators的更多详细信息
+请参考 :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` 和后续小节。
 
-.. topic:: Examples:
+.. topic:: 案例:
 
-  * See :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py`
-    for a comparison of the :class:`svm.OneClassSVM`, the
-    :class:`ensemble.IsolationForest`, the
-    :class:`neighbors.LocalOutlierFactor` and
-    :class:`covariance.EllipticEnvelope`.
+  * 请看 :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py`
+    对比实验，包括了 :class:`svm.OneClassSVM` 类, :class:`ensemble.IsolationForest` 类, 
+    :class:`neighbors.LocalOutlierFactor` 类以及 :class:`covariance.EllipticEnvelope` 类。
 
-奇异值检测(Novelty Detection)
-=================
+新奇点检测(Novelty Detection)
+================================
 
-Consider a data set of :math:`n` observations from the same
-distribution described by :math:`p` features.  Consider now that we
-add one more observation to that data set. Is the new observation so
-different from the others that we can doubt it is regular? (i.e. does
-it come from the same distribution?) Or on the contrary, is it so
-similar to the other that we cannot distinguish it from the original
-observations? This is the question addressed by the novelty detection
-tools and methods.
+我们现在有一个从相同的分布(该分布由 :math:`p` 个特征分量描述)中得到的 :math:`n` 个观测组成的数据集。
+现在我们再往这个观测集合中添加一个新的观测(a new observation)。那么这个新加入的观测是否与该集合中旧有的那些观测
+非常不一样以至于我们必须怀疑它是否是正常的(regular or not)? (也就是说这个新的观测是否来自于一个相同的分布？)
+或者我们从反向考虑，这个新的观测是否与旧有的那些观测特别的相似以至于我们无法将它与原来的旧观测数据区别开来？
+这就是 新奇点检测(novelty detection) 中要强调的问题和它要给我们提供的工具的用途。
 
-In general, it is about to learn a rough, close frontier delimiting
-the contour of the initial observations distribution, plotted in
-embedding :math:`p`-dimensional space. Then, if further observations
-lay within the frontier-delimited subspace, they are considered as
-coming from the same population than the initial
-observations. Otherwise, if they lay outside the frontier, we can say
-that they are abnormal with a given confidence in our assessment.
+一般情况下，新奇点检测器 将学习一个粗糙的、封闭的边界来划分初始观测分布的等高线，绘制在嵌入 :math:`p` 维空间中。
+然后，如果新的观测在边界分隔的子空间内(within the frontier-delimited subspace)，他们被认为来自相同的群体，
+而不是最初的观测。否则，如果这些新观测数据身处边界之外，我们可以说他们是不正常的(abnormal)，
+并且根据我们的评估给出一个置信度。
 
-The One-Class SVM has been introduced by Schölkopf et al. for that purpose
-and implemented in the :ref:`svm` module in the
-:class:`svm.OneClassSVM` object. It requires the choice of a
-kernel and a scalar parameter to define a frontier.  The RBF kernel is
-usually chosen although there exists no exact formula or algorithm to
-set its bandwidth parameter. This is the default in the scikit-learn
-implementation. The :math:`\nu` parameter, also known as the margin of
-the One-Class SVM, corresponds to the probability of finding a new,
-but regular, observation outside the frontier.
+One-Class SVM 已经被 Schölkopf 引入来完成这样一个目的，而且它被实现在 :ref:`svm` 模块中
+的 :class:`svm.OneClassSVM` 类中。 使用该类需要选择一个 kernel 和一个标量参数来定义上面提到的边界(frontier)。
+RBF kernel 是通常的选项，尽管没有准确的公式或算法来设置RBF kernel的带宽参数(bandwidth)。
+这是 scikit-learn 中的默认实现。 参数 :math:`\nu` , 也被称为One-Class SVM的边界(margin), 
+对应于在边界外边(outside frontier)找到一个新的但是正常的观测的概率。
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     * `Estimating the support of a high-dimensional distribution
       <http://dl.acm.org/citation.cfm?id=1119749>`_ Schölkopf,
       Bernhard, et al. Neural computation 13.7 (2001): 1443-1471.
 
-.. topic:: Examples:
+.. topic:: 案例:
 
-   * See :ref:`sphx_glr_auto_examples_svm_plot_oneclass.py` for visualizing the
-     frontier learned around some data by a
-     :class:`svm.OneClassSVM` object.
+   * 请看 :ref:`sphx_glr_auto_examples_svm_plot_oneclass.py` 用于可视化 :class:`svm.OneClassSVM` 类对象
+     从数据中学习到的边界(frontier)。
    * :ref:`sphx_glr_auto_examples_applications_plot_species_distribution_modeling.py`
 
 .. figure:: ../auto_examples/svm/images/sphx_glr_plot_oneclass_001.png
@@ -169,8 +132,8 @@ but regular, observation outside the frontier.
    :scale: 75%
 
 
-外点检测(Outlier Detection)
-=================
+孤立点检测(Outlier Detection)
+==================================
 
 Outlier detection is similar to novelty detection in the sense that
 the goal is to separate a core of regular observations from some
@@ -204,7 +167,7 @@ This strategy is illustrated below.
    :align: center
    :scale: 75%
 
-.. topic:: Examples:
+.. topic:: 案例:
 
    * See :ref:`sphx_glr_auto_examples_covariance_plot_mahalanobis_distances.py` for
      an illustration of the difference between using a standard
@@ -212,7 +175,7 @@ This strategy is illustrated below.
      (:class:`covariance.MinCovDet`) of location and covariance to
      assess the degree of outlyingness of an observation.
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     * Rousseeuw, P.J., Van Driessen, K. "A fast algorithm for the minimum
       covariance determinant estimator" Technometrics 41(3), 212 (1999)
@@ -239,26 +202,23 @@ Random partitioning produces noticeably shorter paths for anomalies.
 Hence, when a forest of random trees collectively produce shorter path
 lengths for particular samples, they are highly likely to be anomalies.
 
-This strategy is illustrated below.
+该策略已在下面的例子中进行了说明。
 
 .. figure:: ../auto_examples/ensemble/images/sphx_glr_plot_isolation_forest_001.png
    :target: ../auto_examples/ensemble/plot_isolation_forest.html
    :align: center
    :scale: 75%
 
-.. topic:: Examples:
+.. topic:: 案例:
 
-   * See :ref:`sphx_glr_auto_examples_ensemble_plot_isolation_forest.py` for
-     an illustration of the use of IsolationForest.
+   * 请看 :ref:`sphx_glr_auto_examples_ensemble_plot_isolation_forest.py`  类 :class:`ensemble.IsolationForest` 的用法的示例说明。
 
-   * See :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` for a
-     comparison of :class:`ensemble.IsolationForest` with
-     :class:`neighbors.LocalOutlierFactor`,
-     :class:`svm.OneClassSVM` (tuned to perform like an outlier detection
-     method) and a covariance-based outlier detection with
-     :class:`covariance.EllipticEnvelope`.
+   * 请看 :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` 
+     类 :class:`ensemble.IsolationForest` ，类 :class:`neighbors.LocalOutlierFactor`,
+     类 :class:`svm.OneClassSVM` (调整为像孤立点检测方法一样执行) 以及 
+     一个基于协方差的孤立点检测和 :class:`covariance.EllipticEnvelope` 类。
 
-.. topic:: References:
+.. topic:: 参考文献:
 
     * Liu, Fei Tony, Ting, Kai Ming and Zhou, Zhi-Hua. "Isolation forest."
       Data Mining, 2008. ICDM'08. Eighth IEEE International Conference on.
@@ -308,22 +268,22 @@ on new unseen data when LOF is applied for novelty detection, i.e. when the
 ``novelty`` parameter is set to ``True``. See :ref:`novelty_with_lof`.
 
 
-This strategy is illustrated below.
+该策略已在下面的例子中进行了说明。
 
 .. figure:: ../auto_examples/neighbors/images/sphx_glr_plot_lof_outlier_detection_001.png
    :target: ../auto_examples/neighbors/sphx_glr_plot_lof_outlier_detection.html
    :align: center
    :scale: 75%
 
-.. topic:: Examples:
+.. topic:: 案例:
 
-   * See :ref:`sphx_glr_auto_examples_neighbors_plot_lof_outlier_detection.py`
-     for an illustration of the use of :class:`neighbors.LocalOutlierFactor`.
+   * 请看 :ref:`sphx_glr_auto_examples_neighbors_plot_lof_outlier_detection.py`
+    :class:`neighbors.LocalOutlierFactor` 类的用法的示例说明。
 
-   * See :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` for a
-     comparison with other anomaly detection methods.
+   * 请看 :ref:`sphx_glr_auto_examples_plot_anomaly_comparison.py` 
+    将该算法 与其他的异常检测(anomaly detection)算法进行对比。
 
-.. topic:: References:
+.. topic:: 参考文献:
 
    *  Breunig, Kriegel, Ng, and Sander (2000)
       `LOF: identifying density-based local outliers.
@@ -332,28 +292,25 @@ This strategy is illustrated below.
 
 .. _novelty_with_lof:
 
-Novelty detection with Local Outlier Factor
+使用LOF进行新奇点检测
 ===========================================
 
-To use :class:`neighbors.LocalOutlierFactor` for novelty detection, i.e.
-predict labels or compute the score of abnormality of new unseen data, you
-need to instantiate the estimator with the ``novelty`` parameter
-set to ``True`` before fitting the estimator::
+如果要用 :class:`neighbors.LocalOutlierFactor` 类进行 新奇点检测, 
+i.e. 对新的未见过的样本 预测其标签或计算其异常性得分, 你可以在实例化这个estimator的时候将其
+``novelty`` 参数设为 ``True`` ，这一步必须要在拟合之前做::
 
   lof = LocalOutlierFactor(novelty=True)
   lof.fit(X_train)
 
-Note that ``fit_predict`` is not available in this case.
+请注意 ``fit_predict`` 方法在这情况下就不可用了。
 
-.. warning:: **Novelty detection with Local Outlier Factor`**
+.. warning:: **使用 局部异常因子(LOF) 进行新奇点检测**
 
-  When ``novelty`` is set to ``True`` be aware that you must only use
-  ``predict``, ``decision_function`` and ``score_samples`` on new unseen data
-  and not on the training samples as this would lead to wrong results.
-  The scores of abnormality of the training samples are always accessible
-  through the ``negative_outlier_factor_`` attribute.
+  当 ``novelty`` 参数被设为 ``True`` 时，要当心 你必须只能使用 ``predict``, 
+  ``decision_function`` 和 ``score_samples`` 在新的未见过的数据上，而不能把这几个函数用在训练数据上，
+  因为这样会导致错误的结果。训练样本的异常性得分总是可以通过 ``negative_outlier_factor_`` 属性来访问获取。
 
-Novelty detection with Local Outlier Factor is illustrated below.
+使用 局部异常因子(LOF)进行新奇点检测 的示例见下图。
 
   .. figure:: ../auto_examples/neighbors/images/sphx_glr_plot_lof_novelty_detection_001.png
      :target: ../auto_examples/neighbors/sphx_glr_plot_lof_novelty_detection.html

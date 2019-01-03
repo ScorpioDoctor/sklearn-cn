@@ -47,6 +47,14 @@
 
 
 
+
+
+.. image:: /auto_examples/datasets/images/sphx_glr_plot_digits_last_image_001.png
+    :class: sphx-glr-single-img
+
+
+
+
 Antares的测试信息
 
 
@@ -70,7 +78,12 @@ Traceback (most recent call last):
 
 
     ##########################################################################################################
-**Total running time of the script:** ( 0 minutes  0.000 seconds)
+
+
+
+
+
+**Total running time of the script:** ( 0 minutes  0.109 seconds)
 
 
 .. _sphx_glr_download_auto_examples_datasets_plot_digits_last_image.py:

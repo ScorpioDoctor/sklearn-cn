@@ -8,7 +8,7 @@
 
 
 ============================================================================
-在各种toy数据集上比较用于孤立点检测的异常检测算法(anomaly detection algorithms)
+在各种toy数据集上比较用于孤立点检测的异常检测算法
 ============================================================================
 
 这个例子展示了二维数据集上不同异常检测算法的特点。数据集包含一个或两个模式(高密度区域)
@@ -44,6 +44,14 @@ One-class SVM 在这些情况下可能会根据其超参数的值给出有用的
 
 最后，请注意，这些模型的参数是在这里精心挑选的，但实际上它们需要调整。
 在没有标签数据的情况下，这个问题是完全没有监督的，因此模型的选择可能是一个挑战。
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_anomaly_comparison_001.png
+    :class: sphx-glr-single-img
+
+
 
 
 
@@ -155,7 +163,7 @@ One-class SVM 在这些情况下可能会根据其超参数的值给出有用的
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.000 seconds)
+**Total running time of the script:** ( 0 minutes  5.517 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_anomaly_comparison.py:

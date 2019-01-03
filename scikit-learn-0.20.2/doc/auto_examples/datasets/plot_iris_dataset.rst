@@ -23,6 +23,24 @@ Sepal Length, Sepal Width, Petal Length , Petal Width .
 
 
 
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/datasets/images/sphx_glr_plot_iris_dataset_001.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /auto_examples/datasets/images/sphx_glr_plot_iris_dataset_002.png
+            :class: sphx-glr-multi-img
+
+
+
+
+
 .. code-block:: python
 
     print(__doc__)
@@ -91,7 +109,7 @@ Sepal Length, Sepal Width, Petal Length , Petal Width .
 
 
     # ################################################################################################
-**Total running time of the script:** ( 0 minutes  0.000 seconds)
+**Total running time of the script:** ( 0 minutes  0.062 seconds)
 
 
 .. _sphx_glr_download_auto_examples_datasets_plot_iris_dataset.py:

@@ -50,6 +50,24 @@ in :ref:`kernel_approximation`.
 
 
 
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_kernel_approximation_001.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_kernel_approximation_002.png
+            :class: sphx-glr-multi-img
+
+
+
+
+
 .. code-block:: python
 
     print(__doc__)
@@ -223,7 +241,7 @@ in :ref:`kernel_approximation`.
     plt.tight_layout()
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.000 seconds)
+**Total running time of the script:** ( 0 minutes  1.710 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_kernel_approximation.py:
