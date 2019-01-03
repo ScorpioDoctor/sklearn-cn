@@ -18,14 +18,6 @@
 
 
 
-
-.. image:: /auto_examples/images/sphx_glr_plot_isotonic_regression_001.png
-    :class: sphx-glr-single-img
-
-
-
-
-
 .. code-block:: python
 
     print(__doc__)
@@ -74,7 +66,7 @@
     plt.title('Isotonic regression')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.041 seconds)
+**Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_isotonic_regression.py:

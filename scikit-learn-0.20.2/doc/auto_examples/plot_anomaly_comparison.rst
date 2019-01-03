@@ -47,14 +47,6 @@ One-class SVM 在这些情况下可能会根据其超参数的值给出有用的
 
 
 
-
-.. image:: /auto_examples/images/sphx_glr_plot_anomaly_comparison_001.png
-    :class: sphx-glr-single-img
-
-
-
-
-
 .. code-block:: python
 
 
@@ -163,7 +155,7 @@ One-class SVM 在这些情况下可能会根据其超参数的值给出有用的
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  4.510 seconds)
+**Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_anomaly_comparison.py:

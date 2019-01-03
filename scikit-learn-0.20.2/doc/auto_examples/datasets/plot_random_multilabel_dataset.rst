@@ -38,29 +38,6 @@
 
 
 
-
-.. image:: /auto_examples/datasets/images/sphx_glr_plot_random_multilabel_dataset_001.png
-    :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    The data was generated from (random_state=886):
-    Class   P(C)    P(w0|C) P(w1|C)
-    red     0.00    0.45    0.55
-    blue    0.88    0.57    0.43
-    yellow  0.12    0.27    0.73
-
-
-
-
-|
-
-
 .. code-block:: python
 
 
@@ -124,7 +101,7 @@
     for k, p, p_w in zip(['red', 'blue', 'yellow'], p_c, p_w_c.T):
         print('%s\t%0.2f\t%0.2f\t%0.2f' % (k, p, p_w[0], p_w[1]))
 
-**Total running time of the script:** ( 0 minutes  0.294 seconds)
+**Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
 .. _sphx_glr_download_auto_examples_datasets_plot_random_multilabel_dataset.py:

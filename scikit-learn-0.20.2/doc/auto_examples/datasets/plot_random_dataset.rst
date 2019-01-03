@@ -21,14 +21,6 @@
 
 
 
-
-.. image:: /auto_examples/datasets/images/sphx_glr_plot_random_dataset_001.png
-    :class: sphx-glr-single-img
-
-
-
-
-
 .. code-block:: python
 
 
@@ -86,7 +78,7 @@
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.151 seconds)
+**Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
 .. _sphx_glr_download_auto_examples_datasets_plot_random_dataset.py:

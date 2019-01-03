@@ -763,7 +763,7 @@ more specific sets of related terms are listed below:
 
 .. _glossary_estimator_types:
 
-Class APIs and Estimator Types
+类APIs和Estimator类型
 ==============================
 
 .. glossary::
@@ -985,7 +985,7 @@ Further examples:
 
 .. _glossary_target_types:
 
-Target Types
+目标值的类型
 ============
 
 .. glossary::
@@ -1111,7 +1111,7 @@ Target Types
 
 .. _glossary_methods:
 
-Methods
+方法
 =======
 
 .. glossary::
@@ -1369,7 +1369,7 @@ Methods
 
 .. _glossary_parameters:
 
-Parameters
+参数
 ==========
 
 These common parameter names, specifically used in estimator construction
@@ -1617,7 +1617,7 @@ functions or non-estimator constructors.
 
 .. _glossary_attributes:
 
-Attributes
+属性
 ==========
 
 See concept :term:`attribute`.
@@ -1682,7 +1682,7 @@ See concept :term:`attribute`.
 
 .. _glossary_sample_props:
 
-Data and sample properties
+数据和样本属性
 ==========================
 
 See concept :term:`sample property`.
