@@ -5,7 +5,7 @@
 =======================================================================================
 
 
-.. topic:: 监督学习中要求解的问题
+.. topic:: 监督学习中要求解的问题:
 
    监督学习(:ref:`Supervised learning <supervised-learning>`)旨在学习两个数据集合之间的关联：
    观测数据集合 ``X`` 和 我们想要预测的外部变量 ``y``。 变量 ``y`` 通常被称为 "target" 或 "labels"。
@@ -19,7 +19,7 @@
    (`监督学习的三要素 <http://www.studyai.com/course/play/c2f7103d4661494a9a22859e6da54b17>`_)
    和(`监督学习的三个问题 <http://www.studyai.com/course/play/e03854b03dbe4d03ab5a76f08d3b1311>`_)。
 
-.. topic:: 术语词汇: 分类(classification) 与 回归(regression)
+.. topic:: 术语词汇: 分类(classification) 与 回归(regression):
 
    如果预测任务是把观测数据在一个有限的标签集合中进行分类，或者说是给观测到的对象"命名",那么这样的预测任务
    就叫**分类**任务；另一方面，如果我们的目的是预测一个连续目标变量，那么这样的预测任务就叫**回归**任务。
@@ -181,7 +181,7 @@ internet (±1000 Exabytes or so).
 .. _shrinkage:
 
 缩减(Shrinkage)
-----------
+----------------------
 
 如果每个维度的数据点很少，则观测中的噪声将会引起高方差:
 
@@ -260,7 +260,7 @@ regression:
 .. _sparsity:
 
 稀疏性(Sparsity)
-----------
+----------------------
 
 
 .. |diabetes_ols_1| image:: /auto_examples/linear_model/images/sphx_glr_plot_ols_3d_001.png
@@ -436,7 +436,7 @@ SVMs 既可以用于回归问题 --:class:`SVR` (Support Vector Regression)--,�
 .. _using_kernels_tut:
 
 使用核函数的SVMs
---------------
+----------------------------
 
 类在特征空间中并不总是线性可分的。解决方法是建立一个非线性的决策函数，比如多项式就是一个替代品。
 这可以使用核技巧(*kernel trick*)来完成，它可以被看作是通过在观测数据上定位核(kernel)来创建决策能量:
@@ -510,7 +510,7 @@ SVMs 既可以用于回归问题 --:class:`SVR` (Support Vector Regression)--,�
 
 
 
-.. topic:: **交互式例子**
+.. topic:: **交互式例子**:
 
    参考链接 :ref:`SVM GUI <sphx_glr_auto_examples_applications_svm_gui.py>` 去下载
    ``svm_gui.py``; 用鼠标左键与右键点击添加两个类的样本点创建两个类，然后在数据上拟合SVM模型,并改变参数和数据。
@@ -520,7 +520,7 @@ SVMs 既可以用于回归问题 --:class:`SVR` (Support Vector Regression)--,�
     :align: right
     :scale: 70
 
-.. topic:: **练习**
+.. topic:: **练习**:
    :class: green
 
    尝试使用SVMs对虹膜数据集(iris dataset)中的第1类和第2类进行分类,只使用前两个特征。

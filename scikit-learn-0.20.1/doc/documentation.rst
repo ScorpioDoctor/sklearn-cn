@@ -57,6 +57,7 @@ scikit-learn |version| 的中文文档
                 </div>
 
             </div>
+
           <!-- row -->
             <div class="row-fluid">
                 <div class="span4 box">
@@ -76,7 +77,8 @@ scikit-learn |version| 的中文文档
                 </div>
 
             </div>
-
+            
+          <!-- row -->
             <div class="row-fluid">
                 <div class="span4 box">
                     <h2><a href="tutorial/machine_learning_map/index.html">知识流图</a></h2>
