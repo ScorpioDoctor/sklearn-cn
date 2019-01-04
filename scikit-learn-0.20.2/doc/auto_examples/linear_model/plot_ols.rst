@@ -8,17 +8,14 @@
 
 
 =========================================================
-Linear Regression Example
+线性回归案例
 =========================================================
-This example uses the only the first feature of the `diabetes` dataset, in
-order to illustrate a two-dimensional plot of this regression technique. The
-straight line can be seen in the plot, showing how linear regression attempts
-to draw a straight line that will best minimize the residual sum of squares
-between the observed responses in the dataset, and the responses predicted by
-the linear approximation.
+此示例仅使用糖尿病(`diabetes`)数据集的第一个特征，以说明此回归技术的二维绘图。
+在图中可以看到直线，显示了线性回归如何试图绘制一条直线，
+使数据集中观察到的响应与线性近似预测的响应之间的残差平方和最小化。
 
-The coefficients, the residual sum of squares and the variance score are also
-calculated.
+系数(The coefficients), 残差平方和(the residual sum of squares) 和 方差得分(the variance score)
+也被计算出来了。
 
 
 
@@ -51,6 +48,7 @@ calculated.
 
 
     # Code source: Jaques Grobler
+    # 翻译者: Antares 博士
     # License: BSD 3 clause
 
 
@@ -59,39 +57,39 @@ calculated.
     from sklearn import datasets, linear_model
     from sklearn.metrics import mean_squared_error, r2_score
 
-    # Load the diabetes dataset
+    # 加载 diabetes 数据集
     diabetes = datasets.load_diabetes()
 
 
-    # Use only one feature
+    # 仅使用第一个特征
     diabetes_X = diabetes.data[:, np.newaxis, 2]
 
-    # Split the data into training/testing sets
+    # 把数据划分成训练集和测试集
     diabetes_X_train = diabetes_X[:-20]
     diabetes_X_test = diabetes_X[-20:]
 
-    # Split the targets into training/testing sets
+    # 把目标值划分成对应的训练集和测试集
     diabetes_y_train = diabetes.target[:-20]
     diabetes_y_test = diabetes.target[-20:]
 
-    # Create linear regression object
+    # 实例化一个 线性回归 类的对象
     regr = linear_model.LinearRegression()
 
-    # Train the model using the training sets
+    # 在训练集上训练模型
     regr.fit(diabetes_X_train, diabetes_y_train)
 
-    # Make predictions using the testing set
+    # 在测试集上进行预测
     diabetes_y_pred = regr.predict(diabetes_X_test)
 
-    # The coefficients
+    # 线性模型的系数
     print('Coefficients: \n', regr.coef_)
-    # The mean squared error
+    # 均方误差
     print("Mean squared error: %.2f"
           % mean_squared_error(diabetes_y_test, diabetes_y_pred))
-    # Explained variance score: 1 is perfect prediction
+    # 解释方差: 1 代表完美预测
     print('Variance score: %.2f' % r2_score(diabetes_y_test, diabetes_y_pred))
 
-    # Plot outputs
+    # 绘制输出结果
     plt.scatter(diabetes_X_test, diabetes_y_test,  color='black')
     plt.plot(diabetes_X_test, diabetes_y_pred, color='blue', linewidth=3)
 
@@ -100,7 +98,7 @@ calculated.
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.043 seconds)
+**Total running time of the script:** ( 0 minutes  0.048 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_ols.py:

@@ -449,12 +449,12 @@ def r2_score(y_true, y_pred, sample_weight=None,
              multioutput="uniform_average"):
     """R^2 (coefficient of determination) regression score function.
 
-    Best possible score is 1.0 and it can be negative (because the
+    最好的可能得分是 1.0 并且它可以为负值 (because the
     model can be arbitrarily worse). A constant model that always
     predicts the expected value of y, disregarding the input features,
     would get a R^2 score of 0.0.
 
-    Read more in the :ref:`User Guide <r2_score>`.
+    阅读更多详情，请看 :ref:`User Guide <r2_score>`.
 
     Parameters
     ----------

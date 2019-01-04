@@ -2836,6 +2836,26 @@ Biclustering
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="系数(The coefficients), 残差平方和(the residual sum of squares) 和 方差得分(the variance score) 也被计算出来了。">
+
+.. only:: html
+
+    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_ols_thumb.png
+
+        :ref:`sphx_glr_auto_examples_linear_model_plot_ols.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/linear_model/plot_ols
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip=" Train l1-penalized logistic regression models on a binary classification problem derived from ...">
 
 .. only:: html
@@ -2933,26 +2953,6 @@ Biclustering
    :hidden:
 
    /auto_examples/linear_model/plot_iris_logistic
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="The coefficients, the residual sum of squares and the variance score are also calculated.">
-
-.. only:: html
-
-    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_ols_thumb.png
-
-        :ref:`sphx_glr_auto_examples_linear_model_plot_ols.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/linear_model/plot_ols
 
 .. raw:: html
 
