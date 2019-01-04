@@ -214,10 +214,10 @@ scikit-learn 通过交叉验证来公开设置 Lasso ``alpha`` 参数的对象: 
 基于信息标准的模型选择
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-有多种选择时，估计器 :class:`LassoLarsIC` 建议使用 Akaike information criterion （Akaike 信息准则）（AIC）
-和 Bayes Information criterion （贝叶斯信息准则）（BIC）。 当使用 k-fold 交叉验证时，正则化路径只计算一次而不是 k + 1 次，
-所以找到 alpha 的最优值是一种计算上更便宜的替代方法。 然而，这样的标准需要对解决方案的自由度进行适当的估计，对于大样本（渐近结果）导出，
-并假设模型是正确的，即数据实际上是由该模型生成的。 当问题严重受限（比样本更多的特征）时，他们也倾向于打破。
+另外作为替代方案，估计器 :class:`LassoLarsIC` 建议使用Akaike信息准则(AIC)和Bayes信息准则(BIC)。使用基于信息准则的方法寻找
+alpha 的最优值是一种计算成本较低的方法，因为这种方法中正则化路径只计算一次而不是使用k-fold交叉验证时的k+1次。
+然而，这类准则需要对解的自由度进行适当的估计，是为大样本(渐近结果)导出的，并假定模型是正确的(即数据实际上是由该模型生成的)。
+当问题条件数不好(特征多于样本)时，它们可能会崩溃。
 
 .. figure:: ../auto_examples/linear_model/images/sphx_glr_plot_lasso_model_selection_001.png
     :target: ../auto_examples/linear_model/plot_lasso_model_selection.html
@@ -240,8 +240,8 @@ scikit-learn 通过交叉验证来公开设置 Lasso ``alpha`` 参数的对象: 
 多任务 Lasso
 ================
 
-:class:`MultiTaskLasso` 是一个估计多元回归稀疏系数的线性模型： ``y`` 是一个 ``(n_samples, n_tasks)`` 的2D array，
-其约束条件和其他回归问题（也称为任务）是一样的，都是所选的特征值。
+:class:`MultiTaskLasso` 是一个线性模型，它联合估计多元回归问题的稀疏系数： ``y`` 是一个 ``(n_samples, n_tasks)`` 的2D array，
+其约束条件和其他回归问题（也称为任务）是一样的，都是所选的特征。
 
 下图比较了通过使用简单的 Lasso 或 MultiTaskLasso 得到的 W 中非零的位置。 
 Lasso 估计产生分散的非零值，而 MultiTaskLasso 的一整列都是非零的。
@@ -256,7 +256,7 @@ Lasso 估计产生分散的非零值，而 MultiTaskLasso 的一整列都是非�
 
 .. centered:: |multi_task_lasso_1| |multi_task_lasso_2|
 
-.. centered:: Fitting a time-series model, imposing that any active feature be active at all times.
+.. centered:: 拟合时间序列模型，强制让任何激活特征在任何时候都是激活的.
 
 .. topic:: 案例:
 

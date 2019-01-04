@@ -8,12 +8,13 @@
 
 
 ========================================
-Lasso and Elastic Net for Sparse Signals
+用于稀疏信号的 Lasso 和 Elastic-Net 
 ========================================
 
-Estimates Lasso and Elastic-Net regression models on a manually generated
-sparse signal corrupted with an additive noise. Estimated coefficients are
-compared with the ground-truth.
+在人工产生的被加性噪声污染的稀疏信号上估计Lasso和Elastic-Net回归模型。
+估计出的系数拿来与真实的系数进行比较。
+
+翻译者：studyai.com的Antares博士
 
 
 
@@ -54,27 +55,27 @@ compared with the ground-truth.
     from sklearn.metrics import r2_score
 
     # #############################################################################
-    # Generate some sparse data to play with
+    # 产生一些稀疏数据
     np.random.seed(42)
 
     n_samples, n_features = 50, 200
-    X = np.random.randn(n_samples, n_features)
-    coef = 3 * np.random.randn(n_features)
+    X = np.random.randn(n_samples, n_features) # randn(...)产生的是正态分布的数据
+    coef = 3 * np.random.randn(n_features)     # 每个特征对应一个系数
     inds = np.arange(n_features)
     np.random.shuffle(inds)
-    coef[inds[10:]] = 0  # sparsify coef
-    y = np.dot(X, coef)
+    coef[inds[10:]] = 0  # 稀疏化系数--随机的把系数向量1x200的其中10个值变为0
+    y = np.dot(X, coef)  # 线性运算 -- y = X.*w
 
-    # add noise
+    # 添加噪声：零均值，标准差为 0.01 的高斯噪声
     y += 0.01 * np.random.normal(size=n_samples)
 
-    # Split data in train set and test set
+    # 把数据划分成训练集和测试集
     n_samples = X.shape[0]
     X_train, y_train = X[:n_samples // 2], y[:n_samples // 2]
     X_test, y_test = X[n_samples // 2:], y[n_samples // 2:]
 
     # #############################################################################
-    # Lasso
+    # 训练 Lasso 模型
     from sklearn.linear_model import Lasso
 
     alpha = 0.1
@@ -86,7 +87,7 @@ compared with the ground-truth.
     print("r^2 on test data : %f" % r2_score_lasso)
 
     # #############################################################################
-    # ElasticNet
+    # 训练 ElasticNet 模型
     from sklearn.linear_model import ElasticNet
 
     enet = ElasticNet(alpha=alpha, l1_ratio=0.7)
@@ -106,7 +107,7 @@ compared with the ground-truth.
               % (r2_score_lasso, r2_score_enet))
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.031 seconds)
+**Total running time of the script:** ( 0 minutes  0.038 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_lasso_and_elasticnet.py:

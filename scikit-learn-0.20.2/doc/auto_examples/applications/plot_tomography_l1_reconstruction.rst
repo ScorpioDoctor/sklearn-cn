@@ -8,39 +8,26 @@
 
 
 ======================================================================
-Compressive sensing: tomography reconstruction with L1 prior (Lasso)
+压缩感知: 使用 L1 prior (Lasso) 进行层析重建
 ======================================================================
 
-This example shows the reconstruction of an image from a set of parallel
-projections, acquired along different angles. Such a dataset is acquired in
-**computed tomography** (CT).
+这个例子显示了从一组平行投影中重建图像的过程，这些投影是沿着不同的角度获得的。
+这种数据集是在计算机断层扫描(**computed tomography** (CT))中获取的。
 
-Without any prior information on the sample, the number of projections
-required to reconstruct the image is of the order of the linear size
-``l`` of the image (in pixels). For simplicity we consider here a sparse
-image, where only pixels on the boundary of objects have a non-zero
-value. Such data could correspond for example to a cellular material.
-Note however that most images are sparse in a different basis, such as
-the Haar wavelets. Only ``l/7`` projections are acquired, therefore it is
-necessary to use prior information available on the sample (its
-sparsity): this is an example of **compressive sensing**.
+在没有关于样本的任何先验信息的情况下，重建图像所需的投影数是图像线性大小 ``l`` 的数量级(以像素为单位)。
+为了简单起见，我们在这里考虑稀疏图像，其中只有物体边界上的像素有一个非零值。
+例如，这样的数据可以对应于蜂窝材料。 但是，请注意，大多数图像都是在不同的基(basis)上稀疏的，例如Haar小波。
+只获得了 ``l/7`` 投影，因此有必要使用现有的样本上的先验信息(其稀疏性)：这是压缩感知(**compressive sensing**)的一个例子。
 
-The tomography projection operation is a linear transformation. In
-addition to the data-fidelity term corresponding to a linear regression,
-we penalize the L1 norm of the image to account for its sparsity. The
-resulting optimization problem is called the :ref:`lasso`. We use the
-class :class:`sklearn.linear_model.Lasso`, that uses the coordinate descent
-algorithm. Importantly, this implementation is more computationally efficient
-on a sparse matrix, than the projection operator used here.
+层析投影操作( tomography projection operation)是一种线性变换。除了对应于线性回归的数据保真度项(data-fidelity term)外，
+我们还惩罚图像的L1范数以便把图像的稀疏性也考虑到模型中去。 由此产生的优化问题称为 :ref:`lasso` 问题。
+我们使用 :class:`sklearn.linear_model.Lasso` 类，它使用坐标下降算法。
+重要的是，这个实现在稀疏矩阵上的计算效率比这里使用的投影算子(projection operator)更高效。
 
-The reconstruction with L1 penalization gives a result with zero error
-(all pixels are successfully labeled with 0 or 1), even if noise was
-added to the projections. In comparison, an L2 penalization
-(:class:`sklearn.linear_model.Ridge`) produces a large number of labeling
-errors for the pixels. Important artifacts are observed on the
-reconstructed image, contrary to the L1 penalization. Note in particular
-the circular artifact separating the pixels in the corners, that have
-contributed to fewer projections than the central disk.
+L1惩罚的重建结果为零误差(所有像素都被成功标记为0或1)，即使在投影中添加了噪声。
+相比之下，L2惩罚(:class:`sklearn.linear_model.Ridge`)会产生大量的像素标记错误。
+在重建图像上观察到重要的伪影(Important artifacts)，这与L1惩罚相反。特别要注意的是，圆形伪影将角上的像素分隔开来，
+而与中央圆盘内的像素相比，角点处的像素只贡献了很少的投影。
 
 
 
@@ -54,12 +41,14 @@ contributed to fewer projections than the central disk.
 
 .. code-block:: python
 
+
     from __future__ import division
 
     print(__doc__)
 
     # Author: Emmanuelle Gouillart <emmanuelle.gouillart@nsup.org>
     # License: BSD 3 clause
+    # 翻译者：studyai.com的Antares博士
 
     import numpy as np
     from scipy import sparse
@@ -85,20 +74,20 @@ contributed to fewer projections than the central disk.
 
 
     def build_projection_operator(l_x, n_dir):
-        """ Compute the tomography design matrix.
+        """ 计算层析设计矩阵
 
-        Parameters
+        参数
         ----------
 
         l_x : int
-            linear size of image array
+            图像数组的线性长度
 
         n_dir : int
-            number of angles at which projections are acquired.
+            获得投影所需的角度的数量.
 
         Returns
         -------
-        p : sparse matrix of shape (n_dir l_x, l_x**2)
+        p :  shape 为 (n_dir l_x, l_x**2) 的稀疏矩阵
         """
         X, Y = _generate_center_coordinates(l_x)
         angles = np.linspace(0, np.pi, n_dir, endpoint=False)
@@ -118,7 +107,7 @@ contributed to fewer projections than the central disk.
 
 
     def generate_synthetic_data():
-        """ Synthetic binary data """
+        """ 合成二进制数据 """
         rs = np.random.RandomState(0)
         n_pts = 36
         x, y = np.ogrid[0:l, 0:l]
@@ -131,21 +120,20 @@ contributed to fewer projections than the central disk.
         return np.logical_xor(res, ndimage.binary_erosion(res))
 
 
-    # Generate synthetic images, and projections
+    # 生成合成图像和投影
     l = 128
     proj_operator = build_projection_operator(l, l // 7)
     data = generate_synthetic_data()
     proj = proj_operator * data.ravel()[:, np.newaxis]
     proj += 0.15 * np.random.randn(*proj.shape)
 
-    # Reconstruction with L2 (Ridge) penalization
+    # 使用 L2 (Ridge) 惩罚的重建
     rgr_ridge = Ridge(alpha=0.2)
     rgr_ridge.fit(proj_operator, proj.ravel())
     rec_l2 = rgr_ridge.coef_.reshape(l, l)
 
-    # Reconstruction with L1 (Lasso) penalization
-    # the best value of alpha was determined using cross validation
-    # with LassoCV
+    # 使用 L1 (Lasso) 惩罚的重建
+    # alpha 的最佳值 使用交叉验证来确定: LassoCV
     rgr_lasso = Lasso(alpha=0.001)
     rgr_lasso.fit(proj_operator, proj.ravel())
     rec_l1 = rgr_lasso.coef_.reshape(l, l)
@@ -169,7 +157,7 @@ contributed to fewer projections than the central disk.
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  7.238 seconds)
+**Total running time of the script:** ( 0 minutes  8.290 seconds)
 
 
 .. _sphx_glr_download_auto_examples_applications_plot_tomography_l1_reconstruction.py:

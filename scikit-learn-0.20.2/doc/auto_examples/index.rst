@@ -186,6 +186,26 @@ Examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子显示了从一组平行投影中重建图像的过程，这些投影是沿着不同的角度获得的。 这种数据集是在计算机断层扫描(**computed tomography** (CT))中获取的。">
+
+.. only:: html
+
+    .. figure:: /auto_examples/applications/images/thumb/sphx_glr_plot_tomography_l1_reconstruction_thumb.png
+
+        :ref:`sphx_glr_auto_examples_applications_plot_tomography_l1_reconstruction.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/applications/plot_tomography_l1_reconstruction
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the need for robust covariance estimation on a real data set. It is us...">
 
 .. only:: html
@@ -203,26 +223,6 @@ Examples
    :hidden:
 
    /auto_examples/applications/plot_outlier_detection_housing
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example shows the reconstruction of an image from a set of parallel projections, acquired ...">
-
-.. only:: html
-
-    .. figure:: /auto_examples/applications/images/thumb/sphx_glr_plot_tomography_l1_reconstruction_thumb.png
-
-        :ref:`sphx_glr_auto_examples_applications_plot_tomography_l1_reconstruction.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/applications/plot_tomography_l1_reconstruction
 
 .. raw:: html
 
@@ -2716,26 +2716,6 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Shows the effect of collinearity in the coefficients of an estimator.">
-
-.. only:: html
-
-    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_ridge_path_thumb.png
-
-        :ref:`sphx_glr_auto_examples_linear_model_plot_ridge_path.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/linear_model/plot_ridge_path
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Plot the maximum margin separating hyperplane within a two-class separable dataset using a line...">
 
 .. only:: html
@@ -2753,6 +2733,26 @@ Biclustering
    :hidden:
 
    /auto_examples/linear_model/plot_sgd_separating_hyperplane
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="展示共线性(collinearity)对估计器系数的影响">
+
+.. only:: html
+
+    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_ridge_path_thumb.png
+
+        :ref:`sphx_glr_auto_examples_linear_model_plot_ridge_path.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/linear_model/plot_ridge_path
 
 .. raw:: html
 
@@ -3056,7 +3056,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="The multi-task lasso allows to fit multiple regression problems jointly enforcing the selected ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="multi-task lasso 允许联合的拟合多元回归问题，强制那些被选择的特征在所有任务上都一样。 此示例模拟了一些序贯测量(sequential measurements)，每个任务都...">
 
 .. only:: html
 
@@ -3076,7 +3076,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Estimates Lasso and Elastic-Net regression models on a manually generated sparse signal corrupt...">
+    <div class="sphx-glr-thumbcontainer" tooltip="在人工产生的被加性噪声污染的稀疏信号上估计Lasso和Elastic-Net回归模型。 估计出的系数拿来与真实的系数进行比较。">
 
 .. only:: html
 
@@ -3296,7 +3296,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Use the Akaike information criterion (AIC), the Bayes Information criterion (BIC) and cross-val...">
+    <div class="sphx-glr-thumbcontainer" tooltip="利用Akaike信息准则(AIC)、Bayes信息准则(BIC)和交叉验证， 选择 :ref:`lasso` 估计器正则化参数 alpha 的最优值。">
 
 .. only:: html
 

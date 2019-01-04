@@ -8,16 +8,12 @@
 
 
 =============================================
-Joint feature selection with multi-task Lasso
+使用 multi-task Lasso 的联合特征选择
 =============================================
 
-The multi-task lasso allows to fit multiple regression problems
-jointly enforcing the selected features to be the same across
-tasks. This example simulates sequential measurements, each task
-is a time instant, and the relevant features vary in amplitude
-over time while being the same. The multi-task lasso imposes that
-features that are selected at one time point are select for all time
-point. This makes feature selection by the Lasso more stable.
+multi-task lasso 允许联合的拟合多元回归问题，强制那些被选择的特征在所有任务上都一样。
+此示例模拟了一些序贯测量(sequential measurements)，每个任务都是即时的，相关的特征的幅值在变得相同的时候随时间而变化。
+multi-task lasso强制那些在一个时间点被选择的特征就是为所有的时间点选择的。这使得使用 Lasso 的特征选择更加稳定。
 
 
 
@@ -46,6 +42,8 @@ point. This makes feature selection by the Lasso more stable.
 
     # Author: Alexandre Gramfort <alexandre.gramfort@inria.fr>
     # License: BSD 3 clause
+    # 翻译者：studyai.com的Antares博士
+
 
     import matplotlib.pyplot as plt
     import numpy as np
@@ -97,7 +95,7 @@ point. This makes feature selection by the Lasso more stable.
     plt.ylim([-1.1, 1.1])
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.099 seconds)
+**Total running time of the script:** ( 0 minutes  0.185 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_multi_task_lasso_support.py:
