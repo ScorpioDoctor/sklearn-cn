@@ -607,7 +607,7 @@ def load_diabetes(return_X_y=False):
     target_filename = join(base_dir, 'diabetes_target.csv.gz')
     target = np.loadtxt(target_filename)
 
-    with open(join(module_path, 'descr', 'diabetes.rst')) as rst_file:
+    with open(join(module_path, 'descr', 'diabetes.rst'),'rb') as rst_file:
         fdescr = rst_file.read()
 
     if return_X_y:
@@ -732,7 +732,7 @@ def load_boston(return_X_y=False):
     module_path = dirname(__file__)
 
     fdescr_name = join(module_path, 'descr', 'boston_house_prices.rst')
-    with open(fdescr_name) as f:
+    with open(fdescr_name,'rb') as f:
         descr_text = f.read()
 
     data_file_name = join(module_path, 'data', 'boston_house_prices.csv')
