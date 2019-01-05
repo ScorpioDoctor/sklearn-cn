@@ -2696,7 +2696,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Computes Lasso Path along the regularization parameter using the LARS algorithm on the diabetes...">
+    <div class="sphx-glr-thumbcontainer" tooltip="在糖尿病数据集(diabetes dataset)上，使用LARS算法 沿着正则化参数计算 Lasso Path。 每种颜色代表系数向量的不同特征, 并且被展示为正则化参数 alpha 的一...">
 
 .. only:: html
 
@@ -3236,7 +3236,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Lasso and elastic net (L1 and L2 penalisation) implemented using a coordinate descent.">
+    <div class="sphx-glr-thumbcontainer" tooltip="Lasso 和 elastic-net (L1与L2惩罚) 是使用坐标下降法来实现的。">
 
 .. only:: html
 
@@ -3256,27 +3256,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Fit regression model with Bayesian Ridge Regression.">
-
-.. only:: html
-
-    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_ard_thumb.png
-
-        :ref:`sphx_glr_auto_examples_linear_model_plot_ard.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/linear_model/plot_ard
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Computes a Bayesian Ridge Regression on a synthetic dataset.">
+    <div class="sphx-glr-thumbcontainer" tooltip="在一个人工合成的数据集上计算贝叶斯岭回归(Bayesian Ridge Regression)。">
 
 .. only:: html
 
@@ -3293,6 +3273,26 @@ Biclustering
    :hidden:
 
    /auto_examples/linear_model/plot_bayesian_ridge
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="使用自动关联确定理论拟合回归模型。">
+
+.. only:: html
+
+    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_ard_thumb.png
+
+        :ref:`sphx_glr_auto_examples_linear_model_plot_ard.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/linear_model/plot_ard
 
 .. raw:: html
 

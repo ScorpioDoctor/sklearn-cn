@@ -8,27 +8,23 @@
 
 
 ==================================================
-Automatic Relevance Determination Regression (ARD)
+自动关联确定 回归 (ARD)
 ==================================================
 
-Fit regression model with Bayesian Ridge Regression.
+使用自动关联确定理论拟合回归模型。
 
-See :ref:`bayesian_ridge_regression` for more information on the regressor.
+请看 自动关联确定(:ref:`automatic_correlation_determination`) 用于回归的更多内容。
 
-Compared to the OLS (ordinary least squares) estimator, the coefficient
-weights are slightly shifted toward zeros, which stabilises them.
+与OLS(普通最小二乘)估计器相比，系数权值略向零漂移，从而使其稳定。
 
-The histogram of the estimated weights is very peaked, as a sparsity-inducing
-prior is implied on the weights.
+估计出的权重的直方图是非常尖峰的(very peaked)，因为在权重上隐含了从稀疏诱导的先验(sparsity-inducing prior)。
 
-The estimation of the model is done by iteratively maximizing the
-marginal log-likelihood of the observations.
+模型的估计是通过 迭代地最大化 观测值的边际对数似然(marginal log-likelihood of the observations)来实现的。
 
-We also plot predictions and uncertainties for ARD
-for one dimensional regression using polynomial feature expansion.
-Note the uncertainty starts going up on the right side of the plot.
-This is because these test samples are outside of the range of the training
-samples.
+我们还用多项式特征展开(polynomial feature expansion)绘制了一维回归情形下的ARD的预测和不确定性图。 
+注意到，不确定性值在图的右边开始上升。这是因为这些测试样本超出了训练样本的范围。
+
+翻译者：studyai.com的Antares博士
 
 
 
@@ -62,6 +58,7 @@ samples.
 
 .. code-block:: python
 
+
     print(__doc__)
 
     import numpy as np
@@ -71,31 +68,31 @@ samples.
     from sklearn.linear_model import ARDRegression, LinearRegression
 
     # #############################################################################
-    # Generating simulated data with Gaussian weights
+    # 用高斯权值(Gaussian weights)生成模拟数据
 
-    # Parameters of the example
+    # 样本集的参数(样本数量，特征数量)
     np.random.seed(0)
     n_samples, n_features = 100, 100
-    # Create Gaussian data
+    # 产生服从高斯分布的数据
     X = np.random.randn(n_samples, n_features)
     # Create weights with a precision lambda_ of 4.
     lambda_ = 4.
     w = np.zeros(n_features)
-    # Only keep 10 weights of interest
+    # 只保留 10 个感兴趣的权重
     relevant_features = np.random.randint(0, n_features, 10)
     for i in relevant_features:
         w[i] = stats.norm.rvs(loc=0, scale=1. / np.sqrt(lambda_))
     # Create noise with a precision alpha of 50.
     alpha_ = 50.
     noise = stats.norm.rvs(loc=0, scale=1. / np.sqrt(alpha_), size=n_samples)
-    # Create the target
+    # 产生 目标值(target)
     y = np.dot(X, w) + noise
 
     # #############################################################################
-    # Fit the ARD Regression
+    # 拟合 ARD Regression 模型
     clf = ARDRegression(compute_score=True)
     clf.fit(X, y)
-
+    # 拟合 OLS Regression 模型
     ols = LinearRegression()
     ols.fit(X, y)
 
@@ -155,7 +152,7 @@ samples.
     plt.legend(loc="lower left")
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.252 seconds)
+**Total running time of the script:** ( 0 minutes  0.250 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_ard.py:

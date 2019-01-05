@@ -283,11 +283,12 @@ Lasso 估计产生分散的非零值，而 MultiTaskLasso 的一整列都是非�
 
 弹性网(Elastic Net)
 ========================
-:class:`ElasticNet` 是一种使用 L1 和 L2 范数作为先验正则项训练的线性回归模型。
-这种正则化项的组合允许学习到一个只有少量参数是非零稀疏的模型，就像 :class:`Lasso` 一样，但是它仍然保持一些像 :class:`Ridge` 的正则性质。
+:class:`ElasticNet` 是一种使用 L1 和 L2 先验作为正则项训练的线性回归模型。
+这种正则化项的组合允许学习到一个稀疏的模型, 其中只有少量参数是非零的，就像 :class:`Lasso` 一样，
+但是它仍然保持一些像 :class:`Ridge` 的正则性质。
 我们可以利用 ``l1_ratio`` 参数控制 L1 和 L2 的凸组合。
 
-弹性网络在很多特征互相联系的情况下是非常有用的。Lasso 很可能只随机考虑这些特征中的一个，而弹性网络更倾向于选择两个。
+弹性网络在很多特征相互关联的情况下是非常有用的。Lasso 很可能只随机考虑这些特征中的一个，而弹性网络更倾向于选择两个。
 
 在实践中，Lasso 和 Ridge 之间权衡的一个优势是它允许Elastic-Net在循环过程（Under rotate）中继承 Ridge 的稳定性。
 
@@ -360,15 +361,15 @@ LARS 的优点如下 :
 
   - 它在计算上和前向选择一样快，和普通最小二乘法有相同的运算复杂度。
 
-  - 它产生了一个完整的分段线性的解决路径，在交叉验证或者其他相似的微调模型的方法上非常有用。
+  - 它产生了一个完整的分段线性的解路径，在交叉验证或者其他相似的微调模型的方法上非常有用。
 
-  - 如果两个变量对响应几乎有相等的联系，则它们的系数应该有相似的增长率。因此这个算法和我们直觉上的判断一样，而且还更加稳定。
+  - 如果两个变量对响应几乎有相等的关联关系，则它们的系数应该有相似的增长率。因此这个算法和我们直觉上的判断一样，而且还更加稳定。
 
   - 它很容易修改并为其他估算器生成解，比如Lasso。
 
 LARS 的缺点如下 :
 
-  - 因为 LARS 是建立在循环拟合剩余变量上的，所以它对噪声非常敏感。这个问题，在 2004 年统计年鉴的文章由 Weisberg 详细讨论。
+  - 因为 LARS 是建立在基于对残差的迭代重拟合上，所以它对噪声非常敏感。这个问题，在 2004 年统计年鉴的文章由 Weisberg 详细讨论。
 
 LARS 模型可以在 :class:`Lars` ，或者它的底层实现 :func:`lars_path` 中被使用。
 
@@ -377,7 +378,7 @@ LARS Lasso
 ==========
 
 :class:`LassoLars` 是一个使用 LARS 算法的 lasso 模型，不同于基于坐标下降法的实现，
-它可以得到一个精确解，也就是一个关于自身参数标准化后的一个分段线性解。
+它可以得到一个精确解。这个解作为其系数的范数的函数是分段线性函数。
 
 .. figure:: ../auto_examples/linear_model/images/sphx_glr_plot_lasso_lars_001.png
    :target: ../auto_examples/linear_model/plot_lasso_lars.html
@@ -465,11 +466,12 @@ previously chosen dictionary elements.
 贝叶斯回归
 ===================
 
-贝叶斯回归可以用于在估计阶段的参数正则化: 正则化参数的选择不是通过人为选择进行设置，而是根据手头的数据来调节的。
+贝叶斯回归技术可用于在估计过程中包含正则化参数: 正则化参数的选择不是通过人为选择进行设置，而是根据手头的数据来调节的。
 
-上述过程可以通过引入 无信息先验(`uninformative priors <https://en.wikipedia.org/wiki/Non-informative_prior#Uninformative_priors>`__) 
-于模型中的超参数来完成。 在 `Ridge Regression`_  中使用的 :math:`\ell_{2}` 正则项相当于在 :math:`w` 为高斯先验条件下，
-且此先验的精确度为 :math:`\lambda^{-1}` 求最大后验估计。在这里，我们没有手工调参数 `\lambda` ，而是让他作为一个变量，通过数据中估计得到。
+上述过程可以通过在模型中的超参数上引入 
+无信息先验(`uninformative priors <https://en.wikipedia.org/wiki/Non-informative_prior#Uninformative_priors>`_) 
+来完成。 在岭回归(`Ridge Regression`_)中使用的 :math:`\ell_{2}` 正则化项 等价于 在 :math:`w` 是精确度为 :math:`\lambda^{-1}` 的高斯先验条件下，
+求最大后验估计。在这里，我们没有手工调参数 `\lambda` ，而是让它作为一个变量，通过数据中估计得到。
 
 为了得到一个全概率模型，输出 :math:`y` 也被认为是关于 :math:`X w` 的高斯分布:
 
@@ -507,7 +509,8 @@ Bayesian Regression 的缺点是:
 .. math:: p(w|\lambda) =
     \mathcal{N}(w|0,\lambda^{-1}\mathbf{I}_{p})
 
-:math:`\alpha` 和 :math:`\lambda` 的先验分布选择为 `gamma distributions <https://en.wikipedia.org/wiki/Gamma_distribution>`__, 
+:math:`\alpha` 和 :math:`\lambda` 的先验分布选择为 
+`gamma distributions <https://en.wikipedia.org/wiki/Gamma_distribution>`_, 
 这个分布与高斯成共轭先验关系。
 
 得到的模型一般称为 贝叶斯岭回归(*Bayesian Ridge Regression*)， 并且这个与传统的 :class:`Ridge` 非常相似。
@@ -561,16 +564,17 @@ Bayesian Ridge Regression 用于回归问题 ::
     by MacKay, David J. C.
 
 
+.. _automatic_correlation_determination:
 
-主动相关决策理论 - ARD
+自动关联确定理论 - ARD
 ---------------------------------------
 
-:class:`ARDRegression` 类 与  `Bayesian Ridge Regression`_ 非常相似,
+:class:`ARDRegression` 与贝叶斯岭回归非常相似,
 但是可以学习到更稀疏的模型权重参数(sparser weights) :math:`w` [1]_ [2]_。
 :class:`ARDRegression` 通过放弃球形高斯分布的假设(assumption of the Gaussian being spherical)
 在 :math:`w` 上强加了一个不同的先验分布。
 
-与贝叶斯岭回归不同的是, :math:`w` 上的分布被假定为是一个与坐标轴平行的(axis-parallel),椭圆形高斯分布。
+与贝叶斯岭回归不同的是, :math:`w` 上的分布被假定为是一个与坐标轴平行的(axis-parallel)椭圆形高斯分布。
 
 这意味着 每一个权重 :math:`w_{i}` 是从一个高斯分布抽取的，此高斯分布以0位中心并且有一个精度 :math:`\lambda_{i}`:
 
@@ -578,15 +582,17 @@ Bayesian Ridge Regression 用于回归问题 ::
 
 with :math:`diag \; (A) = \lambda = \{\lambda_{1},...,\lambda_{p}\}`.
 
-与 `Bayesian Ridge Regression`_ 相比, :math:`w_{i}` 的每一个坐标都有自己的标准差 :math:`\lambda_i`。 在所有
-:math:`\lambda_i` 上的先验分布被选择为由超参数 :math:`\lambda_1` 和 :math:`\lambda_2` 给出的相同的伽马分布(gamma distribution) 。
+与贝叶斯岭回归相比, :math:`w_{i}` 的每一个坐标都有自己的标准差 :math:`\lambda_i`。 在所有
+:math:`\lambda_i` 上的先验分布被选择为由超参数 :math:`\lambda_1` 和 :math:`\lambda_2` 
+给出的相同的伽马分布(gamma distribution) 。
 
 .. figure:: ../auto_examples/linear_model/images/sphx_glr_plot_ard_001.png
    :target: ../auto_examples/linear_model/plot_ard.html
    :align: center
    :scale: 50%
 
-ARD 在文献中也被称之为 *Sparse Bayesian Learning* 和 *Relevance Vector Machine* [3]_ [4]_.
+ARD 在文献中也被称之为 稀疏贝叶斯学习（*Sparse Bayesian Learning*） 
+和 关联向量机（*Relevance Vector Machine*） [3]_ [4]_　。
 
 .. topic:: 案例:
 

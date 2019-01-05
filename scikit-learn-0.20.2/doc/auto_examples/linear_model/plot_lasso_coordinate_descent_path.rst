@@ -8,13 +8,17 @@
 
 
 =====================
-Lasso and Elastic Net
+Lasso 和 Elastic-Net
 =====================
 
-Lasso and elastic net (L1 and L2 penalisation) implemented using a
-coordinate descent.
+Lasso 和 elastic-net (L1与L2惩罚) 是使用坐标下降法来实现的。
 
-The coefficients can be forced to be positive.
+模型的系数可以被强制变为正的(通过设置参数 ``positive=True`` )。
+
+(译者注：要注意 在三个图中alpha被取了负对数，所以越靠近图的左边alpha的负对数越小而alpha则越大，
+alpha越大则正则化就越厉害，系数就都缩减为0了。所以大家看到在三幅图里面都是
+从左到右系数越来越发散，就是因为随着alpha的减小正则化项被逐渐削弱导致的。
+但是在Lasso中随着alpha的减小模型系数发散的比ElesticNet要快。)
 
 
 
@@ -61,6 +65,7 @@ The coefficients can be forced to be positive.
 
     # Author: Alexandre Gramfort <alexandre.gramfort@inria.fr>
     # License: BSD 3 clause
+    # 翻译者： studyai.com 的 Antares 博士
 
     from itertools import cycle
     import numpy as np
@@ -73,11 +78,11 @@ The coefficients can be forced to be positive.
     X = diabetes.data
     y = diabetes.target
 
-    X /= X.std(axis=0)  # Standardize data (easier to set the l1_ratio parameter)
+    X /= X.std(axis=0)  # 标准化数据 (更容易设置 l1_ratio 参数)
 
-    # Compute paths
+    # 计算(正则化)路径
 
-    eps = 5e-3  # the smaller it is the longer is the path
+    eps = 5e-3  # 此值越小，路径越长
 
     print("Computing regularization path using the lasso...")
     alphas_lasso, coefs_lasso, _ = lasso_path(X, y, eps, fit_intercept=False)
@@ -93,7 +98,7 @@ The coefficients can be forced to be positive.
     alphas_positive_enet, coefs_positive_enet, _ = enet_path(
         X, y, eps=eps, l1_ratio=0.8, positive=True, fit_intercept=False)
 
-    # Display results
+    # 展示结果
 
     plt.figure(1)
     colors = cycle(['b', 'r', 'g', 'c', 'k'])
@@ -137,7 +142,7 @@ The coefficients can be forced to be positive.
     plt.axis('tight')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.195 seconds)
+**Total running time of the script:** ( 0 minutes  0.194 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_lasso_coordinate_descent_path.py:

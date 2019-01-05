@@ -8,27 +8,23 @@
 
 
 =========================
-Bayesian Ridge Regression
+贝叶斯岭回归
 =========================
 
-Computes a Bayesian Ridge Regression on a synthetic dataset.
+在一个人工合成的数据集上计算贝叶斯岭回归(Bayesian Ridge Regression)。
 
-See :ref:`bayesian_ridge_regression` for more information on the regressor.
+请参考 :ref:`bayesian_ridge_regression` 获得关于此回归算法的更多详细信息。
 
-Compared to the OLS (ordinary least squares) estimator, the coefficient
-weights are slightly shifted toward zeros, which stabilises them.
+与OLS(普通最小二乘)估计器相比，系数权值略向零漂移，从而使其稳定。
 
-As the prior on the weights is a Gaussian prior, the histogram of the
-estimated weights is Gaussian.
+由于权重上的先验是高斯先验(Gaussian prior), 所以估计出的权重的直方图是个类似高斯分布的直方图。
 
-The estimation of the model is done by iteratively maximizing the
-marginal log-likelihood of the observations.
+模型的估计是通过 迭代地最大化 观测值的边际对数似然(marginal log-likelihood of the observations)来实现的。
 
-We also plot predictions and uncertainties for Bayesian Ridge Regression
-for one dimensional regression using polynomial feature expansion.
-Note the uncertainty starts going up on the right side of the plot.
-This is because these test samples are outside of the range of the training
-samples.
+我们还用多项式特征展开(polynomial feature expansion)绘制了一维回归情形下的贝叶斯岭回归的预测和不确定性图。
+注意到，不确定性值在图的右边开始上升。这是因为这些测试样本超出了训练样本的范围。
+
+翻译者：studyai.com的Antares博士
 
 
 
@@ -71,25 +67,25 @@ samples.
     from sklearn.linear_model import BayesianRidge, LinearRegression
 
     # #############################################################################
-    # Generating simulated data with Gaussian weights
+    # 用高斯权值(Gaussian weights)生成模拟数据
     np.random.seed(0)
     n_samples, n_features = 100, 100
-    X = np.random.randn(n_samples, n_features)  # Create Gaussian data
-    # Create weights with a precision lambda_ of 4.
+    X = np.random.randn(n_samples, n_features)  # 产生服从高斯分布的数据
+    # 用等于 4 的 precision lambda_ 产生权重。
     lambda_ = 4.
     w = np.zeros(n_features)
-    # Only keep 10 weights of interest
+    # 只保留 10 个感兴趣的权重
     relevant_features = np.random.randint(0, n_features, 10)
     for i in relevant_features:
         w[i] = stats.norm.rvs(loc=0, scale=1. / np.sqrt(lambda_))
-    # Create noise with a precision alpha of 50.
+    # 用取值为 50 的 precision alpha_ 产生噪声。
     alpha_ = 50.
     noise = stats.norm.rvs(loc=0, scale=1. / np.sqrt(alpha_), size=n_samples)
-    # Create the target
+    # 产生 目标值
     y = np.dot(X, w) + noise
 
     # #############################################################################
-    # Fit the Bayesian Ridge Regression and an OLS for comparison
+    # 拟合 贝叶斯岭回归模型 和 最小二乘模型　用于比较
     clf = BayesianRidge(compute_score=True)
     clf.fit(X, y)
 
@@ -97,8 +93,7 @@ samples.
     ols.fit(X, y)
 
     # #############################################################################
-    # Plot true weights, estimated weights, histogram of the weights, and
-    # predictions with standard deviations
+    # 画出 真正的权重, 估计出的权重, 权重的直方图，和　伴有标准偏差的预测
     lw = 2
     plt.figure(figsize=(6, 5))
     plt.title("Weights of the model")
@@ -127,7 +122,7 @@ samples.
     plt.xlabel("Iterations")
 
 
-    # Plotting some predictions for polynomial regression
+    # 绘制一些　多项式回归的预测
     def f(x, noise_amount):
         y = np.sqrt(x) * np.sin(x)
         noise = np.random.normal(0, 1, len(x))
@@ -153,7 +148,7 @@ samples.
     plt.legend(loc="lower left")
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.184 seconds)
+**Total running time of the script:** ( 0 minutes  0.205 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_bayesian_ridge.py:
