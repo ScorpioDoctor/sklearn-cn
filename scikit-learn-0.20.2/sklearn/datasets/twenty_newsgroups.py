@@ -269,7 +269,7 @@ def fetch_20newsgroups(data_home=None, subset='train', categories=None,
             "subset can only be 'train', 'test' or 'all', got '%s'" % subset)
 
     module_path = dirname(__file__)
-    with open(join(module_path, 'descr', 'twenty_newsgroups.rst')) as rst_file:
+    with open(join(module_path, 'descr', 'twenty_newsgroups.rst'),'rb') as rst_file:
         fdescr = rst_file.read()
 
     data.DESCR = fdescr
@@ -433,7 +433,7 @@ def fetch_20newsgroups_vectorized(subset="train", remove=(), data_home=None,
                          "['train', 'test', 'all']" % subset)
 
     module_path = dirname(__file__)
-    with open(join(module_path, 'descr', 'twenty_newsgroups.rst')) as rst_file:
+    with open(join(module_path, 'descr', 'twenty_newsgroups.rst'),'rb') as rst_file:
         fdescr = rst_file.read()
 
     if return_X_y:

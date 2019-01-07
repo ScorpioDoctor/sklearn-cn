@@ -8,28 +8,21 @@
 
 
 ==============================================
-Regularization path of L1- Logistic Regression
+L1- Logistic 回归的正则化路径
 ==============================================
 
 
-Train l1-penalized logistic regression models on a binary classification
-problem derived from the Iris dataset.
+在一个来自于Iris数据集的二分类问题上 训练带有L1惩罚的logistic回归模型。
 
-The models are ordered from strongest regularized to least regularized. The 4
-coefficients of the models are collected and plotted as a "regularization
-path": on the left-hand side of the figure (strong regularizers), all the
-coefficients are exactly 0. When regularization gets progressively looser,
-coefficients can get non-zero values one after the other.
+模型按照从最强的正则化到最弱的正则化进行排序。模型的4个系数被收集起来并作为正则化路径
+(regularization path)绘制出来:在图像的左边(强正则化)，所有的系数都是0。当正则化
+逐渐变得松弛时，模型的系数就能够一个接一个的获得非零值。
 
-Here we choose the SAGA solver because it can efficiently optimize for the
-Logistic Regression loss with a non-smooth, sparsity inducing l1 penalty.
+这里我们选择了 SAGA 求解器，因为它可以高效的优化带有非平滑，稀疏诱导的L1惩罚项的Logistic回归损失 。
 
-Also note that we set a low value for the tolerance to make sure that the model
-has converged before collecting the coefficients.
+另外需要注意的是 我们为 tolerance(tol) 设置一个较低的值来确保在收集系数之前模型已经收敛。
 
-We also use warm_start=True which means that the coefficients of the models are
-reused to initialize the next model fit to speed-up the computation of the
-full-path.
+我们也使用了 warm_start=True , 这意味着 模型的系数被重复使用来初始化下一个模型从而加速全路径(full-path)的计算。
 
 
 
@@ -46,7 +39,7 @@ full-path.
  .. code-block:: none
 
     Computing regularization path ...
-    This took 4.641s
+    This took 5.439s
 
 
 
@@ -60,6 +53,7 @@ full-path.
 
     # Author: Alexandre Gramfort <alexandre.gramfort@inria.fr>
     # License: BSD 3 clause
+    # 翻译者 ： Antares@studyai.com
 
     from time import time
     import numpy as np
@@ -73,10 +67,12 @@ full-path.
     X = iris.data
     y = iris.target
 
+    # 鸢尾花数据集总共有3个类，这里只保留前两个类y=0，1
+    # 剔除第三个类的样本和类标签
     X = X[y != 2]
     y = y[y != 2]
 
-    X /= X.max()  # Normalize X to speed-up convergence
+    X /= X.max()  # 归一化 X 来加速收敛
 
     # #############################################################################
     # Demo path functions
@@ -105,7 +101,7 @@ full-path.
     plt.axis('tight')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  4.671 seconds)
+**Total running time of the script:** ( 0 minutes  5.471 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_logistic_path.py:

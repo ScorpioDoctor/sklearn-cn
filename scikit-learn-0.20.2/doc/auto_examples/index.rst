@@ -2856,26 +2856,6 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip=" Train l1-penalized logistic regression models on a binary classification problem derived from ...">
-
-.. only:: html
-
-    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_logistic_path_thumb.png
-
-        :ref:`sphx_glr_auto_examples_linear_model_plot_logistic_path.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/linear_model/plot_logistic_path
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to approximate a function with a polynomial of degree n_degree by...">
 
 .. only:: html
@@ -2893,6 +2873,26 @@ Biclustering
    :hidden:
 
    /auto_examples/linear_model/plot_polynomial_interpolation
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip=" 在一个来自于Iris数据集的二分类问题上 训练带有L1惩罚的logistic回归模型。">
+
+.. only:: html
+
+    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_logistic_path_thumb.png
+
+        :ref:`sphx_glr_auto_examples_linear_model_plot_logistic_path.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/linear_model/plot_logistic_path
 
 .. raw:: html
 
@@ -3116,7 +3116,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Here we fit a multinomial logistic regression with L1 penalty on a subset of the MNIST digits c...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这里我们在MNIST手写数字分类任务的一个子集上拟合了一个带有L1惩罚的多项式logistic回归模型。 我们使用 SAGA算法 做求解器的原因是：SAGA 在样本数量显著大于特征数量的时候...">
 
 .. only:: html
 
@@ -3156,7 +3156,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Comparison of the sparsity (percentage of zero coefficients) of solutions when L1 and L2 penalt...">
+    <div class="sphx-glr-thumbcontainer" tooltip="对不同的 C 值采用L1和L2惩罚时，解的稀疏性(零系数百分比)的比较。 我们可以看到，较大的 C 值给了模型更多的自由度。 相反，较小的 C 值对模型的约束更大。 L1惩罚导致更稀疏的解。">
 
 .. only:: html
 
@@ -3173,6 +3173,26 @@ Biclustering
    :hidden:
 
    /auto_examples/linear_model/plot_logistic_l1_l2_sparsity
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="绘制 多项式Logistic回归 和 OVR Logistic回归 的决策面。 对应于三个OVR分类器的超平面在图中以虚线绘制(dashed lines)。 ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_logistic_multinomial_thumb.png
+
+        :ref:`sphx_glr_auto_examples_linear_model_plot_logistic_multinomial.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/linear_model/plot_logistic_multinomial
 
 .. raw:: html
 
@@ -3193,26 +3213,6 @@ Biclustering
    :hidden:
 
    /auto_examples/linear_model/plot_theilsen
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot decision surface of multinomial and One-vs-Rest Logistic Regression. The hyperplanes corre...">
-
-.. only:: html
-
-    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_logistic_multinomial_thumb.png
-
-        :ref:`sphx_glr_auto_examples_linear_model_plot_logistic_multinomial.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/linear_model/plot_logistic_multinomial
 
 .. raw:: html
 
@@ -3296,6 +3296,26 @@ Biclustering
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="在newgroups20数据集的文档分类任务上，比较 multinomial logistic L1 回归算法 和 one-versus-rest L1 logistic 回归算法 。">
+
+.. only:: html
+
+    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_sparse_logistic_regression_20newsgroups_thumb.png
+
+        :ref:`sphx_glr_auto_examples_linear_model_plot_sparse_logistic_regression_20newsgroups.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/linear_model/plot_sparse_logistic_regression_20newsgroups
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="利用Akaike信息准则(AIC)、Bayes信息准则(BIC)和交叉验证， 选择 :ref:`lasso` 估计器正则化参数 alpha 的最优值。">
 
 .. only:: html
@@ -3313,26 +3333,6 @@ Biclustering
    :hidden:
 
    /auto_examples/linear_model/plot_lasso_model_selection
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Comparison of multinomial logistic L1 vs one-versus-rest L1 logistic regression to classify doc...">
-
-.. only:: html
-
-    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_sparse_logistic_regression_20newsgroups_thumb.png
-
-        :ref:`sphx_glr_auto_examples_linear_model_plot_sparse_logistic_regression_20newsgroups.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/linear_model/plot_sparse_logistic_regression_20newsgroups
 
 .. raw:: html
 

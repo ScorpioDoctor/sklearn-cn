@@ -8,23 +8,22 @@
 
 
 =====================================================
-Multiclass sparse logisitic regression on newgroups20
+在newgroups20数据集上的多类稀疏logisitic回归
 =====================================================
 
-Comparison of multinomial logistic L1 vs one-versus-rest L1 logistic regression
-to classify documents from the newgroups20 dataset. Multinomial logistic
-regression yields more accurate results and is faster to train on the larger
-scale dataset.
+在newgroups20数据集的文档分类任务上，比较 multinomial logistic L1 回归算法
+和 one-versus-rest L1 logistic 回归算法 。
 
-Here we use the l1 sparsity that trims the weights of not informative
-features to zero. This is good if the goal is to extract the strongly
-discriminative vocabulary of each class. If the goal is to get the best
-predictive accuracy, it is better to use the non sparsity-inducing l2 penalty
-instead.
+Multinomial logistic regression 产生更准确的结果而且在较大规模的数据集上可以训练的更快。
 
-A more traditional (and possibly better) way to predict on a sparse subset of
-input features would be to use univariate feature selection followed by a
-traditional (l2-penalised) logistic regression model.
+这里我们使用 l1 sparsity 来把那些 不提供信息的特征的权重 裁剪为0。
+如果我们的目的是抽取每个类的强辨别性词汇，这么做是好的。 
+如果我们的目标是获得最佳的预测准确率，最好是使用无稀疏诱导性的L2惩罚。
+
+在输入特征的稀疏子集上做预测的一个更为传统的(并且更好的)方法是 使用单变量特征选择再紧跟一个
+传统的 (l2-penalised) Logistic回归模型。
+
+翻译者： Antares@studyai.com
 
 
 
@@ -48,7 +47,7 @@ traditional (l2-penalised) logistic regression model.
      0.40889422 0.48959702 1.01301237 0.56261385 0.60104376 0.332803
      0.7094161  0.85083816 0.56876263 0.65715142 0.64408525 0.81163965
      0.44271254 0.41120001]
-    Run time (3 epochs) for model ovr:3.07
+    Run time (3 epochs) for model ovr:3.03
     [model=Multinomial, solver=saga] Number of epochs: 1
     [model=Multinomial, solver=saga] Number of epochs: 3
     [model=Multinomial, solver=saga] Number of epochs: 7
@@ -58,8 +57,8 @@ traditional (l2-penalised) logistic regression model.
      0.15218243 0.09069458 0.07762841 0.12143851 0.14910804 0.10837234
      0.18830655 0.1245129  0.168323   0.21828188 0.11605832 0.07839701
      0.06917383 0.15602543]
-    Run time (7 epochs) for model multinomial:3.95
-    Example run in 11.801 s
+    Run time (7 epochs) for model multinomial:4.12
+    Example run in 12.084 s
 
 
 
@@ -79,14 +78,13 @@ traditional (l2-penalised) logistic regression model.
     from sklearn.model_selection import train_test_split
 
     print(__doc__)
-    # Author: Arthur Mensch
 
     t0 = time.clock()
 
-    # We use SAGA solver
+    # 我们使用 SAGA solver
     solver = 'saga'
 
-    # Turn down for faster run time
+    # 减小样本量可以跑得更快
     n_samples = 10000
 
     # Memorized fetch_rcv1 for faster access
@@ -110,7 +108,7 @@ traditional (l2-penalised) logistic regression model.
               'multinomial': {'name': 'Multinomial', 'iters': [1, 3, 7]}}
 
     for model in models:
-        # Add initial chance-level values for plotting purpose
+        # 添加一个初始准确率(基于随机猜测)用于绘图
         accuracies = [1 / n_classes]
         times = [0]
         densities = [1]
@@ -168,7 +166,7 @@ traditional (l2-penalised) logistic regression model.
     print('Example run in %.3f s' % run_time)
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  11.792 seconds)
+**Total running time of the script:** ( 0 minutes  12.086 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sparse_logistic_regression_20newsgroups.py:

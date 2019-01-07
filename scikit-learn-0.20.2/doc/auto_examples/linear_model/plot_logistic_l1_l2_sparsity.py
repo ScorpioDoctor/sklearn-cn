@@ -1,16 +1,13 @@
 """
 ==============================================
-L1 Penalty and Sparsity in Logistic Regression
+L1 惩罚 与 Logistic回归中的稀疏性
 ==============================================
 
-Comparison of the sparsity (percentage of zero coefficients) of solutions when
-L1 and L2 penalty are used for different values of C. We can see that large
-values of C give more freedom to the model.  Conversely, smaller values of C
-constrain the model more. In the L1 penalty case, this leads to sparser
-solutions.
+对不同的 C 值采用L1和L2惩罚时，解的稀疏性(零系数百分比)的比较。
+我们可以看到，较大的 C 值给了模型更多的自由度。
+相反，较小的 C 值对模型的约束更大。 L1惩罚导致更稀疏的解。
 
-We classify 8x8 images of digits into two classes: 0-4 against 5-9.
-The visualization shows coefficients of the models for varying C.
+我们将8x8的数字图像分为两类：0-4对5-9。可视化显示了模型的系数在不断变化的C值下的图像。
 """
 
 print(__doc__)
@@ -18,6 +15,7 @@ print(__doc__)
 # Authors: Alexandre Gramfort <alexandre.gramfort@inria.fr>
 #          Mathieu Blondel <mathieu@mblondel.org>
 #          Andreas Mueller <amueller@ais.uni-bonn.de>
+# 翻译者：studyai.com 的 Antares 博士
 # License: BSD 3 clause
 
 import numpy as np
@@ -32,11 +30,12 @@ digits = datasets.load_digits()
 X, y = digits.data, digits.target
 X = StandardScaler().fit_transform(X)
 
-# classify small against large digits
+# 把>4的数字看做一类，<=4的数字看做另一类，
+# 就变成了典型的二分类问题
 y = (y > 4).astype(np.int)
 
 
-# Set regularization parameter
+# 设置正则化参数
 for i, C in enumerate((1, 0.1, 0.01)):
     # turn down tolerance for short training time
     clf_l1_LR = LogisticRegression(C=C, penalty='l1', tol=0.01, solver='saga')

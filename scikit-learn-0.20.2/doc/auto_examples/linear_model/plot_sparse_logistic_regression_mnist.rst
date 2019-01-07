@@ -8,20 +8,17 @@
 
 
 =====================================================
-MNIST classfification using multinomial logistic + L1
+在MNIST分类任务中使用 multinomial logistic + L1
 =====================================================
 
-Here we fit a multinomial logistic regression with L1 penalty on a subset of
-the MNIST digits classification task. We use the SAGA algorithm for this
-purpose: this a solver that is fast when the number of samples is significantly
-larger than the number of features and is able to finely optimize non-smooth
-objective functions which is the case with the l1-penalty. Test accuracy
-reaches > 0.8, while weight vectors remains *sparse* and therefore more easily
-*interpretable*.
+这里我们在MNIST手写数字分类任务的一个子集上拟合了一个带有L1惩罚的多项式logistic回归模型。
+我们使用 SAGA算法 做求解器的原因是：SAGA 在样本数量显著大于特征数量的时候非常快，
+而且可以很好地优化带有L1惩罚项的非平滑目标函数。
+测试准确率达到 0.8 以上，而权重向量还可以保持稀疏化，
+这样得到的模型就更具有可解释性(*interpretable*)了。
 
-Note that this accuracy of this l1-penalized linear model is significantly
-below what can be reached by an l2-penalized linear model or a non-linear
-multi-layer perceptron model on this dataset.
+请注意：这个L1惩罚的线性模型的准确率是明显低于L2惩罚的线性模型能够达到的准确率
+或是一个非线性多层感知器能够达到的准确率的。
 
 
 
@@ -37,9 +34,9 @@ multi-layer perceptron model on this dataset.
 
  .. code-block:: none
 
-    Sparsity with L1 penalty: 80.89%
-    Test score with L1 penalty: 0.8309
-    Example run in 33.456 s
+    Sparsity with L1 penalty: 81.84%
+    Test score with L1 penalty: 0.8351
+    Example run in 32.808 s
 
 
 
@@ -68,15 +65,17 @@ multi-layer perceptron model on this dataset.
     t0 = time.time()
     train_samples = 5000
 
-    # Load data from https://www.openml.org/d/554
+    # 从这儿 https://www.openml.org/d/554 加载数据
     X, y = fetch_openml('mnist_784', version=1, return_X_y=True)
 
+    # 对数据进行随机洗牌(shuffle data)
     random_state = check_random_state(0)
     permutation = random_state.permutation(X.shape[0])
     X = X[permutation]
     y = y[permutation]
     X = X.reshape((X.shape[0], -1))
 
+    # 分成 训练集 与 测试集
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, train_size=train_samples, test_size=10000)
 
@@ -84,7 +83,7 @@ multi-layer perceptron model on this dataset.
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    # Turn up tolerance for faster convergence
+    # 上调 tolerance 可以更快的收敛
     clf = LogisticRegression(C=50. / train_samples,
                              multi_class='multinomial',
                              penalty='l1', solver='saga', tol=0.1)
@@ -111,7 +110,7 @@ multi-layer perceptron model on this dataset.
     print('Example run in %.3f s' % run_time)
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  33.456 seconds)
+**Total running time of the script:** ( 0 minutes  32.808 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sparse_logistic_regression_mnist.py:
