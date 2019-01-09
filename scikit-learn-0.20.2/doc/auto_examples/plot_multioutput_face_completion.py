@@ -1,14 +1,13 @@
 """
 ==============================================
-Face completion with a multi-output estimators
+用多输出估计器实现人脸完成
 ==============================================
 
-This example shows the use of multi-output estimator to complete images.
-The goal is to predict the lower half of a face given its upper half.
+这个例子显示了使用多输出估计器来完成图像(complete images)。
+目标是给定脸上半部，预测脸的下半部。
 
-The first column of images shows true faces. The next columns illustrate
-how extremely randomized trees, k nearest neighbors, linear
-regression and ridge regression complete the lower half of those faces.
+第一列图片显示真实的面孔。下一列展示了了极大随机树、
+k近邻、线性回归和岭回归是如何完成这些面的下半部的。
 
 """
 print(__doc__)
@@ -24,13 +23,13 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import RidgeCV
 
-# Load the faces datasets
+# 加载人脸数据集
 data = fetch_olivetti_faces()
 targets = data.target
 
 data = data.images.reshape((len(data.images), -1))
 train = data[targets < 30]
-test = data[targets >= 30]  # Test on independent people
+test = data[targets >= 30]  # 在独立样本上
 
 # Test on a subset of people
 n_faces = 5

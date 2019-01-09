@@ -34,7 +34,7 @@ Examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example shows the use of multi-output estimator to complete images. The goal is to predict...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子显示了使用多输出估计器来完成图像(complete images)。 目标是给定脸上半部，预测脸的下半部。">
 
 .. only:: html
 
@@ -3409,7 +3409,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An illustration of t-SNE on the two concentric circles and the S-curve datasets for different p...">
+    <div class="sphx-glr-thumbcontainer" tooltip="两个同心圆和S曲线数据集对不同困惑值t-SNE的示例。">
 
 .. only:: html
 
@@ -3429,7 +3429,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An illustration of dimensionality reduction on the S-curve dataset with various manifold learni...">
+    <div class="sphx-glr-thumbcontainer" tooltip="在 S-curve 数据集上使用不同的流行学习算法进行维数约减的比较展示">
 
 .. only:: html
 
@@ -3449,7 +3449,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An application of the different :ref:`manifold` techniques on a spherical data-set. Here one ca...">
+    <div class="sphx-glr-thumbcontainer" tooltip="不同的 :ref:`manifold` 技术在球形数据集上的应用。 这里，你可以看到为了获得流行学习方法的一些直观印象使用了维数约减。 关于数据集，两极以及沿着球体一侧的一片薄片被从球体中切...">
 
 .. only:: html
 
@@ -3469,7 +3469,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An illustration of various embeddings on the digits dataset.">
+    <div class="sphx-glr-thumbcontainer" tooltip="各种各样的嵌入方法(Embeddings)在手写数字数据集上的应用.">
 
 .. only:: html
 

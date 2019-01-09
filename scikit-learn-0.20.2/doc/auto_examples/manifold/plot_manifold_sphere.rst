@@ -8,28 +8,23 @@
 
 
 =============================================
-Manifold Learning methods on a severed sphere
+在切断球体上的流行学习方法
 =============================================
 
-An application of the different :ref:`manifold` techniques
-on a spherical data-set. Here one can see the use of
-dimensionality reduction in order to gain some intuition
-regarding the manifold learning methods. Regarding the dataset,
-the poles are cut from the sphere, as well as a thin slice down its
-side. This enables the manifold learning techniques to
-'spread it open' whilst projecting it onto two dimensions.
+不同的 :ref:`manifold` 技术在球形数据集上的应用。
+这里，你可以看到为了获得流行学习方法的一些直观印象使用了维数约减。
+关于数据集，两极以及沿着球体一侧的一片薄片被从球体中切下来。
+这使得流形学习技术能够“打开”球体，同时将其投射到两个维度。
 
-For a similar example, where the methods are applied to the
-S-curve dataset, see :ref:`sphx_glr_auto_examples_manifold_plot_compare_methods.py`
+还有一个类似的例子, 在那里这些流行方法被运用到 S-curve 数据集，请看 
+:ref:`sphx_glr_auto_examples_manifold_plot_compare_methods.py`
 
-Note that the purpose of the :ref:`MDS <multidimensional_scaling>` is
-to find a low-dimensional representation of the data (here 2D) in
-which the distances respect well the distances in the original
-high-dimensional space, unlike other manifold-learning algorithms,
-it does not seeks an isotropic representation of the data in
-the low-dimensional space. Here the manifold problem matches fairly
-that of representing a flat map of the Earth, as with
-`map projection <https://en.wikipedia.org/wiki/Map_projection>`_
+请注意 :ref:`MDS <multidimensional_scaling>` 的目的是发现数据的一个低维表示(这里是2d表示)，
+在这个低维表示下数据点之间的距离
+很好地尊重数据点在原始空间中的距离，这不同于其他流形学习算法，它不会在低维空间中寻找数据的
+各向同性表示(isotropic representation)。
+
+在这里，流形问题与表示地球平面图的问题相当匹配，就像 `地图投影<https://en.wikipedia.org/wiki/Map_projection>`_ 一样。
 
 
 
@@ -44,14 +39,14 @@ that of representing a flat map of the Earth, as with
 
  .. code-block:: none
 
-    standard: 0.094 sec
+    standard: 0.14 sec
     ltsa: 0.16 sec
-    hessian: 0.28 sec
-    modified: 0.2 sec
-    ISO: 0.19 sec
-    MDS: 1.3 sec
-    Spectral Embedding: 0.074 sec
-    t-SNE: 4.3 sec
+    hessian: 0.26 sec
+    modified: 0.22 sec
+    ISO: 0.22 sec
+    MDS: 1.5 sec
+    Spectral Embedding: 0.09 sec
+    t-SNE: 4.2 sec
 
 
 
@@ -185,7 +180,7 @@ that of representing a flat map of the Earth, as with
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  6.818 seconds)
+**Total running time of the script:** ( 0 minutes  7.020 seconds)
 
 
 .. _sphx_glr_download_auto_examples_manifold_plot_manifold_sphere.py:

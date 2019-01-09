@@ -8,27 +8,20 @@
 
 
 =============================================================================
-t-SNE: The effect of various perplexity values on the shape
+t-SNE: 不同困惑值对形状的影响
 =============================================================================
 
-An illustration of t-SNE on the two concentric circles and the S-curve
-datasets for different perplexity values.
+两个同心圆和S曲线数据集对不同困惑值t-SNE的示例。
 
-We observe a tendency towards clearer shapes as the preplexity value increases.
+我们观察到，随着迷惑性值(preplexity value)的增加，形状越来越清晰。
 
-The size, the distance and the shape of clusters may vary upon initialization,
-perplexity values and does not always convey a meaning.
+聚簇(clusters)的大小、距离和形状可能因初始化、困惑值而异，并不总是传达意义。
 
-As shown below, t-SNE for higher perplexities finds meaningful topology of
-two concentric circles, however the size and the distance of the circles varies
-slightly from the original. Contrary to the two circles dataset, the shapes
-visually diverge from S-curve topology on the S-curve dataset even for
-larger perplexity values.
+如下所示，对于较高的困惑值，t-SNE发现了两个同心圆的有意义的拓扑结构，但圆圈的大小和距离与原来的略有不同。
+与同心圆数据集相反，即使在较大的困惑值下，t-SNE获得的形状在视觉上也与S曲线数据集上的S曲线拓扑不同。
 
-For further details, "How to Use t-SNE Effectively"
-http://distill.pub/2016/misread-tsne/ provides a good discussion of the
-effects of various parameters, as well as interactive plots to explore
-those effects.
+关于更多详细细节, "How to Use t-SNE Effectively" http://distill.pub/2016/misread-tsne/ 
+提供了各种参数的影响的讨论，包括一些交互式绘图来探索这些影响。
 
 
 
@@ -43,18 +36,18 @@ those effects.
 
  .. code-block:: none
 
-    circles, perplexity=5 in 0.98 sec
-    circles, perplexity=30 in 1.3 sec
-    circles, perplexity=50 in 1.6 sec
-    circles, perplexity=100 in 1.7 sec
-    S-curve, perplexity=5 in 1.1 sec
-    S-curve, perplexity=30 in 1.4 sec
-    S-curve, perplexity=50 in 1.7 sec
-    S-curve, perplexity=100 in 2.2 sec
-    uniform grid, perplexity=5 in 1.1 sec
+    circles, perplexity=5 in 0.96 sec
+    circles, perplexity=30 in 0.95 sec
+    circles, perplexity=50 in 1.2 sec
+    circles, perplexity=100 in 1.5 sec
+    S-curve, perplexity=5 in 1 sec
+    S-curve, perplexity=30 in 1.3 sec
+    S-curve, perplexity=50 in 1.6 sec
+    S-curve, perplexity=100 in 2.1 sec
+    uniform grid, perplexity=5 in 1 sec
     uniform grid, perplexity=30 in 1.3 sec
     uniform grid, perplexity=50 in 1.3 sec
-    uniform grid, perplexity=100 in 1.9 sec
+    uniform grid, perplexity=100 in 2 sec
 
 
 
@@ -167,7 +160,7 @@ those effects.
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  17.939 seconds)
+**Total running time of the script:** ( 0 minutes  16.590 seconds)
 
 
 .. _sphx_glr_download_auto_examples_manifold_plot_t_sne_perplexity.py:

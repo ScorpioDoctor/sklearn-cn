@@ -1,22 +1,18 @@
 """
 =========================================
-Comparison of Manifold Learning methods
+流形学习方法的比较
 =========================================
 
-An illustration of dimensionality reduction on the S-curve dataset
-with various manifold learning methods.
+在 S-curve 数据集上使用不同的流行学习算法进行维数约减的比较展示
 
-For a discussion and comparison of these algorithms, see the
-:ref:`manifold module page <manifold>`
+关于这些方法的讨论与比较，请看 :ref:`manifold module 页 <manifold>`
 
-For a similar example, where the methods are applied to a
-sphere dataset, see :ref:`sphx_glr_auto_examples_manifold_plot_manifold_sphere.py`
+还有一个类似的将本例中的流行学习算法应用到稀疏数据集上的例子,
+请看 :ref:`sphx_glr_auto_examples_manifold_plot_manifold_sphere.py`
 
-Note that the purpose of the MDS is to find a low-dimensional
-representation of the data (here 2D) in which the distances respect well
-the distances in the original high-dimensional space, unlike other
-manifold-learning algorithms, it does not seeks an isotropic
-representation of the data in the low-dimensional space.
+请注意 MDS 的目的是发现数据的一个低维表示(这里是2d表示)，在这个低维表示下数据点之间的距离
+很好地尊重数据点在原始空间中的距离，这不同于其他流形学习算法，它不会在低维空间中寻找数据的
+各向同性表示(isotropic representation)。
 """
 
 # Author: Jake Vanderplas -- <vanderplas@astro.washington.edu>
