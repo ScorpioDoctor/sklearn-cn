@@ -32,7 +32,7 @@ from matplotlib import offsetbox
 from sklearn import (manifold, datasets, decomposition, ensemble,
                      discriminant_analysis, random_projection)
 
-digits = datasets.load_digits(n_class=9)
+digits = datasets.load_digits(n_class=6)
 X = digits.data
 y = digits.target
 n_samples, n_features = X.shape
