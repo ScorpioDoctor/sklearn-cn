@@ -3196,7 +3196,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Computes a Theil-Sen Regression on a synthetic dataset.">
+    <div class="sphx-glr-thumbcontainer" tooltip="在人工合成的数据集上计算 Theil-Sen 回归。">
 
 .. only:: html
 

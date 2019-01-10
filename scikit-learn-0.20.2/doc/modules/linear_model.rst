@@ -796,7 +796,7 @@ Robust regression 特别适用于回归模型包含损坏数据（corrupt data�
    :target: ../auto_examples/linear_model/plot_robust_fit.html
    :scale: 60%
 
-* **  异常值在 X 中 还是在 y 中  ** ?
+* **离群点在 X 中 还是在 y 中** ?
 
   ==================================== ====================================
   Outliers in the y direction          Outliers in the X direction
@@ -804,7 +804,7 @@ Robust regression 特别适用于回归模型包含损坏数据（corrupt data�
   |y_outliers|                         |X_outliers|
   ==================================== ====================================
 
-* **  异常值的比例 versus 误差幅度  **
+* **离群点的比例 versus 误差幅度**
 
   外围点(outlying points)的数目很重要，但其中有多少是离群点(The number of outlying points matters, but also how much they are
   outliers.)。
