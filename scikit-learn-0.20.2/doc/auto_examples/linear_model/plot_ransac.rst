@@ -8,12 +8,12 @@
 
 
 ===========================================
-Robust linear model estimation using RANSAC
+使用 RANSAC 进行鲁棒线性模型估计
 ===========================================
 
-In this example we see how to robustly fit a linear model to faulty data using
-the RANSAC algorithm.
+在这个例子中，我们将看到如何使用RANSAC算法在错误数据(faulty data)上鲁棒地拟合线性模型。
 
+翻译者：www.studyai.com/antares
 
 
 
@@ -28,6 +28,7 @@ the RANSAC algorithm.
 
  .. code-block:: none
 
+    (8, 1) (8,) (8,)
     Estimated coefficients (true, linear regression, RANSAC):
     82.1903908407869 [54.17236387] [82.08533159]
 
@@ -53,27 +54,28 @@ the RANSAC algorithm.
                                           n_informative=1, noise=10,
                                           coef=True, random_state=0)
 
-    # Add outlier data
+    # 添加 outliers 数据点
     np.random.seed(0)
     X[:n_outliers] = 3 + 0.5 * np.random.normal(size=(n_outliers, 1))
     y[:n_outliers] = -3 + 10 * np.random.normal(size=n_outliers)
 
-    # Fit line using all data
+    # 使用所有数据拟合线性模型
     lr = linear_model.LinearRegression()
     lr.fit(X, y)
 
-    # Robustly fit linear model with RANSAC algorithm
+    # 使用 RANSAC 算法鲁棒滴拟合线性模型
     ransac = linear_model.RANSACRegressor()
     ransac.fit(X, y)
     inlier_mask = ransac.inlier_mask_
     outlier_mask = np.logical_not(inlier_mask)
 
-    # Predict data of estimated models
+    # 使用估计得到的模型拟合数据
     line_X = np.arange(X.min(), X.max())[:, np.newaxis]
     line_y = lr.predict(line_X)
     line_y_ransac = ransac.predict(line_X)
+    print(line_X.shape, line_y.shape, line_y_ransac.shape)
 
-    # Compare estimated coefficients
+    # 比较估计出的 coefficients
     print("Estimated coefficients (true, linear regression, RANSAC):")
     print(coef, lr.coef_, ransac.estimator_.coef_)
 
@@ -90,7 +92,7 @@ the RANSAC algorithm.
     plt.ylabel("Response")
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.040 seconds)
+**Total running time of the script:** ( 0 minutes  0.045 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_ransac.py:

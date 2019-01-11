@@ -47,7 +47,7 @@ Multinomial logistic regression 产生更准确的结果而且在较大规模的
      0.40889422 0.48959702 1.01301237 0.56261385 0.60104376 0.332803
      0.7094161  0.85083816 0.56876263 0.65715142 0.64408525 0.81163965
      0.44271254 0.41120001]
-    Run time (3 epochs) for model ovr:3.03
+    Run time (3 epochs) for model ovr:3.89
     [model=Multinomial, solver=saga] Number of epochs: 1
     [model=Multinomial, solver=saga] Number of epochs: 3
     [model=Multinomial, solver=saga] Number of epochs: 7
@@ -57,8 +57,8 @@ Multinomial logistic regression 产生更准确的结果而且在较大规模的
      0.15218243 0.09069458 0.07762841 0.12143851 0.14910804 0.10837234
      0.18830655 0.1245129  0.168323   0.21828188 0.11605832 0.07839701
      0.06917383 0.15602543]
-    Run time (7 epochs) for model multinomial:4.12
-    Example run in 12.084 s
+    Run time (7 epochs) for model multinomial:4.94
+    Example run in 14.979 s
 
 
 
@@ -166,7 +166,7 @@ Multinomial logistic regression 产生更准确的结果而且在较大规模的
     print('Example run in %.3f s' % run_time)
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  12.086 seconds)
+**Total running time of the script:** ( 0 minutes  14.981 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sparse_logistic_regression_20newsgroups.py:

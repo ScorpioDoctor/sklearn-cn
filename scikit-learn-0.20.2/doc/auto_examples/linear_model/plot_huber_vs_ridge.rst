@@ -8,16 +8,14 @@
 
 
 =======================================================
-HuberRegressor vs Ridge on dataset with strong outliers
+在具有强离群点的数据集上的对比：HuberRegressor vs Ridge
 =======================================================
 
-Fit Ridge and HuberRegressor on a dataset with outliers.
+在具有强离群点的数据集上拟合 Ridge 和 HuberRegressor.
 
-The example shows that the predictions in ridge are strongly influenced
-by the outliers present in the dataset. The Huber regressor is less
-influenced by the outliers since the model uses the linear loss for these.
-As the parameter epsilon is increased for the Huber regressor, the decision
-function approaches that of the ridge.
+该例表明，Ridge的预测受数据集中的离群值的影响很大。
+由于Huber regressor使用了线性损失，因此该模型受离群值的影响较小。
+随着Huber回归方程参数epsilon的增大，决策函数接近于Ridge。
 
 
 
@@ -34,6 +32,7 @@ function approaches that of the ridge.
 
     # Authors: Manoj Kumar mks542@nyu.edu
     # License: BSD 3 clause
+    # 翻译者：www.studyai.com/antares
 
     print(__doc__)
 
@@ -43,12 +42,12 @@ function approaches that of the ridge.
     from sklearn.datasets import make_regression
     from sklearn.linear_model import HuberRegressor, Ridge
 
-    # Generate toy data.
+    # 产生迷你数据集
     rng = np.random.RandomState(0)
     X, y = make_regression(n_samples=20, n_features=1, random_state=0, noise=4.0,
                            bias=100.0)
 
-    # Add four strong outliers to the dataset.
+    # 为数据集添加4个强大的 离群点
     X_outliers = rng.normal(0, 0.5, size=(4, 1))
     y_outliers = rng.normal(0, 2.0, size=4)
     X_outliers[:2, :] += X.max() + X.mean() / 4.
@@ -71,7 +70,7 @@ function approaches that of the ridge.
         coef_ = huber.coef_ * x + huber.intercept_
         plt.plot(x, coef_, colors[k], label="huber loss, %s" % epsilon)
 
-    # Fit a ridge regressor to compare it to huber regressor.
+    # 拟合一个 岭回归 模型与 huber 回归 做对比.
     ridge = Ridge(fit_intercept=True, alpha=0.0, random_state=0, normalize=True)
     ridge.fit(X, y)
     coef_ridge = ridge.coef_
@@ -84,7 +83,7 @@ function approaches that of the ridge.
     plt.legend(loc=0)
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.054 seconds)
+**Total running time of the script:** ( 0 minutes  0.060 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_huber_vs_ridge.py:

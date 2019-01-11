@@ -189,7 +189,7 @@ Lars只为路径中的每个扭结(kink)计算其路径解(path solution)。
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.690 seconds)
+**Total running time of the script:** ( 0 minutes  0.596 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_lasso_model_selection.py:

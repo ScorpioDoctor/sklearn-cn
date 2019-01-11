@@ -31,20 +31,20 @@ L1 惩罚 与 Logistic回归中的稀疏性
  .. code-block:: none
 
     C=1.00
-    Sparsity with L1 penalty: 4.69%
-    score with L1 penalty: 0.9087
+    Sparsity with L1 penalty: 6.25%
+    score with L1 penalty: 0.9098
     Sparsity with L2 penalty: 4.69%
     score with L2 penalty: 0.9037
     C=0.10
-    Sparsity with L1 penalty: 28.12%
-    score with L1 penalty: 0.9009
+    Sparsity with L1 penalty: 25.00%
+    score with L1 penalty: 0.9004
     Sparsity with L2 penalty: 4.69%
-    score with L2 penalty: 0.9004
+    score with L2 penalty: 0.9009
     C=0.01
     Sparsity with L1 penalty: 84.38%
     score with L1 penalty: 0.8625
     Sparsity with L2 penalty: 4.69%
-    score with L2 penalty: 0.8887
+    score with L2 penalty: 0.8893
 
 
 
@@ -122,7 +122,7 @@ L1 惩罚 与 Logistic回归中的稀疏性
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.705 seconds)
+**Total running time of the script:** ( 0 minutes  0.602 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_logistic_l1_l2_sparsity.py:

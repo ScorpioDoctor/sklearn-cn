@@ -1,32 +1,28 @@
 """
-Robust linear estimator fitting
+鲁棒线性估计器拟合对比试验
 ===============================
 
-Here a sine function is fit with a polynomial of order 3, for values
-close to zero.
+这里，用3阶多项式对正弦函数进行拟合，正弦函数数值接近于零。
 
-Robust fitting is demoed in different situations:
+鲁棒的拟合在多种不同情形下做了展示:
 
-- No measurement errors, only modelling errors (fitting a sine with a
-  polynomial)
+- 没有测量误差, 只有模型误差(即，使用多项式模型拟合正弦函数模型带来的误差)
 
-- Measurement errors in X
+- 在 X 中有测量误差
 
-- Measurement errors in y
+- 在 y 中有测量误差
 
-The median absolute deviation to non corrupt new data is used to judge
-the quality of the prediction.
+无污染新数据的中位绝对偏差(median absolute deviation)用来判断预测的质量。
 
-What we can see that:
+我们可以看到的是:
 
-- RANSAC is good for strong outliers in the y direction
+- RANSAC 在y方向上有强离群点的时候表现不错
 
-- TheilSen is good for small outliers, both in direction X and y, but has
-  a break point above which it performs worse than OLS.
+- TheilSen 对弱离群点的效果不错, 不仅在 X 方向还有 y 方向, 但是它有一个崩溃点
+  在这个崩溃点之上，它的表现弱于OLS。
 
-- The scores of HuberRegressor may not be compared directly to both TheilSen
-  and RANSAC because it does not attempt to completely filter the outliers
-  but lessen their effect.
+- HuberRegressor 的得分可能无法与 TheilSen 和 RANSAC 直接对比，因为它不尝试
+  完全过滤掉离群点而是去削弱它们对模型拟合的影响。
 
 """
 
@@ -43,8 +39,9 @@ np.random.seed(42)
 
 X = np.random.normal(size=400)
 y = np.sin(X)
-# Make sure that it X is 2D
+# 确保 X 是一个 2D 数组
 X = X[:, np.newaxis]
+# 或 X= X.reshape(-1,1)
 
 X_test = np.random.normal(size=200)
 y_test = np.sin(X_test)

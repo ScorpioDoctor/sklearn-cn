@@ -95,7 +95,7 @@ multi-task lasso强制那些在一个时间点被选择的特征就是为所有�
     plt.ylim([-1.1, 1.1])
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.185 seconds)
+**Total running time of the script:** ( 0 minutes  0.111 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_multi_task_lasso_support.py:

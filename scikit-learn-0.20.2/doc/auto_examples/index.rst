@@ -2856,7 +2856,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to approximate a function with a polynomial of degree n_degree by...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子演示了如何用岭回归用n_degree次多项式逼近函数。具体而言，从 n_samples 个1d点出发， 建立范德蒙矩阵(Vandermonde matrix)就足够了，它的shape...">
 
 .. only:: html
 
@@ -2956,7 +2956,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="In this example we see how to robustly fit a linear model to faulty data using the RANSAC algor...">
+    <div class="sphx-glr-thumbcontainer" tooltip="在这个例子中，我们将看到如何使用RANSAC算法在错误数据(faulty data)上鲁棒地拟合线性模型。">
 
 .. only:: html
 
@@ -2996,6 +2996,26 @@ Biclustering
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="在具有强离群点的数据集上拟合 Ridge 和 HuberRegressor.">
+
+.. only:: html
+
+    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_huber_vs_ridge_thumb.png
+
+        :ref:`sphx_glr_auto_examples_linear_model_plot_huber_vs_ridge.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/linear_model/plot_huber_vs_ridge
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="We show that linear_model.Lasso provides the same results for dense and sparse data and that in...">
 
 .. only:: html
@@ -3013,26 +3033,6 @@ Biclustering
    :hidden:
 
    /auto_examples/linear_model/plot_lasso_dense_vs_sparse_data
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Fit Ridge and HuberRegressor on a dataset with outliers.">
-
-.. only:: html
-
-    .. figure:: /auto_examples/linear_model/images/thumb/sphx_glr_plot_huber_vs_ridge_thumb.png
-
-        :ref:`sphx_glr_auto_examples_linear_model_plot_huber_vs_ridge.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/linear_model/plot_huber_vs_ridge
 
 .. raw:: html
 
@@ -3216,7 +3216,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Here a sine function is fit with a polynomial of order 3, for values close to zero.">
+    <div class="sphx-glr-thumbcontainer" tooltip="这里，用3阶多项式对正弦函数进行拟合，正弦函数数值接近于零。">
 
 .. only:: html
 

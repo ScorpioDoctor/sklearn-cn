@@ -8,25 +8,21 @@
 
 
 ========================
-Polynomial interpolation
+多项式插值
 ========================
 
-This example demonstrates how to approximate a function with a polynomial of
-degree n_degree by using ridge regression. Concretely, from n_samples 1d
-points, it suffices to build the Vandermonde matrix, which is n_samples x
-n_degree+1 and has the following form:
+这个例子演示了如何用岭回归用n_degree次多项式逼近函数。具体而言，从 n_samples 个1d点出发，
+建立范德蒙矩阵(Vandermonde matrix)就足够了，它的shape是 n_samples x n_degree+1，其形式如下:
 
 [[1, x_1, x_1 ** 2, x_1 ** 3, ...],
  [1, x_2, x_2 ** 2, x_2 ** 3, ...],
  ...]
 
-Intuitively, this matrix can be interpreted as a matrix of pseudo features (the
-points raised to some power). The matrix is akin to (but different from) the
-matrix induced by a polynomial kernel.
+直观地说，这个矩阵可以解释为伪特征矩阵(数据点被提高到某个次幂)。
+该矩阵类似于(但不同于)由多项式核诱导出的矩阵。
 
-This example shows that you can do non-linear regression with a linear model,
-using a pipeline to add non-linear features. Kernel methods extend this idea
-and can induce very high (even infinite) dimensional feature spaces.
+此示例显示，您可以使用线性模型进行非线性回归，使用管道添加非线性特征。
+核方法扩展了这一思想，可以诱导出很高(甚至无限)维数的特征空间。
 
 
 
@@ -45,6 +41,7 @@ and can induce very high (even infinite) dimensional feature spaces.
     # Author: Mathieu Blondel
     #         Jake Vanderplas
     # License: BSD 3 clause
+    # 翻译者： www.studyai.com/antares
 
     import numpy as np
     import matplotlib.pyplot as plt
@@ -55,21 +52,22 @@ and can induce very high (even infinite) dimensional feature spaces.
 
 
     def f(x):
-        """ function to approximate by polynomial interpolation"""
+        """ 要通过多项式插值逼近的函数"""
         return x * np.sin(x)
 
 
-    # generate points used to plot
+    # 产生 x 轴上的坐标点用于绘图
     x_plot = np.linspace(0, 10, 100)
 
-    # generate points and keep a subset of them
+    # 产生数据点并保留一个子集
     x = np.linspace(0, 10, 100)
     rng = np.random.RandomState(0)
     rng.shuffle(x)
+    # 在[0,10]的区间内随机挑选20个点
     x = np.sort(x[:20])
     y = f(x)
 
-    # create matrix versions of these arrays
+    # 创建这些数组的矩阵版本
     X = x[:, np.newaxis]
     X_plot = x_plot[:, np.newaxis]
 
@@ -90,7 +88,7 @@ and can induce very high (even infinite) dimensional feature spaces.
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.034 seconds)
+**Total running time of the script:** ( 0 minutes  0.045 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_polynomial_interpolation.py:
