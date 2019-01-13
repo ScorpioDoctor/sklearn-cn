@@ -39,7 +39,7 @@ L1- Logistic 回归的正则化路径
  .. code-block:: none
 
     Computing regularization path ...
-    This took 5.330s
+    This took 4.762s
 
 
 
@@ -101,7 +101,7 @@ L1- Logistic 回归的正则化路径
     plt.axis('tight')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  5.364 seconds)
+**Total running time of the script:** ( 0 minutes  4.794 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_logistic_path.py:

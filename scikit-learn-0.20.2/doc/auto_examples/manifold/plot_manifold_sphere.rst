@@ -39,14 +39,14 @@
 
  .. code-block:: none
 
-    standard: 0.12 sec
-    ltsa: 0.19 sec
-    hessian: 0.34 sec
-    modified: 0.23 sec
-    ISO: 0.26 sec
-    MDS: 1.6 sec
-    Spectral Embedding: 0.068 sec
-    t-SNE: 5.1 sec
+    standard: 0.11 sec
+    ltsa: 0.16 sec
+    hessian: 0.25 sec
+    modified: 0.21 sec
+    ISO: 0.22 sec
+    MDS: 1.4 sec
+    Spectral Embedding: 0.061 sec
+    t-SNE: 4.3 sec
 
 
 
@@ -180,7 +180,7 @@
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  8.219 seconds)
+**Total running time of the script:** ( 0 minutes  7.034 seconds)
 
 
 .. _sphx_glr_download_auto_examples_manifold_plot_manifold_sphere.py:

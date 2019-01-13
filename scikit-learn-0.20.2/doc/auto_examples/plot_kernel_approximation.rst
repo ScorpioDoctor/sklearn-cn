@@ -241,7 +241,7 @@ in :ref:`kernel_approximation`.
     plt.tight_layout()
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  1.555 seconds)
+**Total running time of the script:** ( 0 minutes  1.520 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_kernel_approximation.py:

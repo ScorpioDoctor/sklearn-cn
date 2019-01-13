@@ -138,7 +138,7 @@
         plt.title(title)
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  3.081 seconds)
+**Total running time of the script:** ( 0 minutes  3.492 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_robust_fit.py:

@@ -122,7 +122,7 @@ L1 惩罚 与 Logistic回归中的稀疏性
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.602 seconds)
+**Total running time of the script:** ( 0 minutes  0.569 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_logistic_l1_l2_sparsity.py:
