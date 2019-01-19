@@ -78,7 +78,7 @@ SVM-Anova: SVM 与 单变量特征选择
     plt.axis('tight')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.823 seconds)
+**Total running time of the script:** ( 0 minutes  0.740 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_svm_anova.py:

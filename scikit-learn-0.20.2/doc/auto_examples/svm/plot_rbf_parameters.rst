@@ -216,7 +216,7 @@ RBF核的半径本身就是一个很好的结构化正则化器。然而，在�
     plt.title('Validation accuracy')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  4.514 seconds)
+**Total running time of the script:** ( 0 minutes  4.310 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_rbf_parameters.py:

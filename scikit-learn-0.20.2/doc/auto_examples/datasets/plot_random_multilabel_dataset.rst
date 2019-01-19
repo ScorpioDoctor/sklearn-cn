@@ -124,7 +124,7 @@
     for k, p, p_w in zip(['red', 'blue', 'yellow'], p_c, p_w_c.T):
         print('%s\t%0.2f\t%0.2f\t%0.2f' % (k, p, p_w[0], p_w[1]))
 
-**Total running time of the script:** ( 0 minutes  0.096 seconds)
+**Total running time of the script:** ( 0 minutes  0.145 seconds)
 
 
 .. _sphx_glr_download_auto_examples_datasets_plot_random_multilabel_dataset.py:

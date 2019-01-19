@@ -83,7 +83,7 @@
     plt.legend(loc=0)
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.063 seconds)
+**Total running time of the script:** ( 0 minutes  0.096 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_huber_vs_ridge.py:

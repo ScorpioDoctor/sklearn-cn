@@ -36,18 +36,18 @@ t-SNE: 不同困惑值对形状的影响
 
  .. code-block:: none
 
-    circles, perplexity=5 in 1.3 sec
-    circles, perplexity=30 in 1.5 sec
-    circles, perplexity=50 in 1.5 sec
-    circles, perplexity=100 in 1.8 sec
-    S-curve, perplexity=5 in 1.4 sec
-    S-curve, perplexity=30 in 1.7 sec
-    S-curve, perplexity=50 in 2 sec
-    S-curve, perplexity=100 in 2.9 sec
-    uniform grid, perplexity=5 in 1.3 sec
-    uniform grid, perplexity=30 in 1.7 sec
-    uniform grid, perplexity=50 in 1.6 sec
-    uniform grid, perplexity=100 in 2.4 sec
+    circles, perplexity=5 in 1.1 sec
+    circles, perplexity=30 in 1.3 sec
+    circles, perplexity=50 in 1.3 sec
+    circles, perplexity=100 in 1.6 sec
+    S-curve, perplexity=5 in 1.1 sec
+    S-curve, perplexity=30 in 1.4 sec
+    S-curve, perplexity=50 in 1.7 sec
+    S-curve, perplexity=100 in 2.3 sec
+    uniform grid, perplexity=5 in 1.1 sec
+    uniform grid, perplexity=30 in 1.4 sec
+    uniform grid, perplexity=50 in 1.4 sec
+    uniform grid, perplexity=100 in 2.1 sec
 
 
 
@@ -160,7 +160,7 @@ t-SNE: 不同困惑值对形状的影响
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  21.591 seconds)
+**Total running time of the script:** ( 0 minutes  18.256 seconds)
 
 
 .. _sphx_glr_download_auto_examples_manifold_plot_t_sne_perplexity.py:

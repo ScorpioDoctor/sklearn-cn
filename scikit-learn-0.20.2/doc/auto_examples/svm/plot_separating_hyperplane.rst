@@ -63,7 +63,7 @@ SVM: 最大裕度分割超平面
                linewidth=1, facecolors='none', edgecolors='k')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.036 seconds)
+**Total running time of the script:** ( 0 minutes  0.033 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_separating_hyperplane.py:

@@ -117,7 +117,7 @@ k近邻、线性回归和岭回归是如何完成这些面的下半部的。
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  4.298 seconds)
+**Total running time of the script:** ( 0 minutes  4.289 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_multioutput_face_completion.py:

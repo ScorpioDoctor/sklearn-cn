@@ -131,7 +131,7 @@
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.476 seconds)
+**Total running time of the script:** ( 0 minutes  0.424 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_iris.py:

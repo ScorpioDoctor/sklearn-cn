@@ -157,7 +157,7 @@ L1惩罚的重建结果为零误差(所有像素都被成功标记为0或1)，�
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  8.536 seconds)
+**Total running time of the script:** ( 0 minutes  14.178 seconds)
 
 
 .. _sphx_glr_download_auto_examples_applications_plot_tomography_l1_reconstruction.py:

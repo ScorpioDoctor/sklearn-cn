@@ -98,7 +98,7 @@ LDA与PCA在鸢尾花数据集上的二维投影的比较
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.084 seconds)
+**Total running time of the script:** ( 0 minutes  0.096 seconds)
 
 
 .. _sphx_glr_download_auto_examples_decomposition_plot_pca_vs_lda.py:

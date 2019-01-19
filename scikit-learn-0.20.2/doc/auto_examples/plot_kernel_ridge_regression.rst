@@ -56,11 +56,11 @@
 
  .. code-block:: none
 
-    SVR complexity and bandwidth selected and model fitted in 0.586 s
-    KRR complexity and bandwidth selected and model fitted in 0.217 s
+    SVR complexity and bandwidth selected and model fitted in 0.570 s
+    KRR complexity and bandwidth selected and model fitted in 0.277 s
     Support vector ratio: 0.320
-    SVR prediction for 100000 inputs in 0.172 s
-    KRR prediction for 100000 inputs in 0.258 s
+    SVR prediction for 100000 inputs in 0.058 s
+    KRR prediction for 100000 inputs in 0.257 s
 
 
 
@@ -210,7 +210,7 @@
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  19.992 seconds)
+**Total running time of the script:** ( 0 minutes  16.695 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_kernel_ridge_regression.py:

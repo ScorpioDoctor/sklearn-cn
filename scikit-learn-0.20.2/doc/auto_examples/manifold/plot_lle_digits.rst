@@ -107,9 +107,9 @@
     Computing LLE embedding
     Done. Reconstruction error: 1.63544e-06
     Computing modified LLE embedding
-    Done. Reconstruction error: 0.360639
+    Done. Reconstruction error: 0.360649
     Computing Hessian LLE embedding
-    Done. Reconstruction error: 0.21281
+    Done. Reconstruction error: 0.212795
     Computing LTSA embedding
     Done. Reconstruction error: 0.212804
     Computing MDS embedding
@@ -340,7 +340,7 @@
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  22.421 seconds)
+**Total running time of the script:** ( 0 minutes  19.354 seconds)
 
 
 .. _sphx_glr_download_auto_examples_manifold_plot_lle_digits.py:

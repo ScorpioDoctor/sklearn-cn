@@ -171,7 +171,7 @@
                  'Analysis')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.242 seconds)
+**Total running time of the script:** ( 0 minutes  0.249 seconds)
 
 
 .. _sphx_glr_download_auto_examples_classification_plot_lda_qda.py:

@@ -78,7 +78,7 @@ SVM: 加权样本
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.365 seconds)
+**Total running time of the script:** ( 0 minutes  0.349 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_weighted_samples.py:

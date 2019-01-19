@@ -95,7 +95,7 @@ SVM: 不平衡分类问题的分割超平面
                loc="upper right")
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.053 seconds)
+**Total running time of the script:** ( 0 minutes  0.051 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_separating_hyperplane_unbalanced.py:

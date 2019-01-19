@@ -76,7 +76,7 @@ SVM 中使用自定义核
     plt.axis('tight')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.131 seconds)
+**Total running time of the script:** ( 0 minutes  0.128 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_custom_kernel.py:
