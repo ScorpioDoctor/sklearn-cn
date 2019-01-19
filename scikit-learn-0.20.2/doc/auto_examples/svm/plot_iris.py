@@ -1,37 +1,29 @@
 """
 ==================================================
-Plot different SVM classifiers in the iris dataset
+在鸢尾花数据集上绘制使用不同类型SVM分类器的分类结果
 ==================================================
 
-Comparison of different linear SVM classifiers on a 2D projection of the iris
-dataset. We only consider the first 2 features of this dataset:
+不同线性SVM分类器在鸢尾花数据集的二维投影上的比较。我们只考虑这个数据集的前两个特征：
 
-- Sepal length
-- Sepal width
+- 花萼长度(Sepal length)
+- 花萼宽度(Sepal width)
 
-This example shows how to plot the decision surface for four SVM classifiers
-with different kernels.
+这个例子展示了如何绘制四个具有不同核的SVM分类器的决策面。
 
-The linear models ``LinearSVC()`` and ``SVC(kernel='linear')`` yield slightly
-different decision boundaries. This can be a consequence of the following
-differences:
+线性模型  ``LinearSVC()`` 和 ``SVC(kernel='linear')`` 产生的决策边界略有不同。
+这可能是以下差异导致的结果：
 
-- ``LinearSVC`` minimizes the squared hinge loss while ``SVC`` minimizes the
-  regular hinge loss.
+- ``LinearSVC`` 最小化平方折页损失(squared hinge loss) 而 ``SVC`` 最小化常规的折页损失(regular hinge loss)。
 
-- ``LinearSVC`` uses the One-vs-All (also known as One-vs-Rest) multiclass
-  reduction while ``SVC`` uses the One-vs-One multiclass reduction.
+- ``LinearSVC`` 使用 One-vs-All (也被称为 One-vs-Rest) 多类分类策略，而 ``SVC`` 使用 One-vs-One 多类分类策略。
 
-Both linear models have linear decision boundaries (intersecting hyperplanes)
-while the non-linear kernel models (polynomial or Gaussian RBF) have more
-flexible non-linear decision boundaries with shapes that depend on the kind of
-kernel and its parameters.
+两个线性模型都具有线性决策面(相交的超平面)，而带有非线性核(多项式核与高斯径向基核)的SVM有更加灵活的非线性决策边界，
+这些决策边界的shapes依赖于核的种类和其参数。
 
-.. NOTE:: while plotting the decision function of classifiers for toy 2D
-   datasets can help get an intuitive understanding of their respective
-   expressive power, be aware that those intuitions don't always generalize to
-   more realistic high-dimensional problems.
+.. NOTE:: 尽管绘制分类器在2D迷你数据集上的决策函数有助于我们获得对这些分类器的表达能力的直观理解，
+   但是这些直观印象不能总是推广到更真实的高维空间中的问题上去。
 
+翻译者：http://studyai.com/antares
 """
 print(__doc__)
 

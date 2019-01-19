@@ -8,26 +8,22 @@
 
 
 =================================================
-SVM: Separating hyperplane for unbalanced classes
+SVM: 不平衡分类问题的分割超平面
 =================================================
 
-Find the optimal separating hyperplane using an SVC for classes that
-are unbalanced.
+使用SVC寻找不平衡分类问题的最优分割超平面
 
-We first find the separating plane with a plain SVC and then plot
-(dashed) the separating hyperplane with automatically correction for
-unbalanced classes.
+我们首先使用一个简单的SVC找到分割超平面，然后(用虚线)画出分离超平面,对那些不平衡类别进行自动矫正。
 
 .. currentmodule:: sklearn.linear_model
 
 .. note::
 
-    This example will also work by replacing ``SVC(kernel="linear")``
-    with ``SGDClassifier(loss="hinge")``. Setting the ``loss`` parameter
-    of the :class:`SGDClassifier` equal to ``hinge`` will yield behaviour
-    such as that of a SVC with a linear kernel.
+    使用 ``SGDClassifier(loss="hinge")`` 替换 ``SVC(kernel="linear")`` 以后，
+    这个例子仍然可以工作。 设置 :class:`SGDClassifier`  类的 ``loss`` 参数
+    为 ``hinge`` 将产生与带有线性核的SVC一样的行为。
 
-    For example try instead of the ``SVC``::
+    比如尝试用下面的估计器实例替换 ``SVC``::
 
         clf = SGDClassifier(n_iter=100, alpha=0.01)
 
@@ -99,7 +95,7 @@ unbalanced classes.
                loc="upper right")
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.048 seconds)
+**Total running time of the script:** ( 0 minutes  0.053 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_separating_hyperplane_unbalanced.py:

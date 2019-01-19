@@ -35,14 +35,14 @@
 
  .. code-block:: none
 
-    standard: 0.21 sec
-    ltsa: 0.26 sec
-    hessian: 0.39 sec
-    modified: 0.31 sec
-    Isomap: 0.39 sec
-    MDS: 2.5 sec
-    SpectralEmbedding: 0.13 sec
-    t-SNE: 7.8 sec
+    standard: 0.18 sec
+    ltsa: 0.28 sec
+    hessian: 0.43 sec
+    modified: 0.32 sec
+    Isomap: 0.47 sec
+    MDS: 2.4 sec
+    SpectralEmbedding: 0.11 sec
+    t-SNE: 9.5 sec
 
 
 
@@ -152,7 +152,7 @@
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  12.226 seconds)
+**Total running time of the script:** ( 0 minutes  13.963 seconds)
 
 
 .. _sphx_glr_download_auto_examples_manifold_plot_compare_methods.py:

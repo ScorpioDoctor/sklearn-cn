@@ -1,13 +1,13 @@
 """
 ====================================================================
-Linear and Quadratic Discriminant Analysis with covariance ellipsoid
+协方差椭球化情形下LDA和QDA的比较
 ====================================================================
 
-This example plots the covariance ellipsoids of each class and
-decision boundary learned by LDA and QDA. The ellipsoids display
-the double standard deviation for each class. With LDA, the
-standard deviation is the same for all the classes, while each
-class has its own standard deviation with QDA.
+这个例子描绘了每个类的协方差椭球面，以及LDA和QDA学习的决策边界。
+椭球体显示每个类的双标准差。
+对于LDA，所有类的标准差是相同的，而对于QDA, 每个类都有自己的标准差。
+
+翻译者：http://www.studyai.com/antares
 """
 print(__doc__)
 

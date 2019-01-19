@@ -1,9 +1,9 @@
 """
 ===================================================================
-Support Vector Regression (SVR) using linear and non-linear kernels
+使用线性核和非线性核的支持向量回归(SVR)
 ===================================================================
 
-Toy example of 1D regression using linear, polynomial and RBF kernels.
+使用线性核，多项式核，RBF核进行1D回归。
 
 """
 print(__doc__)

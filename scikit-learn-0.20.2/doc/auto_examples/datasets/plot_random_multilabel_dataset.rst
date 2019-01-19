@@ -49,11 +49,11 @@
 
  .. code-block:: none
 
-    The data was generated from (random_state=289):
+    The data was generated from (random_state=411):
     Class   P(C)    P(w0|C) P(w1|C)
-    red     0.51    0.63    0.37
-    blue    0.37    0.68    0.32
-    yellow  0.12    0.77    0.23
+    red     0.49    0.26    0.74
+    blue    0.36    0.69    0.31
+    yellow  0.15    0.39    0.61
 
 
 
@@ -124,7 +124,7 @@
     for k, p, p_w in zip(['red', 'blue', 'yellow'], p_c, p_w_c.T):
         print('%s\t%0.2f\t%0.2f\t%0.2f' % (k, p, p_w[0], p_w[1]))
 
-**Total running time of the script:** ( 0 minutes  0.091 seconds)
+**Total running time of the script:** ( 0 minutes  0.096 seconds)
 
 
 .. _sphx_glr_download_auto_examples_datasets_plot_random_multilabel_dataset.py:

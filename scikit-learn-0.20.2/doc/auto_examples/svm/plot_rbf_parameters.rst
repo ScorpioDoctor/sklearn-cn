@@ -8,74 +8,49 @@
 
 
 ==================
-RBF SVM parameters
+RBF SVM 参数选择
 ==================
 
-This example illustrates the effect of the parameters ``gamma`` and ``C`` of
-the Radial Basis Function (RBF) kernel SVM.
+这个例子展示了径向基函数(RBF)核支持向量机的参数 ``gamma`` 和 ``C`` 的影响。
 
-Intuitively, the ``gamma`` parameter defines how far the influence of a single
-training example reaches, with low values meaning 'far' and high values meaning
-'close'. The ``gamma`` parameters can be seen as the inverse of the radius of
-influence of samples selected by the model as support vectors.
+直观地，``gamma`` 参数定义了单个训练样本的影响达到多远，低值意味着“远”，高值意味着“近”。
+``gamma``  参数可以看作是模型选取作为支持向量的样本的影响半径的反比。
 
-The ``C`` parameter trades off correct classification of training examples
-against maximization of the decision function's margin. For larger values of
-``C``, a smaller margin will be accepted if the decision function is better at
-classifying all training points correctly. A lower ``C`` will encourage a
-larger margin, therefore a simpler decision function, at the cost of training
-accuracy. In other words``C`` behaves as a regularization parameter in the
-SVM.
+``C`` 参数在 把尽可能多的训练样本正确分类 与 使决策函数的裕度(margin)最大化 这两个矛盾之间做折中。
+对于较大的 ``C`` 值， 如果决策函数能更好地对所有训练点进行正确的分类，则一个较小的裕度将会被接受。
+一个较低的 ``C`` 值将鼓励更大的裕度(margin)，因此模型将以牺牲训练的准确性接受一个更简单的决策函数。
+换句话说，``C`` 在支持向量机中充当正则化参数： ``C`` 值 越小，正则化程度越强，产生的决策面更简单。
 
-The first plot is a visualization of the decision function for a variety of
-parameter values on a simplified classification problem involving only 2 input
-features and 2 possible target classes (binary classification). Note that this
-kind of plot is not possible to do for problems with more features or target
-classes.
+第一个图是对一个简化的分类问题的各种参数值的决策函数的可视化，该分类问题只涉及两个输入特征和两个可能的目标类(二类分类)。
+请注意，对于具有更多特征或目标类的问题，这种绘图是不可能的。
 
-The second plot is a heatmap of the classifier's cross-validation accuracy as a
-function of ``C`` and ``gamma``. For this example we explore a relatively large
-grid for illustration purposes. In practice, a logarithmic grid from
-:math:`10^{-3}` to :math:`10^3` is usually sufficient. If the best parameters
-lie on the boundaries of the grid, it can be extended in that direction in a
-subsequent search.
+第二幅图是分类器的交叉验证准确率作为 ``C`` 和 ``gamma`` 的函数随这两个参数变化的热力图。
+在本例中，我们将探索一个相对较大的网格，以进行说明。
+在实践中，从 :math:`10^{-3}` 到 :math:`10^3` 的对数网格通常是足够的。
+如果最佳参数位于网格的边界上，则可以在随后的搜索中向该方向扩展。
 
-Note that the heat map plot has a special colorbar with a midpoint value close
-to the score values of the best performing models so as to make it easy to tell
-them apart in the blink of an eye.
+请注意，热力图有一个特别的色度条，其中每个点的颜色值接近不同参数下模型的得分值，
+以便在眨眼之间很容易将它们区分开来，哪些表现好，哪些表现不好。
 
-The behavior of the model is very sensitive to the ``gamma`` parameter. If
-``gamma`` is too large, the radius of the area of influence of the support
-vectors only includes the support vector itself and no amount of
-regularization with ``C`` will be able to prevent overfitting.
+模型的行为对 ``gamma`` 参数非常敏感。如果 ``gamma`` 太大，支持向量的影响范围半径仅包括支持向量本身，
+再加上 ``C`` 的正则化也无法防止过拟合。
 
-When ``gamma`` is very small, the model is too constrained and cannot capture
-the complexity or "shape" of the data. The region of influence of any selected
-support vector would include the whole training set. The resulting model will
-behave similarly to a linear model with a set of hyperplanes that separate the
-centers of high density of any pair of two classes.
+当 ``gamma`` 非常小时，模型太受约束，无法捕捉数据的复杂性或“形状”。任何选定的支持向量的影响区域将包括整个训练集。
+得到的模型将类似于具有一组超平面的线性模型，这些超平面将任意一对两类的高密度中心分离开来。
 
-For intermediate values, we can see on the second plot that good models can
-be found on a diagonal of ``C`` and ``gamma``. Smooth models (lower ``gamma``
-values) can be made more complex by increasing the importance of classifying
-each point correctly (larger ``C`` values) hence the diagonal of good
-performing models.
+对于 ``gamma`` 的中等大小的值，我们可以在第二幅图上看到，在 ``C`` 和 ``gamma`` 的对角线上可以找到好的模型。
+平滑的模型(对应于较低的 ``gamma`` 值)可以通过增加正确分类每个点的重要性(较大的 ``C`` 值)而变得更加复杂，
+从而使性能良好的模型的对角线变得更加复杂。
 
-Finally one can also observe that for some intermediate values of ``gamma`` we
-get equally performing models when ``C`` becomes very large: it is not
-necessary to regularize by enforcing a larger margin. The radius of the RBF
-kernel alone acts as a good structural regularizer. In practice though it
-might still be interesting to simplify the decision function with a lower
-value of ``C`` so as to favor models that use less memory and that are faster
-to predict.
+最后，我们还可以观察到，当 ``C`` 变得非常大时，对于 ``gamma`` 的一些中等大小的值，我们得到了具有相同性能表现的模型：
+没有必要通过执行较大的余量(margin)来进行正则化。
+RBF核的半径本身就是一个很好的结构化正则化器。然而，在实践中，用较低的 ``C`` 值简化决策函数可能仍然很有趣，
+以便更好地支持内存更少、预测速度更快的模型。
 
-We should also note that small differences in scores results from the random
-splits of the cross-validation procedure. Those spurious variations can be
-smoothed out by increasing the number of CV iterations ``n_splits`` at the
-expense of compute time. Increasing the value number of ``C_range`` and
-``gamma_range`` steps will increase the resolution of the hyper-parameter heat
-map.
+我们还应该注意到，分类得分的微小差异是由于交叉验证过程的随机分裂造成的。这些杂散变化可以通过增加CV迭代次数 ``n_splits`` 来平滑，
+而牺牲计算时间。增加 ``C_range`` 和 ``gamma_range`` 步长的数值数将提高超参数热力图的分辨率。
 
+翻译者：http://www.studyai.com/antares
 
 
 
@@ -241,7 +216,7 @@ map.
     plt.title('Validation accuracy')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  4.212 seconds)
+**Total running time of the script:** ( 0 minutes  4.514 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_rbf_parameters.py:

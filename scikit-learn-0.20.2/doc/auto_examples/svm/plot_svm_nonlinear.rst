@@ -8,14 +8,12 @@
 
 
 ==============
-Non-linear SVM
+非线性 SVM
 ==============
 
-Perform binary classification using non-linear SVC
-with RBF kernel. The target to predict is a XOR of the
-inputs.
+使用带有RBF核的非线性SVC执行二类分类问题。要预测的目标是输入的XOR。
 
-The color map illustrates the decision function learned by the SVC.
+彩色图展示了SVC学习到的决策函数。
 
 
 
@@ -61,7 +59,7 @@ The color map illustrates the decision function learned by the SVC.
     plt.axis([-3, 3, -3, 3])
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.830 seconds)
+**Total running time of the script:** ( 0 minutes  0.785 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_svm_nonlinear.py:

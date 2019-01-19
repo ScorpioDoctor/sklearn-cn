@@ -8,10 +8,10 @@
 
 
 ===================================================================
-Support Vector Regression (SVR) using linear and non-linear kernels
+使用线性核和非线性核的支持向量回归(SVR)
 ===================================================================
 
-Toy example of 1D regression using linear, polynomial and RBF kernels.
+使用线性核，多项式核，RBF核进行1D回归。
 
 
 
@@ -63,7 +63,7 @@ Toy example of 1D regression using linear, polynomial and RBF kernels.
     plt.legend()
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.658 seconds)
+**Total running time of the script:** ( 0 minutes  0.735 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_svm_regression.py:

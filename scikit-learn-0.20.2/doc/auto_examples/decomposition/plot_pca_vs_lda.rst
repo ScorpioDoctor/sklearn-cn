@@ -8,21 +8,19 @@
 
 
 =======================================================
-Comparison of LDA and PCA 2D projection of Iris dataset
+LDA与PCA在鸢尾花数据集上的二维投影的比较
 =======================================================
 
-The Iris dataset represents 3 kind of Iris flowers (Setosa, Versicolour
-and Virginica) with 4 attributes: sepal length, sepal width, petal length
-and petal width.
+鸢尾花(Iris)数据集代表了3种鸢尾花(Setosa、Versicolour和Virica)的4个属性：
+萼片(sepal)长度、萼片宽度、花瓣(petal)长度和花瓣宽度。
 
-Principal Component Analysis (PCA) applied to this data identifies the
-combination of attributes (principal components, or directions in the
-feature space) that account for the most variance in the data. Here we
-plot the different samples on the 2 first principal components.
+应用于该数据的主成分分析(PCA)确定了属性(主成分，或特征空间中的方向)的组合，
+这些属性在数据中的方差最大。在这里，我们以前两个主成分绘制了不同的样本。
 
-Linear Discriminant Analysis (LDA) tries to identify attributes that
-account for the most variance *between classes*. In particular,
-LDA, in contrast to PCA, is a supervised method, using known class labels.
+线性判别分析(LDA)试图识别 **类间差异最大** 的属性。
+特别是，与PCA相比，LDA是一种监督方法，使用已知的类标签。
+
+翻译者：http://www.studyai.com/antares
 
 
 
@@ -100,7 +98,7 @@ LDA, in contrast to PCA, is a supervised method, using known class labels.
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.078 seconds)
+**Total running time of the script:** ( 0 minutes  0.084 seconds)
 
 
 .. _sphx_glr_download_auto_examples_decomposition_plot_pca_vs_lda.py:

@@ -134,7 +134,7 @@ Examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Both kernel ridge regression (KRR) and SVR learn a non-linear function by employing the kernel ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="核岭回归(KRR)与支持向量回归(SVR)都可以利用核技巧来学习非线性函数，也就是说,  它们可以在相应的核诱导出的空间中学习一个线性函数。而该核诱导空间的线性函数对应于原始空间的非线性函数...">
 
 .. only:: html
 
@@ -602,7 +602,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Shows how shrinkage improves classification. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子主要展示了缩减(shrinkage)是如何提升LDA分类器的性能的。 ">
 
 .. only:: html
 
@@ -662,7 +662,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example plots the covariance ellipsoids of each class and decision boundary learned by LDA...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子描绘了每个类的协方差椭球面，以及LDA和QDA学习的决策边界。 椭球体显示每个类的双标准差。 对于LDA，所有类的标准差是相同的，而对于QDA, 每个类都有自己的标准差。">
 
 .. only:: html
 
@@ -1637,7 +1637,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="The Iris dataset represents 3 kind of Iris flowers (Setosa, Versicolour and Virginica) with 4 a...">
+    <div class="sphx-glr-thumbcontainer" tooltip="鸢尾花(Iris)数据集代表了3种鸢尾花(Setosa、Versicolour和Virica)的4个属性： 萼片(sepal)长度、萼片宽度、花瓣(petal)长度和花瓣宽度。">
 
 .. only:: html
 
@@ -4485,7 +4485,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Perform binary classification using non-linear SVC with RBF kernel. The target to predict is a ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="使用带有RBF核的非线性SVC执行二类分类问题。要预测的目标是输入的XOR。">
 
 .. only:: html
 
@@ -4505,7 +4505,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the maximum margin separating hyperplane within a two-class separable dataset using a Supp...">
+    <div class="sphx-glr-thumbcontainer" tooltip="使用带线性核的支持向量机分类器绘制两类可分离数据集的最大裕度分割超平面 (maximum margin separating hyperplane)。 ">
 
 .. only:: html
 
@@ -4525,7 +4525,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Toy example of 1D regression using linear, polynomial and RBF kernels.">
+    <div class="sphx-glr-thumbcontainer" tooltip="使用线性核，多项式核，RBF核进行1D回归。">
 
 .. only:: html
 
@@ -4545,7 +4545,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Simple usage of Support Vector Machines to classify a sample. It will plot the decision surface...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这是使用SVM分类器的一个简单案例。主要是展示了如何在SVM中使用自定义内核。 我们将绘制决策面以及找到的支持向量。">
 
 .. only:: html
 
@@ -4565,7 +4565,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot decision function of a weighted dataset, where the size of points is proportional to its w...">
+    <div class="sphx-glr-thumbcontainer" tooltip="绘制加权数据集的决策函数, 其中数据点的大小(就是图中圈圈的直径)与它的权重成正比。">
 
 .. only:: html
 
@@ -4585,7 +4585,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Find the optimal separating hyperplane using an SVC for classes that are unbalanced.">
+    <div class="sphx-glr-thumbcontainer" tooltip="使用SVC寻找不平衡分类问题的最优分割超平面">
 
 .. only:: html
 
@@ -4625,7 +4625,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example shows how to perform univariate feature selection before running a SVC (support ve...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个案例展示了如何在运行SVM分类器之前执行单变量特征选择从而提高分类得分。 ">
 
 .. only:: html
 
@@ -4685,7 +4685,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Comparison of different linear SVM classifiers on a 2D projection of the iris dataset. We only ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="不同线性SVM分类器在鸢尾花数据集的二维投影上的比较。我们只考虑这个数据集的前两个特征：">
 
 .. only:: html
 
@@ -4725,7 +4725,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the effect of the parameters ``gamma`` and ``C`` of the Radial Basis F...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子展示了径向基函数(RBF)核支持向量机的参数 ``gamma`` 和 ``C`` 的影响。">
 
 .. only:: html
 

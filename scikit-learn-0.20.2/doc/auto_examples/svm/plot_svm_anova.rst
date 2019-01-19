@@ -8,11 +8,10 @@
 
 
 =================================================
-SVM-Anova: SVM with univariate feature selection
+SVM-Anova: SVM 与 单变量特征选择
 =================================================
 
-This example shows how to perform univariate feature selection before running a
-SVC (support vector classifier) to improve the classification scores.
+这个案例展示了如何在运行SVM分类器之前执行单变量特征选择从而提高分类得分。
 
 
 
@@ -79,7 +78,7 @@ SVC (support vector classifier) to improve the classification scores.
     plt.axis('tight')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.675 seconds)
+**Total running time of the script:** ( 0 minutes  0.823 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_svm_anova.py:

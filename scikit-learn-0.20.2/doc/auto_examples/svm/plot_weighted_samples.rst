@@ -8,17 +8,13 @@
 
 
 =====================
-SVM: Weighted samples
+SVM: 加权样本
 =====================
 
-Plot decision function of a weighted dataset, where the size of points
-is proportional to its weight.
+绘制加权数据集的决策函数, 其中数据点的大小(就是图中圈圈的直径)与它的权重成正比。
 
-The sample weighting rescales the C parameter, which means that the classifier
-puts more emphasis on getting these points right. The effect might often be
-subtle.
-To emphasize the effect here, we particularly weight outliers, making the
-deformation of the decision boundary very visible.
+样本加权重新标度C参数，这意味着分类器更注重把权重大的那些点分类正确。
+这种影响往往是微妙的。为了强调这里的效果，我们特别加大了离群值的权重，从而使得决策边界的变形非常明显。
 
 
 
@@ -82,7 +78,7 @@ deformation of the decision boundary very visible.
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.348 seconds)
+**Total running time of the script:** ( 0 minutes  0.365 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_weighted_samples.py:

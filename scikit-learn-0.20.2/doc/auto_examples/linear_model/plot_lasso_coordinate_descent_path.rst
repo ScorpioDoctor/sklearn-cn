@@ -142,7 +142,7 @@ alpha越大则正则化就越厉害，系数就都缩减为0了。所以大家�
     plt.axis('tight')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.192 seconds)
+**Total running time of the script:** ( 0 minutes  0.220 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_lasso_coordinate_descent_path.py:

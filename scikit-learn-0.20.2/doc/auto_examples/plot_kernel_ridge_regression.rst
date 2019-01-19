@@ -8,35 +8,25 @@
 
 
 =============================================
-Comparison of kernel ridge regression and SVR
+核岭回归(KRR)与支持向量回归(SVR)的比较
 =============================================
 
-Both kernel ridge regression (KRR) and SVR learn a non-linear function by
-employing the kernel trick, i.e., they learn a linear function in the space
-induced by the respective kernel which corresponds to a non-linear function in
-the original space. They differ in the loss functions (ridge versus
-epsilon-insensitive loss). In contrast to SVR, fitting a KRR can be done in
-closed-form and is typically faster for medium-sized datasets. On the other
-hand, the learned model is non-sparse and thus slower than SVR at
-prediction-time.
+核岭回归(KRR)与支持向量回归(SVR)都可以利用核技巧来学习非线性函数，也就是说, 
+它们可以在相应的核诱导出的空间中学习一个线性函数。而该核诱导空间的线性函数对应于原始空间的非线性函数。
+它们的区别在于损失函数(ridge versus epsilon-insensitive loss)。
+与SVR相比较, KRR的拟合可以用闭合形式(closed-form)完成，并且在中等规模的数据集上通常更快。
+另一方面，KRR学习到的模型是非稀疏的，所以在预测阶段KRR比SVR要慢。
 
-This example illustrates both methods on an artificial dataset, which
-consists of a sinusoidal target function and strong noise added to every fifth
-datapoint. The first figure compares the learned model of KRR and SVR when both
-complexity/regularization and bandwidth of the RBF kernel are optimized using
-grid-search. The learned functions are very similar; however, fitting KRR is
-approx. seven times faster than fitting SVR (both with grid-search). However,
-prediction of 100000 target values is more than tree times faster with SVR
-since it has learned a sparse model using only approx. 1/3 of the 100 training
-datapoints as support vectors.
+下面这个案例展示了将这两个方法用于人工数据集，它由一个正弦目标函数和每五个数据点所加的强噪声组成。
+第一个图比较了在使用网格搜索优化了RBF核的正则化和带宽时，KRR和SVR学习到的模型。它们学习到的函数是非常相似的，
+但是，拟合KRR大约比拟合SVR快7倍(都使用了网格搜索)。
+然而，使用SVR预测100000个目标值要比KRR快三倍，因为它只使用了100项训练数据中的大约1/3作为支持向量就学到了稀疏模型。
 
-The next figure compares the time for fitting and prediction of KRR and SVR for
-different sizes of the training set. Fitting KRR is faster than SVR for medium-
-sized training sets (less than 1000 samples); however, for larger training sets
-SVR scales better. With regard to prediction time, SVR is faster than
-KRR for all sizes of the training set because of the learned sparse
-solution. Note that the degree of sparsity and thus the prediction time depends
-on the parameters epsilon and C of the SVR.
+下一个图比较了在不同训练集上KRR和SVR的拟合和预测时间。对于中等规模的训练集(小于1000个样本)，拟合KRR比SVR更快；
+然而，对于较大的训练集，SVR的时间弹性更好。在预测时间方面，由于学习到的稀疏解，SVR对于所有训练集的大小都比KRR更快。
+请注意，稀疏度和预测时间取决于SVR的参数epsilon和C。
+
+翻译者： http://www.studyai.com/antares
 
 
 
@@ -66,11 +56,11 @@ on the parameters epsilon and C of the SVR.
 
  .. code-block:: none
 
-    SVR complexity and bandwidth selected and model fitted in 0.484 s
-    KRR complexity and bandwidth selected and model fitted in 0.187 s
+    SVR complexity and bandwidth selected and model fitted in 0.586 s
+    KRR complexity and bandwidth selected and model fitted in 0.217 s
     Support vector ratio: 0.320
-    SVR prediction for 100000 inputs in 0.062 s
-    KRR prediction for 100000 inputs in 0.203 s
+    SVR prediction for 100000 inputs in 0.172 s
+    KRR prediction for 100000 inputs in 0.258 s
 
 
 
@@ -220,7 +210,7 @@ on the parameters epsilon and C of the SVR.
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  14.898 seconds)
+**Total running time of the script:** ( 0 minutes  19.992 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_kernel_ridge_regression.py:

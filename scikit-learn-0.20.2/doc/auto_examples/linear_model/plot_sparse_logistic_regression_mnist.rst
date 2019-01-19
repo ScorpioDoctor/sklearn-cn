@@ -36,7 +36,7 @@
 
     Sparsity with L1 penalty: 77.22%
     Test score with L1 penalty: 0.8336
-    Example run in 33.537 s
+    Example run in 37.369 s
 
 
 
@@ -110,7 +110,7 @@
     print('Example run in %.3f s' % run_time)
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  33.537 seconds)
+**Total running time of the script:** ( 0 minutes  37.370 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sparse_logistic_regression_mnist.py:

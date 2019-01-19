@@ -1,10 +1,10 @@
 """
 ======================
-SVM with custom kernel
+SVM 中使用自定义核
 ======================
 
-Simple usage of Support Vector Machines to classify a sample. It will
-plot the decision surface and the support vectors.
+这是使用SVM分类器的一个简单案例。主要是展示了如何在SVM中使用自定义内核。
+我们将绘制决策面以及找到的支持向量。
 
 """
 print(__doc__)

@@ -1,9 +1,9 @@
 """
 ====================================================================
-Normal and Shrinkage Linear Discriminant Analysis for classification
+应用于分类任务的 正常LDA和缩减LDA
 ====================================================================
 
-Shows how shrinkage improves classification.
+这个例子主要展示了缩减(shrinkage)是如何提升LDA分类器的性能的。
 """
 
 from __future__ import division
@@ -28,8 +28,8 @@ def generate_data(n_samples, n_features):
     This returns an array of input data with shape `(n_samples, n_features)`
     and an array of `n_samples` target labels.
 
-    Only one feature contains discriminative information, the other features
-    contain only noise.
+    只有一个特征包含独特信息或者叫鉴别信息(discriminative information), 
+    剩余的所有特征都只含有噪声。
     """
     X, y = make_blobs(n_samples=n_samples, n_features=1, centers=[[-2], [2]])
 

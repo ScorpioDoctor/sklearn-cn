@@ -1,11 +1,10 @@
 """
 =========================================
-SVM: Maximum margin separating hyperplane
+SVM: 最大裕度分割超平面
 =========================================
 
-Plot the maximum margin separating hyperplane within a two-class
-separable dataset using a Support Vector Machine classifier with
-linear kernel.
+使用带线性核的支持向量机分类器绘制两类可分离数据集的最大裕度分割超平面
+(maximum margin separating hyperplane)。
 """
 print(__doc__)
 
