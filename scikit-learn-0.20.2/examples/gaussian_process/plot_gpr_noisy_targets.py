@@ -1,28 +1,28 @@
 """
 =========================================================
-Gaussian Processes regression: basic introductory example
+高斯过程回归: 基本的介绍性案例
 =========================================================
 
-A simple one-dimensional regression example computed in two different ways:
+一个简单的一维回归例子，以两种不同的方式计算：
 
-1. A noise-free case
-2. A noisy case with known noise-level per datapoint
+1. 没有噪声的情况
+2. 每个数据点的噪声水平已知的有噪声情况
 
-In both cases, the kernel's parameters are estimated using the maximum
-likelihood principle.
+在上述两种情况下, 内核参数可以使用最大似然原则被估计出来。
 
-The figures illustrate the interpolating property of the Gaussian Process
-model as well as its probabilistic nature in the form of a pointwise 95%
-confidence interval.
+实验图像展示了高斯过程模型的内插特性(interpolating property)以及
+它的概率性本质：为每个点的预测结果给出95%的置信区间。
 
 Note that the parameter ``alpha`` is applied as a Tikhonov
 regularization of the assumed covariance between the training points.
+注意，参数 ``alpha`` 被用做训练点之间假设协方差的Tikhonov正则化。
 """
 print(__doc__)
 
 # Author: Vincent Dubourg <vincent.dubourg@gmail.com>
 #         Jake Vanderplas <vanderplas@astro.washington.edu>
 #         Jan Hendrik Metzen <jhm@informatik.uni-bremen.de>s
+# 翻译者：www.studyai.com/antares
 # License: BSD 3 clause
 
 import numpy as np

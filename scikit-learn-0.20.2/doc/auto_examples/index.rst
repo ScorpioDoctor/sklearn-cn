@@ -2504,7 +2504,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates GPC on XOR data. Compared are a stationary, isotropic kernel (RBF) and...">
+    <div class="sphx-glr-thumbcontainer" tooltip="此示例展示了将GPC用于XOR数据。参与比较试验的是 平稳的各向同性的核(RBF)和非平稳的核(DotProduct)。  在这个特定的数据集上，DotProduct核获得了更好的结果， 因...">
 
 .. only:: html
 
@@ -2524,7 +2524,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the predicted probability of GPC for an isotropic and anisotropic RBF ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="该示例展示了在iris数据集的二维版本上 各向同性和各向异性RBF核的GPC的预测概率。 这说明了GPC对多类分类的适用性。  各向异性RBF内核通过为两个特征维度分配不同的长度尺度(len...">
 
 .. only:: html
 
@@ -2564,7 +2564,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the prior and posterior of a GPR with different kernels. Mean, standar...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子展示了使用不同内核的先验和后验高斯过程。 在先验和后验两种情况下，展示了 均值，标准差，和 10个样本。 ">
 
 .. only:: html
 
@@ -2604,7 +2604,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the predicted probability of GPC for an RBF kernel with different choi...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子展示了具有不同超参数选项的RBF内核的GPC预测概率。  第一幅图显示的是 具有任意选择的超参数的GPC的预测概率 以及 具有与最大LML对应的超参数的GPC的预测概率。">
 
 .. only:: html
 
@@ -2644,7 +2644,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A simple one-dimensional regression example computed in two different ways:">
+    <div class="sphx-glr-thumbcontainer" tooltip="一个简单的一维回归例子，以两种不同的方式计算：">
 
 .. only:: html
 
@@ -2664,7 +2664,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example is based on Section 5.4.3 of &quot;Gaussian Processes for Machine Learning&quot; [RW2006]. I...">
+    <div class="sphx-glr-thumbcontainer" tooltip="该示例基于书([RW2006]) 的第 5.4.3 节。 它演示了使用梯度上升的对数边缘似然性的复杂内核工程和超参数优化的示例。  数据包括在 1958 年至 1997 年间夏威夷 Maun...">
 
 .. only:: html
 

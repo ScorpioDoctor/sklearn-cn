@@ -8,46 +8,30 @@
 
 
 ========================================================
-Gaussian process regression (GPR) on Mauna Loa CO2 data.
+高斯过程回归 (GPR) 在 Mauna Loa 二氧化碳数据上的应用
 ========================================================
 
-This example is based on Section 5.4.3 of "Gaussian Processes for Machine
-Learning" [RW2006]. It illustrates an example of complex kernel engineering and
-hyperparameter optimization using gradient ascent on the
-log-marginal-likelihood. The data consists of the monthly average atmospheric
-CO2 concentrations (in parts per million by volume (ppmv)) collected at the
-Mauna Loa Observatory in Hawaii, between 1958 and 2001. The objective is to
-model the CO2 concentration as a function of the time t.
+该示例基于书([RW2006]) 的第 5.4.3 节。 它演示了使用梯度上升的对数边缘似然性的复杂内核工程和超参数优化的示例。 
+数据包括在 1958 年至 1997 年间夏威夷 Mauna Loa 天文台收集的每月平均大气二氧 化碳浓度（以百万分之几（ppmv）计）。 
+目的是将二氧化碳浓度建模为时间 t 的函数。
 
-The kernel is composed of several terms that are responsible for explaining
-different properties of the signal:
+内核由若干项组成，负责解释信号的不同属性：
 
-- a long term, smooth rising trend is to be explained by an RBF kernel. The
-  RBF kernel with a large length-scale enforces this component to be smooth;
-  it is not enforced that the trend is rising which leaves this choice to the
-  GP. The specific length-scale and the amplitude are free hyperparameters.
+- 一个长期平滑的上升趋势是由一个 RBF 内核来解释的。 具有较大长度尺寸的RBF内核将使该分量平滑; 没有强制这种趋势正在上升，
+  这给 GP 带来了可选择性。 具体的长度尺度(length-scale)和振幅(amplitude)是自由的超参数。
 
-- a seasonal component, which is to be explained by the periodic
-  ExpSineSquared kernel with a fixed periodicity of 1 year. The length-scale
-  of this periodic component, controlling its smoothness, is a free parameter.
-  In order to allow decaying away from exact periodicity, the product with an
-  RBF kernel is taken. The length-scale of this RBF component controls the
-  decay time and is a further free parameter.
+- 季节性因素，由周期性的 ExpSineSquared 内核来解释，固定周期为1年。 该周期性分量的长度尺度控制其平滑度，是一个自由参数。 
+  为了使其具备准确周期性的衰减，将 ExpSineSquared kernel 与 RBF kernel 取乘积。 
+  该RBF component的长度尺度(length-scale)控制衰减时间， 并且是另一个自由参数。
 
-- smaller, medium term irregularities are to be explained by a
-  RationalQuadratic kernel component, whose length-scale and alpha parameter,
-  which determines the diffuseness of the length-scales, are to be determined.
-  According to [RW2006], these irregularities can better be explained by
-  a RationalQuadratic than an RBF kernel component, probably because it can
-  accommodate several length-scales.
+- 较小的中期不规则性将由有理二次(RationalQuadratic)核分量来解释， 有理二次核分量的长度尺度和alpha 参数，
+  决定着长度尺度的扩散性，是将要被确定的参数。 根据 [RW2006] ，这些不规则性可以更好地由有理二次内核来解释， 
+  而不是 RBF 核分量，这可能是因为它可以容纳若干个长度尺度(length-scale)。
 
-- a "noise" term, consisting of an RBF kernel contribution, which shall
-  explain the correlated noise components such as local weather phenomena,
-  and a WhiteKernel contribution for the white noise. The relative amplitudes
-  and the RBF's length scale are further free parameters.
+- 噪声项，由一个 RBF 核组成，它将解释相关的噪声分量，如局部天气现象以及 WhiteKernel 对白噪声的贡献。 
+  在这里，相对幅度(relative amplitudes)和RBF的长度尺度又是自由参数。
 
-Maximizing the log-marginal-likelihood after subtracting the target's mean
-yields the following kernel with an LML of -83.214::
+减去目标平均值后 最大化 对数边际似然(log-marginal-likelihood)产生下列内核，其中LML为-83.214:
 
    34.4**2 * RBF(length_scale=41.8)
    + 3.27**2 * RBF(length_scale=180) * ExpSineSquared(length_scale=1.44,
@@ -55,15 +39,12 @@ yields the following kernel with an LML of -83.214::
    + 0.446**2 * RationalQuadratic(alpha=17.7, length_scale=0.957)
    + 0.197**2 * RBF(length_scale=0.138) + WhiteKernel(noise_level=0.0336)
 
-Thus, most of the target signal (34.4ppm) is explained by a long-term rising
-trend (length-scale 41.8 years). The periodic component has an amplitude of
-3.27ppm, a decay time of 180 years and a length-scale of 1.44. The long decay
-time indicates that we have a locally very close to periodic seasonal
-component. The correlated noise has an amplitude of 0.197ppm with a length
-scale of 0.138 years and a white-noise contribution of 0.197ppm. Thus, the
-overall noise level is very small, indicating that the data can be very well
-explained by the model. The figure shows also that the model makes very
-confident predictions until around 2015.
+因此，大多数目标信号（34.4ppm）由长期上升趋势（长度尺度即length-scale为41.8年）解释。 
+周期分量的振幅为3.27ppm，衰减时间为180年，长度尺度为1.44。 
+长时间的衰变时间表明我们有一个局部非常接近周期性的季节性成分。 
+相关噪声的幅度为0.197ppm，长度为0.138年，白噪声贡献为0.197ppm。 
+因此，整体噪声水平非常小，表明该模型可以很好地解释数据。 
+该图还显示，该模型直到2015年左右才能做出置信度比较高的预测。
 
 
 
@@ -93,7 +74,7 @@ confident predictions until around 2015.
 .. code-block:: python
 
     # Authors: Jan Hendrik Metzen <jhm@informatik.uni-bremen.de>
-    #
+    #翻译者：http://www.studyai.com/antares
     # License: BSD 3 clause
 
     from __future__ import division, print_function
@@ -191,7 +172,7 @@ confident predictions until around 2015.
     plt.tight_layout()
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  9.199 seconds)
+**Total running time of the script:** ( 0 minutes  7.901 seconds)
 
 
 .. _sphx_glr_download_auto_examples_gaussian_process_plot_gpr_co2.py:

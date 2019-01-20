@@ -1,12 +1,12 @@
 """
 =====================================================
-Gaussian process classification (GPC) on iris dataset
+高斯过程分类器(GPC)在鸢尾花数据集上的应用
 =====================================================
 
-This example illustrates the predicted probability of GPC for an isotropic
-and anisotropic RBF kernel on a two-dimensional version for the iris-dataset.
-The anisotropic RBF kernel obtains slightly higher log-marginal-likelihood by
-assigning different length-scales to the two feature dimensions.
+该示例展示了在iris数据集的二维版本上 各向同性和各向异性RBF核的GPC的预测概率。 这说明了GPC对多类分类的适用性。 
+各向异性RBF内核通过为两个特征维度分配不同的长度尺度(length-scales)来获得稍高的LML(log-marginal-likelihood)。
+
+翻译者：http://www.studyai.com/antares
 """
 print(__doc__)
 

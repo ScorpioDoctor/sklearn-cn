@@ -8,25 +8,19 @@
 
 
 ====================================================================
-Probabilistic predictions with Gaussian process classification (GPC)
+使用高斯过程分类器(GPC)进行概率性预测
 ====================================================================
 
-This example illustrates the predicted probability of GPC for an RBF kernel
-with different choices of the hyperparameters. The first figure shows the
-predicted probability of GPC with arbitrarily chosen hyperparameters and with
-the hyperparameters corresponding to the maximum log-marginal-likelihood (LML).
+这个例子展示了具有不同超参数选项的RBF内核的GPC预测概率。 
+第一幅图显示的是 具有任意选择的超参数的GPC的预测概率 以及 具有与最大LML对应的超参数的GPC的预测概率。
 
-While the hyperparameters chosen by optimizing LML have a considerable larger
-LML, they perform slightly worse according to the log-loss on test data. The
-figure shows that this is because they exhibit a steep change of the class
-probabilities at the class boundaries (which is good) but have predicted
-probabilities close to 0.5 far away from the class boundaries (which is bad)
-This undesirable effect is caused by the Laplace approximation used
-internally by GPC.
+虽然通过优化LML选择的超参数具有相当大的LML，但是依据测试数据上的对数损失，它们的表现更差。 
+该图显示， 这是因为它们在类边界表现出类概率的急剧变化(这是好的表现)， 
+但在远离类边界的地方 其预测概率却接近0.5（这是坏的表现） 
+这种不良影响是由于GPC内部使用了拉普拉斯近似(Laplace approximation)。
 
-The second figure shows the log-marginal-likelihood for different choices of
-the kernel's hyperparameters, highlighting the two choices of the
-hyperparameters used in the first figure by black dots.
+第二幅图显示了 针对内核超参数的不同选择所对应的LML（对数边缘似然），
+突出了在第一幅图中使用的通过黑点（训练集）选择的两个超参数。
 
 
 
@@ -67,7 +61,7 @@ hyperparameters used in the first figure by black dots.
     print(__doc__)
 
     # Authors: Jan Hendrik Metzen <jhm@informatik.uni-bremen.de>
-    #
+    # 翻译者：http://www.studyai.com/antares
     # License: BSD 3 clause
 
     import numpy as np
@@ -145,7 +139,7 @@ hyperparameters used in the first figure by black dots.
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  2.901 seconds)
+**Total running time of the script:** ( 0 minutes  3.205 seconds)
 
 
 .. _sphx_glr_download_auto_examples_gaussian_process_plot_gpc.py:

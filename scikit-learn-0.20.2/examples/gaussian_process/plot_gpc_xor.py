@@ -1,18 +1,16 @@
 """
 ========================================================================
-Illustration of Gaussian process classification (GPC) on the XOR dataset
+高斯过程分类器(GPC)在 XOR 数据集上的应用
 ========================================================================
 
-This example illustrates GPC on XOR data. Compared are a stationary, isotropic
-kernel (RBF) and a non-stationary kernel (DotProduct). On this particular
-dataset, the DotProduct kernel obtains considerably better results because the
-class-boundaries are linear and coincide with the coordinate axes. In general,
-stationary kernels often obtain better results.
+此示例展示了将GPC用于XOR数据。参与比较试验的是 平稳的各向同性的核(RBF)和非平稳的核(DotProduct)。 
+在这个特定的数据集上，DotProduct核获得了更好的结果， 因为类边界是线性的，并且与坐标轴重合。 
+然而，实际上，平稳的核 诸如 RBF 经常获得更好结果。
 """
 print(__doc__)
 
 # Authors: Jan Hendrik Metzen <jhm@informatik.uni-bremen.de>
-#
+# 翻译者：http://www.studyai.com/antares
 # License: BSD 3 clause
 
 import numpy as np

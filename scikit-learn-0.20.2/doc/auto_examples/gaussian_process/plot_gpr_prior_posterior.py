@@ -1,16 +1,15 @@
 """
 ==========================================================================
-Illustration of prior and posterior Gaussian process for different kernels
+使用不同内核的先验和后验高斯过程的展示
 ==========================================================================
 
-This example illustrates the prior and posterior of a GPR with different
-kernels. Mean, standard deviation, and 10 samples are shown for both prior
-and posterior.
+这个例子展示了使用不同内核的先验和后验高斯过程。
+在先验和后验两种情况下，展示了 均值，标准差，和 10个样本。
 """
 print(__doc__)
 
 # Authors: Jan Hendrik Metzen <jhm@informatik.uni-bremen.de>
-#
+# 翻译：http://www.studyai.com/antares
 # License: BSD 3 clause
 
 import numpy as np
