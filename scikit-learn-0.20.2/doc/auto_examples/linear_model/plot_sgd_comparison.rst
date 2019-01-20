@@ -8,11 +8,10 @@
 
 
 ==================================
-Comparing various online solvers
+比较各种在线求解器
 ==================================
 
-An example showing how different online solvers perform
-on the hand-written digits dataset.
+一个示例，显示各种在线求解器(solver)在手写数字数据集上执行的不同之处。
 
 
 
@@ -93,7 +92,7 @@ on the hand-written digits dataset.
     plt.ylabel("Test Error Rate")
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  26.501 seconds)
+**Total running time of the script:** ( 0 minutes  28.678 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sgd_comparison.py:

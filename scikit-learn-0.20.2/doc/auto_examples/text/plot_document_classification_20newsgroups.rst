@@ -8,20 +8,17 @@
 
 
 ======================================================
-Classification of text documents using sparse features
+基于稀疏特征的文本文档分类
 ======================================================
 
-This is an example showing how scikit-learn can be used to classify documents
-by topics using a bag-of-words approach. This example uses a scipy.sparse
-matrix to store the features and demonstrates various classifiers that can
-efficiently handle sparse matrices.
+这是一个例子，展示了如何在scikit-learn中使用词袋方法按主题对文档进行分类。
+此示例使用一个 scipy.sparse 矩阵来存储这些特征，并演示了能够有效处理稀疏矩阵的各种分类器。
 
-The dataset used in this example is the 20 newsgroups dataset. It will be
-automatically downloaded, then cached.
+此示例中使用的数据集是20个新闻组数据集。它将被自动下载，然后缓存。
 
-The bar plot indicates the accuracy, training time (normalized) and test time
-(normalized) of each classifier.
+条形图表示每个分类器的准确率、归一化训练时间 和 归一化测试时间。
 
+翻译者：http://www.studyai.com/antares
 
 
 
@@ -62,11 +59,11 @@ The bar plot indicates the accuracy, training time (normalized) and test time
     4 categories
 
     Extracting features from the training data using a sparse vectorizer
-    done in 0.476027s at 8.360MB/s
+    done in 0.521030s at 7.638MB/s
     n_samples: 2034, n_features: 33809
 
     Extracting features from the test data using the same vectorizer
-    done in 0.299017s at 9.590MB/s
+    done in 0.322019s at 8.905MB/s
     n_samples: 1353, n_features: 33809
 
     ================================================================================
@@ -76,9 +73,9 @@ The bar plot indicates the accuracy, training time (normalized) and test time
     RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
             max_iter=None, normalize=False, random_state=None, solver='sag',
             tol=0.01)
-    train time: 0.201s
+    train time: 0.204s
     test time:  0.001s
-    accuracy:   0.896
+    accuracy:   0.897
     dimensionality: 33809
     density: 1.000000
 
@@ -91,8 +88,8 @@ The bar plot indicates the accuracy, training time (normalized) and test time
           fit_intercept=True, max_iter=50, n_iter=None, n_iter_no_change=5,
           n_jobs=None, penalty=None, random_state=0, shuffle=True, tol=0.001,
           validation_fraction=0.1, verbose=0, warm_start=False)
-    train time: 0.015s
-    test time:  0.001s
+    train time: 0.014s
+    test time:  0.002s
     accuracy:   0.888
     dimensionality: 33809
     density: 0.240114
@@ -107,11 +104,11 @@ The bar plot indicates the accuracy, training time (normalized) and test time
                   max_iter=50, n_iter=None, n_iter_no_change=5, n_jobs=None,
                   random_state=None, shuffle=True, tol=0.001,
                   validation_fraction=0.1, verbose=0, warm_start=False)
-    train time: 0.025s
-    test time:  0.002s
+    train time: 0.028s
+    test time:  0.001s
     accuracy:   0.900
     dimensionality: 33809
-    density: 0.702069
+    density: 0.705552
 
 
     ================================================================================
@@ -122,7 +119,7 @@ The bar plot indicates the accuracy, training time (normalized) and test time
                metric_params=None, n_jobs=None, n_neighbors=10, p=2,
                weights='uniform')
     train time: 0.001s
-    test time:  0.150s
+    test time:  0.146s
     accuracy:   0.858
 
     ================================================================================
@@ -136,9 +133,9 @@ The bar plot indicates the accuracy, training time (normalized) and test time
                 min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
-    train time: 1.291s
-    test time:  0.083s
-    accuracy:   0.845
+    train time: 1.380s
+    test time:  0.087s
+    accuracy:   0.841
 
     ================================================================================
     L2 penalty
@@ -148,7 +145,7 @@ The bar plot indicates the accuracy, training time (normalized) and test time
          intercept_scaling=1, loss='squared_hinge', max_iter=1000,
          multi_class='ovr', penalty='l2', random_state=None, tol=0.001,
          verbose=0)
-    train time: 0.075s
+    train time: 0.094s
     test time:  0.002s
     accuracy:   0.900
     dimensionality: 33809
@@ -163,11 +160,11 @@ The bar plot indicates the accuracy, training time (normalized) and test time
            n_iter=None, n_iter_no_change=5, n_jobs=None, penalty='l2',
            power_t=0.5, random_state=None, shuffle=True, tol=None,
            validation_fraction=0.1, verbose=0, warm_start=False)
-    train time: 0.094s
+    train time: 0.116s
     test time:  0.002s
     accuracy:   0.902
     dimensionality: 33809
-    density: 0.666213
+    density: 0.668417
 
 
     ================================================================================
@@ -178,11 +175,11 @@ The bar plot indicates the accuracy, training time (normalized) and test time
          intercept_scaling=1, loss='squared_hinge', max_iter=1000,
          multi_class='ovr', penalty='l1', random_state=None, tol=0.001,
          verbose=0)
-    train time: 0.186s
+    train time: 0.217s
     test time:  0.001s
-    accuracy:   0.873
+    accuracy:   0.874
     dimensionality: 33809
-    density: 0.005568
+    density: 0.005575
 
 
     ________________________________________________________________________________
@@ -193,11 +190,11 @@ The bar plot indicates the accuracy, training time (normalized) and test time
            n_iter=None, n_iter_no_change=5, n_jobs=None, penalty='l1',
            power_t=0.5, random_state=None, shuffle=True, tol=None,
            validation_fraction=0.1, verbose=0, warm_start=False)
-    train time: 0.328s
-    test time:  0.002s
+    train time: 0.397s
+    test time:  0.003s
     accuracy:   0.888
     dimensionality: 33809
-    density: 0.020128
+    density: 0.019928
 
 
     ================================================================================
@@ -210,11 +207,11 @@ The bar plot indicates the accuracy, training time (normalized) and test time
            n_iter=None, n_iter_no_change=5, n_jobs=None, penalty='elasticnet',
            power_t=0.5, random_state=None, shuffle=True, tol=None,
            validation_fraction=0.1, verbose=0, warm_start=False)
-    train time: 0.483s
-    test time:  0.002s
-    accuracy:   0.901
+    train time: 0.560s
+    test time:  0.003s
+    accuracy:   0.900
     dimensionality: 33809
-    density: 0.186615
+    density: 0.186748
 
 
     ================================================================================
@@ -222,7 +219,7 @@ The bar plot indicates the accuracy, training time (normalized) and test time
     ________________________________________________________________________________
     Training: 
     NearestCentroid(metric='euclidean', shrink_threshold=None)
-    train time: 0.006s
+    train time: 0.009s
     test time:  0.002s
     accuracy:   0.855
 
@@ -231,7 +228,7 @@ The bar plot indicates the accuracy, training time (normalized) and test time
     ________________________________________________________________________________
     Training: 
     MultinomialNB(alpha=0.01, class_prior=None, fit_prior=True)
-    train time: 0.005s
+    train time: 0.006s
     test time:  0.002s
     accuracy:   0.899
     dimensionality: 33809
@@ -242,7 +239,7 @@ The bar plot indicates the accuracy, training time (normalized) and test time
     Training: 
     BernoulliNB(alpha=0.01, binarize=0.0, class_prior=None, fit_prior=True)
     train time: 0.007s
-    test time:  0.006s
+    test time:  0.007s
     accuracy:   0.884
     dimensionality: 33809
     density: 1.000000
@@ -270,9 +267,9 @@ The bar plot indicates the accuracy, training time (normalized) and test time
             max_features=None, no...ax_iter=1000,
          multi_class='ovr', penalty='l2', random_state=None, tol=0.0001,
          verbose=0))])
-    train time: 0.194s
+    train time: 0.245s
     test time:  0.003s
-    accuracy:   0.879
+    accuracy:   0.880
 
 
 
@@ -591,7 +588,7 @@ The bar plot indicates the accuracy, training time (normalized) and test time
 
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  4.493 seconds)
+**Total running time of the script:** ( 0 minutes  4.955 seconds)
 
 
 .. _sphx_glr_download_auto_examples_text_plot_document_classification_20newsgroups.py:

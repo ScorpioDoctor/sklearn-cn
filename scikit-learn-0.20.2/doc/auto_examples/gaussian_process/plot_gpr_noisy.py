@@ -1,24 +1,19 @@
 """
 =============================================================
-Gaussian process regression (GPR) with noise-level estimation
+带有噪声水平估计的高斯过程回归(GPR)
 =============================================================
 
-This example illustrates that GPR with a sum-kernel including a WhiteKernel can
-estimate the noise level of data. An illustration of the
-log-marginal-likelihood (LML) landscape shows that there exist two local
-maxima of LML. The first corresponds to a model with a high noise level and a
-large length scale, which explains all variations in the data by noise. The
-second one has a smaller noise level and shorter length scale, which explains
-most of the variation by the noise-free functional relationship. The second
-model has a higher likelihood; however, depending on the initial value for the
-hyperparameters, the gradient-based optimization might also converge to the
-high-noise solution. It is thus important to repeat the optimization several
-times for different initializations.
+这个例子展示了带有sum-kernel的GPR(包括WhiteKernel)可以估计数据的噪声水平。
+对数边缘似然(LML)景观图表明：LML存在两个局部极大值.
+第一个图对应于一个高噪声水平和大长度尺度的模型，它解释了噪声带给数据的所有变化。
+第二个图对应于噪声水平较小，长度尺度较短的模型，主要解释了与噪声无关的函数关系带给数据的大多数变化。
+第二个模型具有较高的likelihood，但是，根据超参数的初始值，基于梯度的优化也可能收敛到高噪声的解。
+因此，以不同的初始化状态进行多次重复优化是很重要的。
 """
 print(__doc__)
 
 # Authors: Jan Hendrik Metzen <jhm@informatik.uni-bremen.de>
-#
+# 翻译者：http://www.studyai.com/antares
 # License: BSD 3 clause
 
 import numpy as np

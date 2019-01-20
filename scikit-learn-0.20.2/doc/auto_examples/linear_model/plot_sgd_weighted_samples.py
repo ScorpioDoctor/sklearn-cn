@@ -1,10 +1,9 @@
 """
 =====================
-SGD: Weighted samples
+SGD: 加权样本
 =====================
 
-Plot decision function of a weighted dataset, where the size of points
-is proportional to its weight.
+绘制SGD在加权数据集上的决策函数，其中点的大小与其权重成正比。
 """
 print(__doc__)
 

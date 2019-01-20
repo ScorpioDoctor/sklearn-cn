@@ -8,11 +8,10 @@
 
 
 =====================
-SGD: Weighted samples
+SGD: 加权样本
 =====================
 
-Plot decision function of a weighted dataset, where the size of points
-is proportional to its weight.
+绘制SGD在加权数据集上的决策函数，其中点的大小与其权重成正比。
 
 
 
@@ -67,7 +66,7 @@ is proportional to its weight.
     plt.yticks(())
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.062 seconds)
+**Total running time of the script:** ( 0 minutes  0.068 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sgd_weighted_samples.py:

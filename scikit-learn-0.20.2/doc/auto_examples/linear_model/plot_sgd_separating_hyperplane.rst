@@ -8,12 +8,11 @@
 
 
 =========================================
-SGD: Maximum margin separating hyperplane
+SGD: 最大裕度分离超平面
 =========================================
 
-Plot the maximum margin separating hyperplane within a two-class
-separable dataset using a linear Support Vector Machines classifier
-trained using SGD.
+使用SGD训练的线性支持向量机分类器绘制两类可分离数据集之间的
+最大裕度分离超平面(maximum margin separating hyperplane)。
 
 
 
@@ -62,7 +61,7 @@ trained using SGD.
     plt.axis('tight')
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.031 seconds)
+**Total running time of the script:** ( 0 minutes  0.042 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sgd_separating_hyperplane.py:

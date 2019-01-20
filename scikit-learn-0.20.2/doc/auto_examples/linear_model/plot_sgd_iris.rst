@@ -8,13 +8,13 @@
 
 
 ========================================
-Plot multi-class SGD on the iris dataset
+在鸢尾花数据集上进行多类SGD分类
 ========================================
 
-Plot decision surface of multi-class SGD on iris dataset.
-The hyperplanes corresponding to the three one-versus-all (OVA) classifiers
-are represented by the dashed lines.
+绘制鸢尾花数据上的多类SGD的决策面。
+对应于三个OVA分类器的三个超平面在图中用虚线(dashed lines)表示。
 
+翻译者： http:www.studyai.com/antares
 
 
 
@@ -102,7 +102,7 @@ are represented by the dashed lines.
     plt.legend()
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.083 seconds)
+**Total running time of the script:** ( 0 minutes  0.070 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sgd_iris.py:

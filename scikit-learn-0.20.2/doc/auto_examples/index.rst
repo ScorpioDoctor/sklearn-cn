@@ -2544,7 +2544,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Both kernel ridge regression (KRR) and Gaussian process regression (GPR) learn a target functio...">
+    <div class="sphx-glr-thumbcontainer" tooltip="核岭回归(KRR)和高斯过程回归(GPR)都是通过在内部使用“核技巧”来学习目标函数的。 KRR在相应核诱导的空间中学习一个线性函数，该函数对应于原始空间中的一个非线性函数。 基于带有岭正则...">
 
 .. only:: html
 
@@ -2624,7 +2624,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates that GPR with a sum-kernel including a WhiteKernel can estimate the no...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这个例子展示了带有sum-kernel的GPR(包括WhiteKernel)可以估计数据的噪声水平。 对数边缘似然(LML)景观图表明：LML存在两个局部极大值. 第一个图对应于一个高噪声水...">
 
 .. only:: html
 
@@ -2716,7 +2716,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the maximum margin separating hyperplane within a two-class separable dataset using a line...">
+    <div class="sphx-glr-thumbcontainer" tooltip="使用SGD训练的线性支持向量机分类器绘制两类可分离数据集之间的 最大裕度分离超平面(maximum margin separating hyperplane)。 ">
 
 .. only:: html
 
@@ -2756,7 +2756,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A plot that compares the various convex loss functions supported by :class:`sklearn.linear_mode...">
+    <div class="sphx-glr-thumbcontainer" tooltip="比较 :class:`sklearn.linear_model.SGDClassifier` 所支持的各种凸损失函数。 ">
 
 .. only:: html
 
@@ -2816,7 +2816,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Contours of where the penalty is equal to 1 for the three penalties L1, L2 and elastic-net.">
+    <div class="sphx-glr-thumbcontainer" tooltip="L1，L2，以及 elastic-net 这三种惩罚等于1的时候的等高线 对比图。">
 
 .. only:: html
 
@@ -2916,7 +2916,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot decision function of a weighted dataset, where the size of points is proportional to its w...">
+    <div class="sphx-glr-thumbcontainer" tooltip="绘制SGD在加权数据集上的决策函数，其中点的大小与其权重成正比。 ">
 
 .. only:: html
 
@@ -3036,7 +3036,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An example showing how different online solvers perform on the hand-written digits dataset.">
+    <div class="sphx-glr-thumbcontainer" tooltip="一个示例，显示各种在线求解器(solver)在手写数字数据集上执行的不同之处。">
 
 .. only:: html
 
@@ -3136,7 +3136,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot decision surface of multi-class SGD on iris dataset. The hyperplanes corresponding to the ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="绘制鸢尾花数据上的多类SGD的决策面。 对应于三个OVA分类器的三个超平面在图中用虚线(dashed lines)表示。">
 
 .. only:: html
 
@@ -4797,7 +4797,7 @@ Biclustering
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This is an example showing how scikit-learn can be used to classify documents by topics using a...">
+    <div class="sphx-glr-thumbcontainer" tooltip="这是一个例子，展示了如何在scikit-learn中使用词袋方法按主题对文档进行分类。 此示例使用一个 scipy.sparse 矩阵来存储这些特征，并演示了能够有效处理稀疏矩阵的各种分类器...">
 
 .. only:: html
 

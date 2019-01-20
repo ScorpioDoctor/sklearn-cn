@@ -1,12 +1,12 @@
 """
 ========================================
-Plot multi-class SGD on the iris dataset
+在鸢尾花数据集上进行多类SGD分类
 ========================================
 
-Plot decision surface of multi-class SGD on iris dataset.
-The hyperplanes corresponding to the three one-versus-all (OVA) classifiers
-are represented by the dashed lines.
+绘制鸢尾花数据上的多类SGD的决策面。
+对应于三个OVA分类器的三个超平面在图中用虚线(dashed lines)表示。
 
+翻译者： http:www.studyai.com/antares
 """
 print(__doc__)
 

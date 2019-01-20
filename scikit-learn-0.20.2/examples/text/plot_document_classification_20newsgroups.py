@@ -1,19 +1,16 @@
 """
 ======================================================
-Classification of text documents using sparse features
+基于稀疏特征的文本文档分类
 ======================================================
 
-This is an example showing how scikit-learn can be used to classify documents
-by topics using a bag-of-words approach. This example uses a scipy.sparse
-matrix to store the features and demonstrates various classifiers that can
-efficiently handle sparse matrices.
+这是一个例子，展示了如何在scikit-learn中使用词袋方法按主题对文档进行分类。
+此示例使用一个 scipy.sparse 矩阵来存储这些特征，并演示了能够有效处理稀疏矩阵的各种分类器。
 
-The dataset used in this example is the 20 newsgroups dataset. It will be
-automatically downloaded, then cached.
+此示例中使用的数据集是20个新闻组数据集。它将被自动下载，然后缓存。
 
-The bar plot indicates the accuracy, training time (normalized) and test time
-(normalized) of each classifier.
+条形图表示每个分类器的准确率、归一化训练时间 和 归一化测试时间。
 
+翻译者：http://www.studyai.com/antares
 """
 
 # Author: Peter Prettenhofer <peter.prettenhofer@gmail.com>

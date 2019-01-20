@@ -1,13 +1,13 @@
 """
 ==============
-SGD: Penalties
+SGD: 惩罚项
 ==============
 
-Contours of where the penalty is equal to 1
-for the three penalties L1, L2 and elastic-net.
+L1，L2，以及 elastic-net 这三种惩罚等于1的时候的等高线
+对比图。
 
-All of the above are supported by
-:class:`sklearn.linear_model.stochastic_gradient`.
+上面这三种惩罚都可被
+:class:`sklearn.linear_model.stochastic_gradient` 所支持。
 
 """
 print(__doc__)

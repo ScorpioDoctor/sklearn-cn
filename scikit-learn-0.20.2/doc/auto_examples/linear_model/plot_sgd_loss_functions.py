@@ -3,8 +3,7 @@
 SGD: convex loss functions
 ==========================
 
-A plot that compares the various convex loss functions supported by
-:class:`sklearn.linear_model.SGDClassifier` .
+比较 :class:`sklearn.linear_model.SGDClassifier` 所支持的各种凸损失函数。
 """
 print(__doc__)
 

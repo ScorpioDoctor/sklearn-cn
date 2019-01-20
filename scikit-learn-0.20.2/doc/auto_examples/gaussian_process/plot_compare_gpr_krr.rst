@@ -8,49 +8,32 @@
 
 
 ==========================================================
-Comparison of kernel ridge and Gaussian process regression
+高斯过程回归与核岭回归的比较
 ==========================================================
 
-Both kernel ridge regression (KRR) and Gaussian process regression (GPR) learn
-a target function by employing internally the "kernel trick". KRR learns a
-linear function in the space induced by the respective kernel which corresponds
-to a non-linear function in the original space. The linear function in the
-kernel space is chosen based on the mean-squared error loss with
-ridge regularization. GPR uses the kernel to define the covariance of
-a prior distribution over the target functions and uses the observed training
-data to define a likelihood function. Based on Bayes theorem, a (Gaussian)
-posterior distribution over target functions is defined, whose mean is used
-for prediction.
+核岭回归(KRR)和高斯过程回归(GPR)都是通过在内部使用“核技巧”来学习目标函数的。
+KRR在相应核诱导的空间中学习一个线性函数，该函数对应于原始空间中的一个非线性函数。
+基于带有岭正则化的均方误差损失，选择核空间中的线性函数。
+GPR利用核函数定义目标函数上先验分布的协方差，
+并利用观测到的训练数据定义似然函数。然后，基于Bayes定理，
+目标函数上的(高斯)后验分布就可以被定义了，其均值则用于预测。
 
-A major difference is that GPR can choose the kernel's hyperparameters based
-on gradient-ascent on the marginal likelihood function while KRR needs to
-perform a grid search on a cross-validated loss function (mean-squared error
-loss). A further difference is that GPR learns a generative, probabilistic
-model of the target function and can thus provide meaningful confidence
-intervals and posterior samples along with the predictions while KRR only
-provides predictions.
+一个主要的区别是，GPR可以基于边缘似然函数的梯度上升来选择核的超参数，
+而KRR需要对交叉验证的损失函数(均方误差损失)执行网格搜索。另一个不同之处在于，
+GPR学习目标函数的生成概率模型，因此可以提供有意义的置信区间和后验样本以及预测，
+而KRR只提供预测。
 
-This example illustrates both methods on an artificial dataset, which
-consists of a sinusoidal target function and strong noise. The figure compares
-the learned model of KRR and GPR based on a ExpSineSquared kernel, which is
-suited for learning periodic functions. The kernel's hyperparameters control
-the smoothness (l) and periodicity of the kernel (p). Moreover, the noise level
-of the data is learned explicitly by GPR by an additional WhiteKernel component
-in the kernel and by the regularization parameter alpha of KRR.
+此示例在人工数据集上展示这两种方法的使用，该数据集由一个正弦目标函数和强噪声组成。
+该图比较了适用于学习周期函数的基于ExpSineSquared核的KRR和GPR的学习模型。
+核的超参数控制核的光滑性(l)和周期性(p)。此外，数据的噪声水平 在GPR中是
+通过内核中附加的 WhiteKernel 分量显式地获得的，而在KRR中则是通过正则化参数 alpha 显式地获得的。
 
-The figure shows that both methods learn reasonable models of the target
-function. GPR correctly identifies the periodicity of the function to be
-roughly 2*pi (6.28), while KRR chooses the doubled periodicity 4*pi. Besides
-that, GPR provides reasonable confidence bounds on the prediction which are not
-available for KRR. A major difference between the two methods is the time
-required for fitting and predicting: while fitting KRR is fast in principle,
-the grid-search for hyperparameter optimization scales exponentially with the
-number of hyperparameters ("curse of dimensionality"). The gradient-based
-optimization of the parameters in GPR does not suffer from this exponential
-scaling and is thus considerable faster on this example with 3-dimensional
-hyperparameter space. The time for predicting is similar; however, generating
-the variance of the predictive distribution of GPR takes considerable longer
-than just predicting the mean.
+展示图显示，这两种方法都学习了目标函数的合理模型。GPR正确地识别出函数的周期约为2*pi(6.28)，
+而KRR选择的周期为4*pi。此外，GPR为预测提供了合理的置信限,但是KRR则无法提供。
+这两种方法的一个主要区别是拟合和预测所需的时间：虽然拟合KRR在原则上是快速的，
+但网格搜索的超参数优化规模与超参数的数量成指数关系(“维数灾难”)。
+GPR的参数是基于梯度优化的，不受这种指数标度的影响，因此在这个具有三维超参数空间的例子中，
+速度要快得多。预测的时间是相似的，然而，产生GPR的预测分布的方差要比仅仅预测平均值花费的时间要长得多。
 
 
 
@@ -65,11 +48,11 @@ than just predicting the mean.
 
  .. code-block:: none
 
-    Time for KRR fitting: 3.432
-    Time for GPR fitting: 0.078
-    Time for KRR prediction: 0.047
-    Time for GPR prediction: 0.047
-    Time for GPR prediction with standard-deviation: 0.062
+    Time for KRR fitting: 3.894
+    Time for GPR fitting: 0.098
+    Time for KRR prediction: 0.050
+    Time for GPR prediction: 0.053
+    Time for GPR prediction with standard-deviation: 0.063
 
 
 
@@ -83,7 +66,7 @@ than just predicting the mean.
 
     # Authors: Jan Hendrik Metzen <jhm@informatik.uni-bremen.de>
     # License: BSD 3 clause
-
+    # 翻译者：http://www.studyai.com/antares
 
     import time
 
@@ -155,7 +138,7 @@ than just predicting the mean.
     plt.legend(loc="best",  scatterpoints=1, prop={'size': 8})
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  3.697 seconds)
+**Total running time of the script:** ( 0 minutes  4.207 seconds)
 
 
 .. _sphx_glr_download_auto_examples_gaussian_process_plot_compare_gpr_krr.py:
